@@ -13,10 +13,10 @@ process FASTP_REPORT {
     path fastp_overlap
 
     output:
-    path "qc_report", emit: qc_report
+    path "qc_summary", emit: qc_report
 
     script:
     """
-    fastp_parse.py --qc-json ${fastp_qc} --overlap-json ${fastp_overlap} -o "qc_report"
+    fastp_parse.py --qc-json ${fastp_qc} --overlap-json ${fastp_overlap} -o "qc_summary"
     """
 }

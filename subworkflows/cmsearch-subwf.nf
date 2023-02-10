@@ -28,5 +28,9 @@ workflow CMSEARCH_SUBWF {
         cmsearch_result_deoverlapped = CMSEARCH_DEOVERLAP.out.cmsearch_deoverlap.collect()
 
         EASEL(sequences, cmsearch_result_deoverlapped)
+
+    emit:
+        lsu_fasta = EASEL.out.lsu_fasta
+        ssu_fasta = EASEL.out.ssu_fasta
 }
 

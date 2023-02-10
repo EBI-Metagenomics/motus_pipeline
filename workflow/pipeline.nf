@@ -12,6 +12,7 @@ qualified_quality_phred = channel.value(params.qualified_quality_phred)
 unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 reference_genome = channel.fromPath(params.reference_genome, checkIfExists: true)
 reference_genome_name = channel.value(params.reference_genome_name)
+motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
@@ -20,13 +21,13 @@ reference_genome_name = channel.value(params.reference_genome_name)
 include { QC } from '../subworkflows/qc'
 include { MAPSEQ_OTU_KRONA } from '../subworkflows/mapseq-otu-krona'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch-subwf'
-
+include { MOTUS } from '../modules/mOTUs'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-
+/*
 workflow PIPELINE {
 
     QC(
@@ -39,8 +40,6 @@ workflow PIPELINE {
         reference_genome,
         reference_genome_name)
 
-    // FASTQ_TO_FASTA(QC.out.merged_reads)
-
     // MOTUS
 
     // CMSEARCH_SUBWF(sequences, covariance_model_database, clan_information)
@@ -48,4 +47,11 @@ workflow PIPELINE {
     // MAPSEQ_OTU_KRONA(sequence, mapseq_db, mapseq_taxonomy, otu_ref, otu_label)
     //SSU
     // MAPSEQ_OTU_KRONA(sequence, mapseq_db, mapseq_taxonomy, otu_ref, otu_label)
+}
+*/
+
+
+workflow PIPELINE {
+
+    MOTUS(raw_reads, motus_db)
 }
