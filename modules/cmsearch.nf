@@ -22,7 +22,7 @@ process CMSEARCH {
         """
         cmsearch \
             --cpu ${task.cpus} \
-            --cat_ga \
+            --cut_ga \
             --noali \
             --hmmonly \
             -Z 1000 \

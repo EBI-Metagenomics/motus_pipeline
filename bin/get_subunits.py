@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-f", "--fives", dest="fives", help="5S pattern", default='mtPerm-5S')
     parser.add_argument("-e", "--five_eights", dest="five_eights", help="5.8S pattern", default='5_8S_rRNA')
-    parser.add_argument("-p", "--prefix", dest="prefix", help="prefix for models", default='model')
+    parser.add_argument("-p", "--prefix", dest="prefix", help="prefix for models", required=False)
 
     args = parser.parse_args()
     if not args.prefix:
@@ -113,5 +113,5 @@ if __name__ == "__main__":
     # remove empty files
     for onefile in [LSU_filename, SSU_filename, FiveS_filename, FiveEightS_filename] + names:
         if os.path.getsize(onefile) == 0:
-            print "Removing the empty file: " + str(onefile)
+            print("Removing the empty file: " + str(onefile))
             os.remove(onefile)

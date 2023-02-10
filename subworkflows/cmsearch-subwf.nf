@@ -5,6 +5,7 @@
 include { CMSEARCH } from '../modules/cmsearch'
 include { CMSEARCH_DEOVERLAP } from '../modules/cmsearch_deoverlap'
 include { EASEL } from '../modules/easel'
+include { EXTRACT_MODELS } from '../modules/extract_coords'
 
 workflow CMSEARCH_SUBWF {
     take:
@@ -29,8 +30,10 @@ workflow CMSEARCH_SUBWF {
 
         EASEL(sequences, cmsearch_result_deoverlapped)
 
+        EXTRACT_MODELS(EASEL.out.models_fasta)
+
     emit:
-        lsu_fasta = EASEL.out.lsu_fasta
-        ssu_fasta = EASEL.out.ssu_fasta
+        cmsearch_lsu_fasta = EXTRACT_MODELS.out.lsu_fasta
+        cmsearch_ssu_fasta = EXTRACT_MODELS.out.ssu_fasta
 }
 

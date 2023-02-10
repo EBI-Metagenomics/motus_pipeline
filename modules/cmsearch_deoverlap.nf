@@ -13,7 +13,7 @@ process CMSEARCH_DEOVERLAP {
         path clan_information
         path cmsearch_matches
     output:
-        path "${cmsearch_matches.baseName}.deoverlapped", emit: cmsearch_deoverlap
+        path "${cmsearch_matches}.deoverlapped", emit: cmsearch_deoverlap
 
     script:
     """
