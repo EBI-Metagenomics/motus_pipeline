@@ -14,6 +14,7 @@ workflow QC {
     take:
         name
         reads
+        mode
         length_filter
         polya_trim_param
         qualified_quality_phred
@@ -22,37 +23,47 @@ workflow QC {
         reference_genome_name
 
     main:
-        raw_reads_list = reads.collect()
+        reads_list = reads.collect()
 
         FASTP_FILTERING(
             name,
-            raw_reads_list,
-            "",
+            reads_list,
+            mode,
+            channel.value(""),
             length_filter,
             polya_trim_param,
             qualified_quality_phred,
             unqualified_percent_limit)
+        overlapped_report = FASTP_FILTERING.out.json
 
         DECONTAMINATION(
             FASTP_FILTERING.out.output_reads,
+            mode,
             reference_genome,
             reference_genome_name)
 
-        FASTP_OVERLAP(
-            name,
-            DECONTAMINATION.out.decontaminated_reads,
-            "merged.fastq.gz", "", "", "", "")
+        if (params.mode == "paired"){
+            FASTP_OVERLAP(
+                name,
+                DECONTAMINATION.out.decontaminated_reads,
+                mode,
+                "merged.fastq.gz", "", "", "", "")
 
-        FASTP_REPORT(FASTP_FILTERING.out.json, FASTP_OVERLAP.out.json)
+            overlapped_reads = FASTP_OVERLAP.out.overlapped_reads
+            overlapped_report = overlapped_report.concat(FASTP_OVERLAP.out.json)
+        }
+        else {
+            overlapped_reads = DECONTAMINATION.out.decontaminated_reads
+        }
 
-        FASTQ_TO_FASTA(FASTP_OVERLAP.out.overlapped_reads)
+        FASTP_REPORT(overlapped_report.collect(), mode)
+
+        FASTQ_TO_FASTA(overlapped_reads)
 
         QC_STATS(FASTQ_TO_FASTA.out.sequence)
 
     emit:
-        merged_reads = FASTP_OVERLAP.out.overlapped_reads
+        merged_reads = overlapped_reads
         sequence = FASTQ_TO_FASTA.out.sequence
-        // filtering report
-        // qc summary
 }
 

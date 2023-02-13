@@ -2,8 +2,8 @@
  * easel
 */
 
-process EASEL {
-    publishDir "${params.output}/cmsearch/", mode: 'copy'
+process EASEL_EXTRACT_BY_COORD {
+    publishDir "${params.outdir}/cmsearch/", mode: 'copy'
 
     container 'quay.io/biocontainers/easel:0.48--hec16e2b_1'
 
@@ -18,7 +18,7 @@ process EASEL {
 
     script:
     """
-    bash extract_coords.sh -i ${deoverlapped_coords} -n ${sequences.baseName}
+    awk '{print \$1"-"\$3"/q"\$8"-"\$9" "\$8" "\$9" "\$1}' ${deoverlapped_coords} > ${sequences.baseName}.matched_seqs_with_coords
 
     esl-sfetch --index ${sequences}
 

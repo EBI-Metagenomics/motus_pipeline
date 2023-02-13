@@ -3,7 +3,7 @@
 */
 
 process MAPSEQ {
-    publishDir "${params.output}/taxonomy-summary/", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
+    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
 
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
 

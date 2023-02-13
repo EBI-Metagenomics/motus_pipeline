@@ -3,7 +3,7 @@
 */
 
 process KRONA {
-    publishDir "${params.output}/taxonomy-summary/", mode: 'copy', pattern: "*krona.html"
+    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "*krona.html"
 
     container 'quay.io/microbiome-informatics/krona:2.7.1'
 

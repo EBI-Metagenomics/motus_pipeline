@@ -3,7 +3,7 @@
 */
 
 process SEQTK {
-    publishDir "${params.output}/", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy'
 
     container 'quay.io/biocontainers/seqtk:1.3--h7132678_4'
 

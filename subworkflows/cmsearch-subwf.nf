@@ -4,7 +4,7 @@
 
 include { CMSEARCH } from '../modules/cmsearch'
 include { CMSEARCH_DEOVERLAP } from '../modules/cmsearch_deoverlap'
-include { EASEL } from '../modules/easel'
+include { EASEL_EXTRACT_BY_COORD } from '../modules/easel'
 include { EXTRACT_MODELS } from '../modules/extract_coords'
 
 workflow CMSEARCH_SUBWF {
@@ -32,7 +32,7 @@ workflow CMSEARCH_SUBWF {
         // cat deoverlapped
         cmsearch_result_deoverlapped = CMSEARCH_DEOVERLAP.out.cmsearch_deoverlap.collect()
 
-        EASEL(sequences, cmsearch_result_deoverlapped)
+        EASEL_EXTRACT_BY_COORD(sequences, cmsearch_result_deoverlapped)
 
         EXTRACT_MODELS(name, EASEL.out.models_fasta)
 

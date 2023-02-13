@@ -3,9 +3,9 @@
 */
 
 process CMSEARCH_DEOVERLAP {
-    publishDir "${params.output}/cmsearch/", mode: 'copy'
+    publishDir "${params.outdir}/cmsearch/", mode: 'copy'
 
-    container 'quay.io/microbiome-informatics/cmsearch_deoverlap:1.0.0'
+    container 'debian:stable-slim'
 
     memory '200 MB'
     cpus 2

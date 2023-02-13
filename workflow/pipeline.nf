@@ -5,6 +5,7 @@
 */
 name = channel.value(params.name)
 raw_reads = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+mode = channel.value(params.mode)
 
 min_length = channel.value(params.min_length)
 polya_trim = channel.value(params.polya_trim)
@@ -46,12 +47,13 @@ include { MOTUS } from '../modules/mOTUs'
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-
+/*
 workflow PIPELINE {
 
     QC(
         name,
         raw_reads,
+        mode,
         min_length,
         polya_trim,
         qualified_quality_phred,
@@ -71,13 +73,21 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_SSU(CMSEARCH_SUBWF.out.cmsearch_ssu_fasta, ssu_db, ssu_tax, ssu_otu, ssu_label)
     }
 }
+*/
 
 
-/*
 workflow PIPELINE {
 
-    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    CMSEARCH_SUBWF(name, sequences, covariance_model_database, clan_information)
+    QC(
+        name,
+        raw_reads,
+        mode,
+        min_length,
+        polya_trim,
+        qualified_quality_phred,
+        unqualified_percent_limit,
+        reference_genome,
+        reference_genome_name)
 
 }
-*/
+

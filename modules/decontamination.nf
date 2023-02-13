@@ -11,6 +11,7 @@ process DECONTAMINATION {
 
     input:
     path reads
+    val mode
     path reference_genome
     val ref_gen_name
 
@@ -18,7 +19,13 @@ process DECONTAMINATION {
     path "*_clean*.fastq.gz", emit: decontaminated_reads
 
     script:
-    def input_reads = reads.size() == 1 ? "-f ${reads[0]}" : "-f ${reads[0]} -r ${reads[1]}"
+    def input_reads = ""
+    if (mode == 'single') {
+        input_reads = "-f ${reads[0]}"
+    }
+    if (mode == 'paired') {
+        input_reads = "-f ${reads[0]} -r ${reads[1]}"
+    }
 
     """
     map_host.sh -t ${task.cpus} \
