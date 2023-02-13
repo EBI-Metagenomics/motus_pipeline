@@ -7,7 +7,8 @@ process MAPSEQ {
 
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
 
-    cpus 1
+    memory '25 GB'
+    cpus 8
 
     input:
         path sequence
@@ -20,7 +21,7 @@ process MAPSEQ {
     """
     mapseq \
         $sequence \
-        ${mapseq_db}/${mapseq_db.baseName}.fasta \
+        ${mapseq_db} \
         $mapseq_taxonomy \
         -nthreads ${task.cpus} \
         -tophits 80 \

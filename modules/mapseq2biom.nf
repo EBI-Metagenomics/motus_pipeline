@@ -7,6 +7,7 @@ process MAPSEQ2BIOM {
 
     container 'quay.io/microbiome-informatics/mapseq2biom:1.0.0'
 
+    memory '200 MB'
     cpus 1
 
     input:

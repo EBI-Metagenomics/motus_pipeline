@@ -7,7 +7,7 @@ process SEQTK {
 
     container 'quay.io/biocontainers/seqtk:1.3--h7132678_4'
 
-    cpus 1
+    cpus 2
 
     input:
         path reads

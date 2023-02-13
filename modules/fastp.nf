@@ -8,7 +8,7 @@ process FASTP {
     publishDir "${params.output}/qc", mode: 'copy', pattern: "*fastq*"
 
     container 'quay.io/biocontainers/fastp:0.23.1--h79da9fb_0'
-    cpus = 2
+    cpus = 8
 
     input:
     val name

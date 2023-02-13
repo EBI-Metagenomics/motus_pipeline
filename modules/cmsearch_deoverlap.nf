@@ -7,7 +7,8 @@ process CMSEARCH_DEOVERLAP {
 
     container 'quay.io/microbiome-informatics/cmsearch_deoverlap:1.0.0'
 
-    cpus 1
+    memory '200 MB'
+    cpus 2
 
     input:
         path clan_information

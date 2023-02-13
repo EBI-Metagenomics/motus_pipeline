@@ -11,7 +11,8 @@ process MOTUS {
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
     containerOptions '--bind db_mOTU:/db_mOTU'
 
-    cpus 2
+    memory '1 GB'
+    cpus 4
 
     input:
         path reads

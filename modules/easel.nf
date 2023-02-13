@@ -7,7 +7,8 @@ process EASEL {
 
     container 'quay.io/biocontainers/easel:0.48--hec16e2b_1'
 
-    cpus 1
+    memory '5 GB'
+    cpus 4
 
     input:
         path sequences

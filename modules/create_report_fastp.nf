@@ -6,7 +6,7 @@ process FASTP_REPORT {
     publishDir "results/qc", mode: 'copy'
 
     cpus 1
-    memory '1 GB'
+    memory '300 MB'
 
     input:
     path fastp_qc

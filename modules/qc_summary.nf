@@ -6,7 +6,7 @@ process QC_STATS {
     publishDir "results/qc", mode: 'copy'
 
     cpus 1
-    memory '1 GB'
+    memory '200 MB'
 
     input:
     path sequence

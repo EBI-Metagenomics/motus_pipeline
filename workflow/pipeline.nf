@@ -46,7 +46,7 @@ include { MOTUS } from '../modules/mOTUs'
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-/*
+
 workflow PIPELINE {
 
     QC(
@@ -60,20 +60,24 @@ workflow PIPELINE {
         reference_genome_name)
 
     MOTUS(QC.out.merged_reads, motus_db)
-    // covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    // CMSEARCH_SUBWF(sequences, covariance_model_database, clan_information)
-    //LSU
-    // MAPSEQ_OTU_KRONA(CMSEARCH_SUBWF.out.lsu_fasta, lsu_db, lsu_tax, lsu_otu, lsu_label)
-    //SSU
-    // MAPSEQ_OTU_KRONA(CMSEARCH_SUBWF.out.ssu_fasta, ssu_db, ssu_tax, ssu_otu, ssu_label)
+
+    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+    CMSEARCH_SUBWF(name, QC.out.sequence, covariance_model_database, clan_information)
+
+    if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
+        MAPSEQ_OTU_KRONA_LSU(CMSEARCH_SUBWF.out.cmsearch_lsu_fasta, lsu_db, lsu_tax, lsu_otu, lsu_label)
+    }
+    if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
+        MAPSEQ_OTU_KRONA_SSU(CMSEARCH_SUBWF.out.cmsearch_ssu_fasta, ssu_db, ssu_tax, ssu_otu, ssu_label)
+    }
 }
-*/
 
 
+/*
 workflow PIPELINE {
 
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    CMSEARCH_SUBWF(sequences, covariance_model_database, clan_information)
-    MAPSEQ_OTU_KRONA_LSU(CMSEARCH_SUBWF.out.cmsearch_lsu_fasta.first(), lsu_db, lsu_tax, lsu_otu, lsu_label)
-    MAPSEQ_OTU_KRONA_SSU(CMSEARCH_SUBWF.out.cmsearch_ssu_fasta.first(), ssu_db, ssu_tax, ssu_otu, ssu_label)
+    CMSEARCH_SUBWF(name, sequences, covariance_model_database, clan_information)
+
 }
+*/

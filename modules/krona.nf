@@ -7,7 +7,8 @@ process KRONA {
 
     container 'quay.io/microbiome-informatics/krona:2.7.1'
 
-    cpus 1
+    memory '200 MB'
+    cpus 2
 
     input:
         path otu_counts
