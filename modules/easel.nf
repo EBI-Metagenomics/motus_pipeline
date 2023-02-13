@@ -2,8 +2,8 @@
  * easel
 */
 
-process EASEL {
-    publishDir "${params.output}/cmsearch/", mode: 'copy'
+process EASEL_EXTRACT_BY_COORD {
+    publishDir "${params.outdir}/cmsearch/", mode: 'copy'
 
     container 'quay.io/biocontainers/easel:0.48--hec16e2b_1'
 

@@ -4,6 +4,7 @@
 process QC_STATS {
 
     publishDir "results/qc", mode: 'copy'
+    container 'python:3.7.9-slim-buster'
 
     cpus 1
     memory '200 MB'

@@ -6,7 +6,7 @@
 */
 
 process MOTUS {
-    publishDir "${params.output}/mOTUs/", mode: 'copy'
+    publishDir "${params.outdir}/mOTUs/", mode: 'copy'
 
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
     containerOptions '--bind db_mOTU:/db_mOTU'
@@ -26,7 +26,7 @@ process MOTUS {
     gunzip $reads
     motus profile -c -q \
           -db /db_mOTU \
-          -s ${reads.baseName) \
+          -s ${reads.baseName} \
           -t ${task.cpus} \
           -o ${reads.baseName}.motus
 

@@ -4,6 +4,7 @@
 process FASTP_REPORT {
 
     publishDir "results/qc", mode: 'copy'
+    container 'python:3.7.9-slim-buster'
 
     cpus 1
     memory '300 MB'

@@ -22,12 +22,12 @@ workflow QC {
         reference_genome_name
 
     main:
-        raw_reads_list = reads.collect()
+        reads_list = reads.collect()
 
         FASTP_FILTERING(
             name,
-            raw_reads_list,
-            "",
+            reads_list,
+            channel.value(""),
             length_filter,
             polya_trim_param,
             qualified_quality_phred,

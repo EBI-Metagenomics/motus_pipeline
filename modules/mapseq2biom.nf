@@ -3,9 +3,9 @@
 */
 
 process MAPSEQ2BIOM {
-    publishDir "${params.output}/taxonomy-summary/", mode: 'copy', pattern: "$mapseq.baseName.*"
+    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "$mapseq.baseName.*"
 
-    container 'quay.io/microbiome-informatics/mapseq2biom:1.0.0'
+    container 'perl:5.32-slim'
 
     memory '200 MB'
     cpus 1

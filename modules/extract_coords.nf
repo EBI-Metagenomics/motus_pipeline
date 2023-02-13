@@ -5,6 +5,7 @@
 process EXTRACT_MODELS {
 
     publishDir 'results/cmsearch/', mode:'copy'
+    container 'python:3.7.9-slim-buster'
 
     memory '300 MB'
     cpus 1
