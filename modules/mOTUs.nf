@@ -23,9 +23,10 @@ process MOTUS {
 
     script:
     """
+    gunzip $reads
     motus profile -c -q \
           -db /db_mOTU \
-          -s $reads \
+          -s ${reads.baseName) \
           -t ${task.cpus} \
           -o ${reads.baseName}.motus
 
