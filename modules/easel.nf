@@ -18,7 +18,7 @@ process EASEL_EXTRACT_BY_COORD {
 
     script:
     """
-    bash extract_coords.sh -i ${deoverlapped_coords} -n ${sequences.baseName}
+    awk '{print \$1"-"\$3"/q"\$8"-"\$9" "\$8" "\$9" "\$1}' ${deoverlapped_coords} > ${sequences.baseName}.matched_seqs_with_coords
 
     esl-sfetch --index ${sequences}
 
