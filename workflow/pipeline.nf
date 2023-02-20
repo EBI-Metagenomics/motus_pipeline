@@ -5,6 +5,7 @@
 */
 name = channel.value(params.name)
 raw_reads = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+mode = channel.value(params.mode)
 
 min_length = channel.value(params.min_length)
 polya_trim = channel.value(params.polya_trim)
@@ -52,6 +53,7 @@ workflow PIPELINE {
     QC(
         name,
         raw_reads,
+        mode,
         min_length,
         polya_trim,
         qualified_quality_phred,
@@ -79,6 +81,7 @@ workflow PIPELINE {
     QC(
         name,
         raw_reads,
+        mode,
         min_length,
         polya_trim,
         qualified_quality_phred,

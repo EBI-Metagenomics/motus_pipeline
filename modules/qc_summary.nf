@@ -4,7 +4,7 @@
 process QC_STATS {
 
     publishDir "results/qc", mode: 'copy'
-    container 'python:3.7.9-slim-buster'
+    container 'quay.io/biocontainers/biopython:1.75'
 
     cpus 1
     memory '200 MB'

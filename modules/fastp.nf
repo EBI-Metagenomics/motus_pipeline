@@ -12,7 +12,8 @@ process FASTP {
 
     input:
     val name
-    val reads
+    path reads
+    val mode
     val merged_reads
     val length_filter
     val polya_trim_param
@@ -27,11 +28,11 @@ process FASTP {
 
     script:
 
-    print(reads)
     def input_reads = ""
-    if (reads.size().value == 1) {
+    if (mode == 'single') {
         input_reads = "--in1 ${reads[0]}"
-    } else {
+    }
+    if (mode == 'paired') {
         if (reads[0].contains('_1.fastq')) {
             input_reads = "--in1 ${reads[0]} --in2 ${reads[1]} --detect_adapter_for_pe"
         } else {
@@ -40,9 +41,9 @@ process FASTP {
     }
 
     def output_reads = ""
-    if (reads.size().value == 1) {
+    if (mode == 'single') {
          output_reads = "--out1 ${name}_fastp.fastq.gz" }
-    else {
+    if (mode == 'paired') {
         output_reads = "--out1 ${name}_fastp_1.fastq.gz --out2 ${name}_fastp_2.fastq.gz"
     }
 

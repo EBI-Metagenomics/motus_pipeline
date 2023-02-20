@@ -10,14 +10,27 @@ process FASTP_REPORT {
     memory '300 MB'
 
     input:
-    path fastp_qc
-    path fastp_overlap
+    path fastp_jsons
+    val mode
 
     output:
     path "qc_summary", emit: qc_report
 
     script:
+    def inputs = ""
+    if (mode == "paired") {
+        if (fastp_jsons[0].contains('.qc.')) {
+            inputs = "--qc-json ${fastp_jsons[0]} --overlap-json ${fastp_jsons[1]} "
+        }
+        else {
+            inputs = "--qc-json ${fastp_jsons[1]} --overlap-json ${fastp_jsons[0]} "
+        }
+    }
+    else {
+        inputs = "--qc-json ${fastp_jsons[0]} "
+    }
+
     """
-    fastp_parse.py --qc-json ${fastp_qc} --overlap-json ${fastp_overlap} -o "qc_summary"
+    fastp_parse.py ${inputs} -o "qc_summary"
     """
 }
