@@ -18,7 +18,12 @@ process DECONTAMINATION {
     path "*_clean*.fastq.gz", emit: decontaminated_reads
 
     script:
-    def input_reads = reads.size() == 1 ? "-f ${reads[0]}" : "-f ${reads[0]} -r ${reads[1]}"
+    def input_reads = ""
+    if (reads.size().value == 1) {
+        input_reads = "-f ${reads[0]}"
+    } else {
+        input_reads = "-f ${reads[0]} -r ${reads[1]}"
+    }
 
     """
     map_host.sh -t ${task.cpus} \
