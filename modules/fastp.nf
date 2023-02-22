@@ -8,7 +8,7 @@ process FASTP {
     publishDir "${params.outdir}/qc", mode: 'copy', pattern: "*fastq*"
 
     container 'quay.io/biocontainers/fastp:0.23.1--h79da9fb_0'
-    cpus = 8
+    cpus = 4
 
     input:
     val name
@@ -33,7 +33,7 @@ process FASTP {
         input_reads = "--in1 ${reads[0]}"
     }
     if (mode == 'paired') {
-        if ($reads[0].contains('_1.fastq')) {
+        if (reads[0].contains('_1.fastq')) {
             input_reads = "--in1 ${reads[0]} --in2 ${reads[1]} --detect_adapter_for_pe"
         } else {
             input_reads = "--in1 ${reads[1]} --in2 ${reads[0]} --detect_adapter_for_pe"
