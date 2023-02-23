@@ -9,14 +9,41 @@ nextflow_process {
         when {
             params {
                 name = "oral_human_example_1_splitaa"
-                reads = "/Users/kates/Desktop/quality/clean_other/"
-                mode = "paired"
+                reads = "${baseDir}/test_data/fastq/"
             }
             process {
                 """
                 input[0] = params.name
-                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
-                input[2] = params.mode
+                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true).collect()
+                input[2] = "paired"
+                input[3] = ""
+                input[4] = 10
+                input[5] = 10
+                input[6] = 15
+                input[7] = 10
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+
+        }
+    }
+
+    test("Fastp QC on SE") {
+
+        when {
+            params {
+                name = "single"
+                reads = "${baseDir}/test_data/fastq/"
+            }
+            process {
+                """
+                input[0] = params.name
+                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true).collect()
+                input[2] = "single"
                 input[3] = ""
                 input[4] = 10
                 input[5] = 10
@@ -30,6 +57,31 @@ nextflow_process {
             assert process.success
             assert snapshot(process.out).match()
         }
+    }
+    test("Fastp merge") {
 
+        when {
+            params {
+                name = "oral_human_example_1_splitaa"
+                reads = "${baseDir}/test_data/fastq/"
+            }
+            process {
+                """
+                input[0] = params.name
+                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true).collect()
+                input[2] = "paired"
+                input[3] = "merged"
+                input[4] = 10
+                input[5] = 10
+                input[6] = 15
+                input[7] = 10
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
     }
 }

@@ -47,7 +47,7 @@ include { MOTUS } from '../modules/mOTUs'
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-/*
+
 workflow PIPELINE {
 
     QC(
@@ -73,21 +73,5 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_SSU(CMSEARCH_SUBWF.out.cmsearch_ssu_fasta, ssu_db, ssu_tax, ssu_otu, ssu_label)
     }
 }
-*/
 
-
-workflow PIPELINE {
-
-    QC(
-        name,
-        raw_reads,
-        mode,
-        min_length,
-        polya_trim,
-        qualified_quality_phred,
-        unqualified_percent_limit,
-        reference_genome,
-        reference_genome_name)
-
-}
 

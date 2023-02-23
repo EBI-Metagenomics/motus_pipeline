@@ -8,10 +8,10 @@ nextflow_process {
 
         when {
             params {
-                name = "oral_human_example_1_splitaa"
-                reads = "/Users/kates/Desktop/quality/clean_other/"
+                name = "mgtest"
+                reads = "${baseDir}/test_data/bwa/"
                 mode = "paired"
-                ref_path = "/Users/kates/Desktop/EBI/pipelines/CWL/CWL-assembly/tests/in/bwa_index/"
+                ref_path = "${baseDir}/test_data/bwa/ref"
                 ref_name = "GRCh38_chr10.fasta"
             }
             process {
