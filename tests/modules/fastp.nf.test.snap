@@ -1,0 +1,24 @@
+{
+    "Fastp QC on SE": {
+        "content": [
+            [
+                "single_ended_example_fastp.qc.json:md5,64d7434a2d3adfa1c3af5d5c8b2e7262"
+            ],
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-02-23T18:37:45+0000"
+    },
+    "Fastp QC on PE": {
+        "content": [
+            [
+                "paired_example_fastp.qc.json:md5,eefcb2b2a4c409919bec59a65f235263"
+            ],
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-02-23T18:37:45+0000"
+    }
+}

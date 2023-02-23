@@ -4,7 +4,18 @@
     ~~~~~~~~~~~~~~~~~~
 */
 name = channel.value(params.name)
-raw_reads = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+
+paired_reads = channel.empty()
+single_end_reads = file("EMPTY")
+
+// TODO: I haven't tested this /
+if ( params.mode == "paired" ) {
+    paired_reads = channel.fromFilePairs('/my/data/SRR*_{1,2}.fastq', checkIfExists: true).map { it[1] }
+} else if ( params.mode == "single" ) {
+    single_end_reads = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+}
+
+
 mode = channel.value(params.mode)
 
 min_length = channel.value(params.min_length)
@@ -37,11 +48,13 @@ ssu_label = channel.value(params.ssu_label)
      Steps
     ~~~~~~~~~~~~~~~~~~
 */
-include { QC } from '../subworkflows/qc'
-include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq-otu-krona'
-include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq-otu-krona'
-include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch-subwf'
-include { MOTUS } from '../modules/mOTUs'
+include { QC } from '../subworkflows/qc_swf'
+include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
+include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
+include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
+
+include { MOTUS } from '../modules/motus'
+
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
@@ -87,7 +100,7 @@ workflow PIPELINE {
         qualified_quality_phred,
         unqualified_percent_limit,
         reference_genome,
-        reference_genome_name)
-
+        reference_genome_name
+    )
 }
 

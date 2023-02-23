@@ -8,27 +8,62 @@ nextflow_process {
 
         when {
             params {
-                name = "oral_human_example_1_splitaa"
-                reads = "/Users/kates/Desktop/quality/clean_other/"
+                name = "paired_example"
+                reads = "${baseDir}/tests/modules/fixtures/fastp/paired_end/example_paired_{1,2}.fastq.gz"
                 mode = "paired"
             }
             process {
                 """
                 input[0] = params.name
-                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+                input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
                 input[3] = ""
-                input[4] = 10
-                input[5] = 10
-                input[6] = 15
-                input[7] = 10
+                input[4] = channel.value(10)
+                input[5] = channel.value(10)
+                input[6] = channel.value(15)
+                input[7] = channel.value(10)
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            assert snapshot(
+                process.out.json,
+                process.out.overlapped_reads
+            ).match()
+        }
+
+    }
+
+    test("Fastp QC on SE") {
+
+        when {
+            params {
+                name = "single_ended_example"
+                reads = "${baseDir}/tests/modules/fixtures/fastp/single_end/single.fastq.gz"
+                mode = "single"
+            }
+            process {
+                """
+                input[0] = params.name
+                input[1] = channel.fromPath("${params.reads}", checkIfExists: true)
+                input[2] = params.mode
+                input[3] = ""
+                input[4] = channel.value(10)
+                input[5] = channel.value(10)
+                input[6] = channel.value(15)
+                input[7] = channel.value(10)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(
+                process.out.json,
+                process.out.overlapped_reads
+            ).match()
         }
 
     }
