@@ -1,0 +1,38 @@
+nextflow_process {
+
+    name "Test SubWorkflow QC"
+    script "subworkflows/qc.nf"
+    process "QC"
+
+    test("QC PE") {
+
+        when {
+            params {
+                name = "oral_human_example_1_splitaa"
+                reads = "/Users/kates/Desktop/quality/clean_other/"
+                mode = "paired"
+                ref_path = "/Users/kates/Desktop/EBI/pipelines/CWL/CWL-assembly/tests/in/bwa_index/"
+                ref_name = "GRCh38_chr10.fasta"
+            }
+            process {
+                """
+                input[0] = params.name
+                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+                input[2] = params.mode
+                input[3] = 10
+                input[4] = 10
+                input[5] = 15
+                input[6] = 10
+                input[7] = channel.fromPath(params.ref_path, checkIfExists: true)
+                input[8] = params.ref_name
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
