@@ -5,16 +5,13 @@
 */
 name = channel.value(params.name)
 
-paired_reads = channel.empty()
-single_end_reads = file("EMPTY")
+reads = channel.fromPath(params.reads)
 
-// TODO: I haven't tested this /
 if ( params.mode == "paired" ) {
-    paired_reads = channel.fromFilePairs('/my/data/SRR*_{1,2}.fastq', checkIfExists: true).map { it[1] }
+    chosen_reads = channel.fromFilePairs("${params.reads}/${params.name}*_{1,2}.fastq*", checkIfExists: true).map { it[1] }
 } else if ( params.mode == "single" ) {
-    single_end_reads = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+    chosen_reads = channel.fromPath("${params.reads}/${params.name}*.fastq*", checkIfExists: true)
 }
-
 
 mode = channel.value(params.mode)
 
@@ -65,7 +62,7 @@ workflow PIPELINE {
 
     QC(
         name,
-        raw_reads,
+        chosen_reads,
         mode,
         min_length,
         polya_trim,
@@ -93,7 +90,7 @@ workflow PIPELINE {
 
     QC(
         name,
-        raw_reads,
+        chosen_reads,
         mode,
         min_length,
         polya_trim,

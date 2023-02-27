@@ -19,7 +19,7 @@ process FASTP_REPORT {
     script:
     def inputs = ""
     if (mode == "paired") {
-        if ($fastp_jsons[0].contains('.qc.')) {
+        if (fastp_jsons[0].name.contains('.qc.')) {
             inputs = "--qc-json ${fastp_jsons[0]} --overlap-json ${fastp_jsons[1]} "
         }
         else {

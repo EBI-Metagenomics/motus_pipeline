@@ -22,7 +22,7 @@ process FASTP {
     val unqualified_percent_limit
 
     output:
-    path "*_fastp*.fastq.gz", optional: true, emit: output_reads
+    path "${name}_fastp*.fastq.gz", optional: true, emit: output_reads
     path "*_fastp.*.json", emit: json
     path "*_fastp.*.html", emit: html
     path "*_merged*", optional: true, emit: overlapped_reads
@@ -31,6 +31,7 @@ process FASTP {
     /* Handle the input reads */
     def input_reads = "";
     def output_reads = "";
+    def report_name = "qc";
 
     if ( mode == "single" ) {
         input_reads = "--in1 ${reads}";
@@ -48,18 +49,17 @@ process FASTP {
         args += " -m --merged_out ${name}_${merged_reads}" + 
         " --unpaired1 ${name}.unpaired_1.fastq.gz " + 
         " --unpaired2 ${name}.unpaired_2.fastq.gz"
+        report_name = "overlap"
     }
     args += length_filter ? " -l ${length_filter}" : "";
     args += polya_trim_param ? " -x ${polya_trim_param}" : "";
     args += qualified_quality_phred ? " -q ${qualified_quality_phred}" : "";
     args += unqualified_percent_limit ? " -u ${unqualified_percent_limit}" : "";
 
-    // TODO this is giving me problems, it says that merged_reads is not defined (?)
-    def report_name = "qc" //merged_reads != false ? "overlap" : "qc";
-
     """
     fastp -w ${task.cpus} \
     ${input_reads} \
+    ${output_reads} \
     --json ${name}_fastp.${report_name}.json \
     --html ${name}_fastp.${report_name}.html \
     ${args}
