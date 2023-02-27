@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test SubWorkflow QC"
-    script "subworkflows/qc.nf"
+    script "subworkflows/qc_swf.nf"
     process "QC"
 
     test("QC PE") {
@@ -9,20 +9,20 @@ nextflow_process {
         when {
             params {
                 name = "mgtest"
-                reads = "${baseDir}/test_data/bwa/"
+                reads = "${baseDir}/tests/modules/fixtures/bwa/"
                 mode = "paired"
-                ref_path = "${baseDir}/test_data/bwa/ref"
+                ref_path = "${baseDir}/tests/modules/fixtures/bwa/ref/"
                 ref_name = "GRCh38_chr10.fasta"
             }
             process {
                 """
                 input[0] = params.name
-                input[1] = channel.fromPath("${params.reads}/${params.name}*.fastq.gz", checkIfExists: true)
+                input[1] = channel.fromFilePairs("${params.reads}/${params.name}_{1,2}.fastq.gz", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
-                input[3] = 10
-                input[4] = 10
-                input[5] = 15
-                input[6] = 10
+                input[3] = channel.value(10)
+                input[4] = channel.value(10)
+                input[5] = channel.value(15)
+                input[6] = channel.value(10)
                 input[7] = channel.fromPath(params.ref_path, checkIfExists: true)
                 input[8] = params.ref_name
                 """
