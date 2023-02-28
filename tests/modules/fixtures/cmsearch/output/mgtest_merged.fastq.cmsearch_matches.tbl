@@ -1,0 +1,13 @@
+#target name         accession query name           accession mdl mdl from   mdl to seq from   seq to strand trunc pass   gc  bias  score   E-value inc description of target
+#------------------- --------- -------------------- --------- --- -------- -------- -------- -------- ------ ----- ---- ---- ----- ------ --------- --- ---------------------
+ERR7438498.267       -         RNaseP_bact_b        RF00011   hmm       11      261        3      252      +     -    6 0.47   0.0  155.6   2.5e-43 !   ST-E00523:73:HF5WYALXX:1:1101:10054:12507/1 merged_150_114
+#
+# Program:         cmsearch
+# Version:         1.1.4 (Dec 2020)
+# Pipeline mode:   SEARCH
+# Query file:      models.cm
+# Target file:     mgtest_merged.fastq.fasta
+# Option settings: cmsearch -Z 1000 -o /dev/null --tblout mgtest_merged.fastq.cmsearch_matches.tbl --noali --cut_ga --hmmonly --cpu 2 models.cm mgtest_merged.fastq.fasta 
+# Current dir:     /Users/kates/Desktop/EBI/pipelines/motus_pipeline/.nf-test/tests/41df1270fa1b13e76573bc62a73d28c8/work/0c/a3565ef3b025457caf4c99bb673327
+# Date:            Tue Feb 28 14:06:42 2023
+# [ok]

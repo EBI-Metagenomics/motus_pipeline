@@ -1,0 +1,28 @@
+nextflow_process {
+
+    name "Test module cmsearch"
+    script "modules/cmsearch.nf"
+    process "CMSEARCH"
+
+    test("cmsearch") {
+
+        when {
+            params {
+                sequence = "${baseDir}/tests/modules/fixtures/bwa/output/mgtest_merged.fastq.fasta"
+                db = "${baseDir}/tests/modules/fixtures/cmsearch/"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.sequence}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.db}/*.cm", checkIfExists: true).collectFile(name: "models.cm", newLine: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}

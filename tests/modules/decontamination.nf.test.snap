@@ -1,0 +1,38 @@
+{
+    "Decontamination SE": {
+        "content": [
+            {
+                "decontaminated_reads": [
+                    "mgtest_merged_clean.fastq.gz:md5,0d1779a98411057a7df60549a8ba94a0"
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T11:31:20+0000"
+    },
+    "Decontamination PE": {
+        "content": [
+            {
+                "decontaminated_reads": [
+                    [
+                        "mgtest_clean_1.fastq.gz:md5,11f4cb5684a3ac52167f9392e99d81b6",
+                        "mgtest_clean_2.fastq.gz:md5,69c29131e4f6d81f719a30109aa7cbc4"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T11:31:20+0000"
+    },
+    "Decontamination PE reverse input order": {
+        "content": [
+            {
+                "decontaminated_reads": [
+                    [
+                        "mgtest_clean_1.fastq.gz:md5,a979047936858df8934584646cd819d9",
+                        "mgtest_clean_2.fastq.gz:md5,1746997336f7f145181b547549934bbe"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T11:31:20+0000"
+    }
+}

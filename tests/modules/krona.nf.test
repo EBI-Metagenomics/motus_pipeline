@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test module krona"
+    script "modules/krona.nf"
+    process "KRONA"
+
+    test("krona") {
+
+        when {
+            params {
+                otu = "${baseDir}/tests/modules/fixtures/mapseq2biom/output/test-mapseq.txt"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.otu}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}

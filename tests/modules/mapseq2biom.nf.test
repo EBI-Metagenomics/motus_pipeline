@@ -1,0 +1,29 @@
+nextflow_process {
+
+    name "Test module mapseq2biom"
+    script "modules/mapseq2biom.nf"
+    process "MAPSEQ2BIOM"
+
+    test("mapseq2biom") {
+
+        when {
+            params {
+                mapseq = "${baseDir}/tests/modules/fixtures/mapseq2biom/test-mapseq"
+                otu_ref = "${baseDir}/tests/modules/fixtures/mapseq2biom/test-otu"
+                otu_label = "test"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.mapseq}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.otu_ref}", checkIfExists: true)
+                input[2] = channel.value("${params.otu_label}")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

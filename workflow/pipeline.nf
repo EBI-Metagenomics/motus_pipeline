@@ -49,7 +49,6 @@ include { QC } from '../subworkflows/qc_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
-
 include { MOTUS } from '../modules/motus'
 
 /*

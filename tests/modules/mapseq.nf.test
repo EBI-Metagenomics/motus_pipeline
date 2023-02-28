@@ -1,0 +1,29 @@
+nextflow_process {
+
+    name "Test module mapseq"
+    script "modules/mapseq.nf"
+    process "MAPSEQ"
+
+    test("mapseq") {
+
+        when {
+            params {
+                seq = "${baseDir}/tests/modules/fixtures/mapseq/test.SSU.fasta"
+                db = "${baseDir}/tests/modules/fixtures/mapseq/silva-SSU/silva-SSU.fasta"
+                tax = "${baseDir}/tests/modules/fixtures/mapseq/silva-filt.txt"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.seq}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.db}", checkIfExists: true)
+                input[2] = channel.fromPath("${params.tax}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

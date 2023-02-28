@@ -1,0 +1,28 @@
+nextflow_process {
+
+    name "Test module extract models from fasta"
+    script "modules/extract_coords.nf"
+    process "EXTRACT_MODELS"
+
+    test("extract models") {
+
+        when {
+            params {
+                name = "SRR5643986"
+                seqs = "${baseDir}/tests/modules/fixtures/extract_coords/test.fasta"
+            }
+            process {
+                """
+                input[0] = channel.value("${params.name}")
+                input[1] = channel.fromPath("${params.seqs}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}

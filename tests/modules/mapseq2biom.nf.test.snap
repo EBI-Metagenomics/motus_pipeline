@@ -1,0 +1,18 @@
+{
+    "mapseq2biom": {
+        "content": [
+            {
+                "mapseq2biom_txt": [
+                    "test-mapseq.txt:md5,fec26a63bbdeaea136fd751640cc305f"
+                ],
+                "mapseq2biom_tsv": [
+                    "test-mapseq.tsv:md5,41c4f5b5857339f066cd790dacbe4377"
+                ],
+                "mapseq2biom_notaxid": [
+                    "test-mapseq.notaxid.tsv:md5,79924bc9316de373b87f073a8fdb291d"
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T17:20:32+0000"
+    }
+}

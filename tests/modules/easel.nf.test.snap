@@ -1,0 +1,12 @@
+{
+    "easel": {
+        "content": [
+            {
+                "models_fasta": [
+                    "mgtest_merged.fastq_mgtest_merged.fastq.cmsearch_matches.tbl.fasta:md5,9b18ab968e855f663e2a7be8ed6097d9"
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T15:36:28+0000"
+    }
+}

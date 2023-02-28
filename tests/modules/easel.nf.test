@@ -1,0 +1,28 @@
+nextflow_process {
+
+    name "Test module easel"
+    script "modules/easel.nf"
+    process "EASEL_EXTRACT_BY_COORD"
+
+    test("easel") {
+
+        when {
+            params {
+                matches = "${baseDir}/tests/modules/fixtures/cmsearch/output/mgtest_merged.fastq.cmsearch_matches.tbl.deoverlapped"
+                seqs = "${baseDir}/tests/modules/fixtures/bwa/output/mgtest_merged.fastq.fasta"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.seqs}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.matches}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
