@@ -8,8 +8,8 @@ process CMSEARCH {
 
     publishDir 'results/cmsearch/', mode:'copy'
 
-    memory '24 GB'
-    cpus 4
+    //memory '24 GB'
+    //cpus 4
 
     input:
         path sequences

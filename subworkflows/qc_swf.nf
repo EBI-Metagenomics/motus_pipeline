@@ -71,5 +71,7 @@ workflow QC {
     emit:
         merged_reads = overlapped_reads
         sequence = FASTQ_TO_FASTA.out.sequence
+        fastp_report = FASTP_REPORT.out.qc_report
+        qc_stats = QC_STATS.out.qc_statistics
 }
 

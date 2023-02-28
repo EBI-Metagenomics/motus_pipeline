@@ -13,7 +13,7 @@ process KRONA {
     input:
         path otu_counts
     output:
-        file("*krona.html")
+        path "*krona.html", emit: krona_html
 
     script:
     """

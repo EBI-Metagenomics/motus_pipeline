@@ -39,5 +39,6 @@ workflow CMSEARCH_SUBWF {
     emit:
         cmsearch_lsu_fasta = EXTRACT_MODELS.out.lsu_fasta
         cmsearch_ssu_fasta = EXTRACT_MODELS.out.ssu_fasta
+        sequence_categorisation = EXTRACT_MODELS.out.sequence_categorisation
 }
 

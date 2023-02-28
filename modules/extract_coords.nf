@@ -15,7 +15,7 @@ process EXTRACT_MODELS {
         path sequences
 
     output:
-        path "sequence-categorisation/"
+        path "sequence-categorisation/", emit: sequence_categorisation
         path "sequence-categorisation/${name}_SSU.fasta", optional: true, emit: ssu_fasta
         path "sequence-categorisation/${name}_LSU.fasta", optional: true, emit: lsu_fasta
 
