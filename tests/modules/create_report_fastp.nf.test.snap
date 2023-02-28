@@ -1,0 +1,22 @@
+{
+    "Report QC and overlap (PE)": {
+        "content": [
+            {
+                "qc_report": [
+                    "qc_summary:md5,74cc08bcc04532c5886e85561bbfe7ef"
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T11:02:35+0000"
+    },
+    "Report QC (SE)": {
+        "content": [
+            {
+                "qc_report": [
+                    "qc_summary:md5,dcbd7acdfe6144da0fcc96ec547414c1"
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T11:02:35+0000"
+    }
+}

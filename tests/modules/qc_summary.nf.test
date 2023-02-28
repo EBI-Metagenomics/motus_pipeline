@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test module qc_statistics"
+    script "modules/qc_summary.nf"
+    process "QC_STATS"
+
+    test("qc-statistics") {
+
+        when {
+            params {
+                sequence = "${baseDir}/tests/modules/fixtures/bwa/output/mgtest_merged.fastq.fasta"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.sequence}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}

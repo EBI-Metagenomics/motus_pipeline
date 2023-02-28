@@ -34,7 +34,7 @@ workflow CMSEARCH_SUBWF {
 
         EASEL_EXTRACT_BY_COORD(sequences, cmsearch_result_deoverlapped)
 
-        EXTRACT_MODELS(name, EASEL.out.models_fasta)
+        EXTRACT_MODELS(name, EASEL_EXTRACT_BY_COORD.out.models_fasta)
 
     emit:
         cmsearch_lsu_fasta = EXTRACT_MODELS.out.lsu_fasta

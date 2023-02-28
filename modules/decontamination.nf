@@ -4,9 +4,9 @@
 process DECONTAMINATION {
 
     container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
-    publishDir "results/qc", mode: 'copy'
+    publishDir "results/qc/decontamination", mode: 'copy'
 
-    cpus 4
+    cpus 2
     memory '2 GB'
 
     input:
@@ -20,11 +20,15 @@ process DECONTAMINATION {
 
     script:
     def input_reads = ""
-    if (mode == 'single') {
-        input_reads = "-f ${reads[0]}"
+    if (mode == "single") {
+        input_reads = "-f ${reads}"
     }
-    if (mode == 'paired') {
-        input_reads = "-f ${reads[0]} -r ${reads[1]}"
+    if (mode == "paired") {
+        if (reads[0].name.contains("_1")) {
+            input_reads = "-f ${reads[0]} -r ${reads[1]}"
+        } else {
+            input_reads = "-f ${reads[1]} -r ${reads[0]}"
+        }
     }
 
     """

@@ -1,0 +1,21 @@
+{
+    "qc-statistics": {
+        "content": [
+            {
+                "qc_statistics": [
+                    [
+                        "GC-distribution.out.full:md5,1a81b87eddfe6793fda85f4659d63da4",
+                        "GC-distribution.out.full_bin:md5,075ecd30b38ef4c4ec41f6daf7b3aa97",
+                        "GC-distribution.out.full_pcbin:md5,8d59084106b60d884207c409c579626e",
+                        "nucleotide-distribution.out.full:md5,9d113270d2885dc991d477000213b19d",
+                        "seq-length.out.full:md5,3e84915ac7f45218d00ceacfdca1a6df",
+                        "seq-length.out.full_bin:md5,de4e27736592c58adb580907a3002d2e",
+                        "seq-length.out.full_pcbin:md5,08cf865b15b7de8bf2d8f4dd78a2911b",
+                        "summary.out:md5,cacc3ef36cb28ceaea0b7e00d8824bbd"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-02-28T12:32:38+0000"
+    }
+}

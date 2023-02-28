@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test module seqtk"
+    script "modules/seqtk.nf"
+    process "SEQTK"
+
+    test("seqtk fastq to fasta") {
+
+        when {
+            params {
+                name = "mgtest_merged"
+                reads = "${baseDir}/tests/modules/fixtures/bwa/"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.reads}/${params.name}.fastq.gz", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
