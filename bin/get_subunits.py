@@ -38,11 +38,6 @@ def set_model_names(prefix, name):
     return pattern_dict
 
 
-def add_sequence(filename, record):
-    with open(filename, 'wt') as file_out:
-        SeqIO.write(record, file_out, "fasta")
-
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Extract lsu, ssu and 5s and other models")
@@ -51,12 +46,17 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--name", dest="name", help="Accession", required=True)
 
     args = parser.parse_args()
-    prefix = args.prefix if args.prefix else "_"
+    prefix = args.prefix if args.prefix else ""
 
     print('Start fasta mode')
     pattern_dict = set_model_names(prefix, args.name)
-
+    open_files = {}
     for record in SeqIO.parse(args.input, "fasta"):
         for pattern in pattern_dict:
             if pattern in record.id:
-                add_sequence(pattern_dict[pattern], record)
+                if pattern not in open_files:
+                    file_out = open(pattern_dict[pattern], 'w')
+                    open_files[pattern] = file_out
+                SeqIO.write(record, open_files[pattern], "fasta")
+    for item in open_files:
+        open_files[item].close()

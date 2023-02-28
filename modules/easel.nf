@@ -7,8 +7,8 @@ process EASEL_EXTRACT_BY_COORD {
 
     container 'quay.io/biocontainers/easel:0.48--hec16e2b_1'
 
-    memory '5 GB'
-    cpus 4
+    //memory '5 GB'
+    //cpus 4
 
     input:
         path sequences

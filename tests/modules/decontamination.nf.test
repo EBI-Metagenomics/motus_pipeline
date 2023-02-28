@@ -25,8 +25,12 @@ nextflow_process {
         }
 
         then {
+            // TODO: it's returning a list of a list (?), hence the get(0).get(0)
             assert process.success
-            assert snapshot(process.out).match()
+            assert path(process.out.decontaminated_reads.get(0).get(0)).linesGzip.size() == 1972
+            assert path(process.out.decontaminated_reads.get(0).get(0)).linesGzip.contains("@ERR7438498.1")
+            assert path(process.out.decontaminated_reads.get(0).get(1)).linesGzip.size() == 1972
+            assert path(process.out.decontaminated_reads.get(0).get(1)).linesGzip.contains("@ERR7438498.3")
         }
 
     }

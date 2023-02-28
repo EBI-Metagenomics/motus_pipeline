@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test SubWorkflow mapseq-otu-krona"
+    script "subworkflows/mapseq_otu_krona_swf.nf"
+    process "MAPSEQ_OTU_KRONA"
+
+    test("mapseq-otu-krona") {
+
+        when {
+            params {
+                seq = "${baseDir}/tests/subworkflows/fixtures/mapseq/test.fasta"
+                db = "${baseDir}/tests/modules/fixtures/mapseq/silva-SSU/silva-SSU.fasta"
+                tax = "${baseDir}/tests/modules/fixtures/mapseq/silva-filt.txt"
+                otu = "${baseDir}/tests/subworkflows/fixtures/mapseq/otu"
+            }
+            process {
+                """
+                input[0] = channel.fromPath("${params.seq}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.db}", checkIfExists: true)
+                input[2] = channel.fromPath("${params.tax}", checkIfExists: true)
+                input[3] = channel.fromPath("${params.otu}", checkIfExists: true)
+                input[4] = channel.value("test")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}

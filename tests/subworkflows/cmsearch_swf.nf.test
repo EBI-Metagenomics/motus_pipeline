@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test SubWorkflow cmsearch-easel"
+    script "subworkflows/cmsearch_swf.nf"
+    process "CMSEARCH_SUBWF"
+
+    test("cmsearch-deoverlap-extract") {
+
+        when {
+            params {
+                seq = "${baseDir}/tests/modules/fixtures/bwa/output/mgtest_merged.fastq.fasta"
+                cov = "${baseDir}/tests/modules/fixtures/cmsearch/"
+                clan = "${baseDir}/tests/modules/fixtures/cmsearch/ribo.claninfo"
+            }
+            process {
+                """
+                input[0] = channel.value("mgtest")
+                input[1] = channel.fromPath("${params.seq}", checkIfExists: true)
+                input[2] = channel.fromPath("${params.cov}/*.cm", checkIfExists: true)
+                input[3] = channel.fromPath("${params.clan}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
