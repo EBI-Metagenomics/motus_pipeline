@@ -3,7 +3,7 @@
 */
 process FASTP_REPORT {
 
-    publishDir "results/qc", mode: 'copy'
+    publishDir "${params.outdir}/qc", mode: 'copy'
     container 'python:3.8'
 
     cpus 1

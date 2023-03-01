@@ -4,16 +4,15 @@
 process DECONTAMINATION {
 
     container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
-    publishDir "results/qc/decontamination", mode: 'copy'
+    publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
 
     cpus 2
-    memory '2 GB'
+    memory '30 GB'
 
     input:
     path reads
     val mode
-    path reference_genome
-    val ref_gen_name
+    val name
 
     output:
     path "*_clean*.fastq.gz", emit: decontaminated_reads
@@ -21,20 +20,65 @@ process DECONTAMINATION {
     script:
     def input_reads = ""
     if (mode == "single") {
-        input_reads = "-f ${reads}"
+        input_reads = "${reads}"
+        """
+        mkdir output_decontamination
+
+        echo "mapping files to host genome SE"
+        bwa-mem2 mem -M -t ${task.cpus} \
+        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
+        ${input_reads} > out.sam
+
+        echo "convert sam to bam"
+        samtools view -@ ${task.cpus} -f 4 -F 256 -uS -o output_decontamination/${name}_unmapped.bam out.sam
+
+        echo "samtools sort"
+        samtools sort -@ ${task.cpus} -n output_decontamination/${name}_unmapped.bam \
+        -o output_decontamination/${name}_unmapped_sorted.bam
+
+        echo "samtools"
+        samtools output_decontamination/${name}_unmapped_sorted.bam > output_decontamination/${name}_clean.fastq
+        
+        echo "compressing output file"
+        
+        gzip -c output_decontamination/${name}_clean.fastq > ${name}_clean.fastq.gz
+        """
     }
+    
     if (mode == "paired") {
         if (reads[0].name.contains("_1")) {
-            input_reads = "-f ${reads[0]} -r ${reads[1]}"
+            input_reads = "${reads[0]} ${reads[1]}"
         } else {
-            input_reads = "-f ${reads[1]} -r ${reads[0]}"
+            input_reads = "${reads[1]} ${reads[0]}"
         }
-    }
+        """
+        mkdir output_decontamination
+        echo "build index PE"
+        cp ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} output_decontamination/
+        bwa-mem2 index output_decontamination/${params.decontamination_reference_index}
 
-    """
-    map_host.sh -t ${task.cpus} \
-    ${input_reads} \
-    -c ${reference_genome}/${ref_gen_name} \
-    -o output_decontamination
-    """
+        echo "mapping files to host genome PE"
+        bwa-mem2 mem -M \
+        -t ${task.cpus} \
+        output_decontamination/${params.decontamination_reference_index} \
+        ${input_reads} > out.sam
+
+        echo "convert sam to bam"
+        samtools view -@ ${task.cpus} -f 12 -F 256 -uS -o output_decontamination/${name}_both_unmapped.bam out.sam
+        
+        echo "samtools sort"
+        samtools sort -@ ${task.cpus} -n output_decontamination/${name}_both_unmapped.bam -o output_decontamination/${name}_both_unmapped_sorted.bam
+        
+        echo "samtools fastq"
+        samtools fastq -1 output_decontamination/${name}_clean_1.fastq \
+        -2 output_decontamination/${name}_clean_2.fastq \
+        -0 /dev/null \
+        -s /dev/null \
+        -n output_decontamination/${name}_both_unmapped_sorted.bam
+
+        echo "compressing output files"
+        gzip -c output_decontamination/${name}_clean_1.fastq > ${name}_clean_1.fastq.gz
+        gzip -c output_decontamination/${name}_clean_2.fastq > ${name}_clean_2.fastq.gz
+        """
+    }
 }
