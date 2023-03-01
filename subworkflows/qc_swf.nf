@@ -42,7 +42,8 @@ workflow QC {
             FASTP_FILTERING.out.output_reads,
             mode,
             reference_genome,
-            reference_genome_name
+            reference_genome_name,
+            name
         )
 
         if ( params.mode == "paired" ) {
