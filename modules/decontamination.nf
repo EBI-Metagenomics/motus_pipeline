@@ -7,7 +7,7 @@ process DECONTAMINATION {
     publishDir "results/qc/decontamination", mode: 'copy'
 
     cpus 2
-    memory '2 GB'
+    memory '10 GB'
 
     input:
     path reads
@@ -39,9 +39,9 @@ process DECONTAMINATION {
         bwa-mem2 mem -M \
                      -t ${task.cpus} \
                      ${reference_genome}/${ref_gen_name} \
-                     ${input_reads} | samtools view -@ ${task.cpus} \
-                                                    -f 12 -F 256 \
-                                                    -uS - -o output_decontamination/${name}_both_unmapped.bam
+                     ${input_reads} > out.sam
+        echo "convert sam to bam"
+        samtools view -@ ${task.cpus} -f 12 -F 256 -uS -o output_decontamination/${name}_both_unmapped.bam out.sam
         echo "samtools sort"
         samtools sort -@ ${task.cpus} -n output_decontamination/${name}_both_unmapped.bam -o output_decontamination/${name}_both_unmapped_sorted.bam
         echo "samtools fastq"
@@ -57,9 +57,9 @@ process DECONTAMINATION {
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
                         ${reference_genome}/${ref_gen_name} \
-                        ${input_reads} | samtools view -@ ${task.cpus} \
-                                                       -f 4 -F 256 \
-                                                       -uS - -o output_decontamination/${name}_unmapped.bam
+                        ${input_reads} > out.sam
+        echo "convert sam to bam"
+        samtools view -@ ${task.cpus} -f 4 -F 256 -uS -o output_decontamination/${name}_unmapped.bam out.sam
         echo "samtools sort"
         samtools sort -@ ${task.cpus} -n output_decontamination/${name}_unmapped.bam -o output_decontamination/${name}_unmapped_sorted.bam
         echo "samtools"
