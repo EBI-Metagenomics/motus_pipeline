@@ -21,7 +21,6 @@ qualified_quality_phred = channel.value(params.qualified_quality_phred)
 unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 
 reference_genome = channel.fromPath(params.reference_genome, checkIfExists: true)
-reference_genome_name = channel.value(params.reference_genome_name)
 
 motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 
@@ -58,6 +57,7 @@ include { MOTUS } from '../modules/motus'
 */
 
 workflow PIPELINE {
+
     QC(
         name,
         chosen_reads,
@@ -67,14 +67,36 @@ workflow PIPELINE {
         qualified_quality_phred,
         unqualified_percent_limit,
         reference_genome,
-        reference_genome_name)
+    )
+    
     MOTUS(QC.out.merged_reads, motus_db)
+    
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    CMSEARCH_SUBWF(name, QC.out.sequence, covariance_model_database, clan_information)
+    
+    CMSEARCH_SUBWF(
+        name,
+        QC.out.sequence,
+        covariance_model_database,
+        clan_information
+    )
+    
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
-        MAPSEQ_OTU_KRONA_LSU(CMSEARCH_SUBWF.out.cmsearch_lsu_fasta, lsu_db, lsu_tax, lsu_otu, lsu_label)
+        MAPSEQ_OTU_KRONA_LSU(
+            CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
+            lsu_db,
+            lsu_tax,
+            lsu_otu,
+            lsu_label
+        )
     }
+    
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
-        MAPSEQ_OTU_KRONA_SSU(CMSEARCH_SUBWF.out.cmsearch_ssu_fasta, ssu_db, ssu_tax, ssu_otu, ssu_label)
+        MAPSEQ_OTU_KRONA_SSU(
+            CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
+            ssu_db,
+            ssu_tax,
+            ssu_otu,
+            ssu_label
+        )
     }
 }
