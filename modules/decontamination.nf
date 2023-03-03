@@ -13,7 +13,6 @@ process DECONTAMINATION {
     path reads
     val mode
     val name
-    tuple path(indexes_folder), val(index_name)
 
     output:
     path "*_clean*.fastq.gz", emit: decontaminated_reads
