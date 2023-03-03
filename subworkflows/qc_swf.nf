@@ -20,8 +20,6 @@ workflow QC {
         qualified_quality_phred
         unqualified_percent_limit
         reference_genome
-        reference_genome_name
-
     main:
         reads_list = reads.collect()
 
@@ -42,7 +40,6 @@ workflow QC {
             FASTP_FILTERING.out.output_reads,
             mode,
             reference_genome,
-            reference_genome_name,
             name
         )
 
