@@ -19,7 +19,6 @@ workflow QC {
         polya_trim_param
         qualified_quality_phred
         unqualified_percent_limit
-        reference_genome
     main:
         reads_list = reads.collect()
 
@@ -39,7 +38,6 @@ workflow QC {
         DECONTAMINATION(
             FASTP_FILTERING.out.output_reads,
             mode,
-            reference_genome,
             name
         )
 

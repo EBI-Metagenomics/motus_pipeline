@@ -20,8 +20,6 @@ polya_trim = channel.value(params.polya_trim)
 qualified_quality_phred = channel.value(params.qualified_quality_phred)
 unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 
-reference_genome = channel.fromPath(params.reference_genome, checkIfExists: true)
-
 motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 
 covariance_model_database_ribo = channel.fromPath(params.covariance_model_database_ribo, checkIfExists: true)
@@ -66,7 +64,6 @@ workflow PIPELINE {
         polya_trim,
         qualified_quality_phred,
         unqualified_percent_limit,
-        reference_genome,
     )
     
     MOTUS(QC.out.merged_reads, motus_db)

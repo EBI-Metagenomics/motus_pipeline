@@ -12,8 +12,8 @@ process DECONTAMINATION {
     input:
     path reads
     val mode
-    path reference_genome
     val name
+    tuple path(indexes_folder), val(index_name)
 
     output:
     path "*_clean*.fastq.gz", emit: decontaminated_reads
@@ -27,7 +27,7 @@ process DECONTAMINATION {
 
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
-        ${reference_genome} \
+        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
@@ -58,7 +58,7 @@ process DECONTAMINATION {
         echo "mapping files to host genome PE"
         bwa-mem2 mem -M \
         -t ${task.cpus} \
-        ${reference_genome} \
+        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
