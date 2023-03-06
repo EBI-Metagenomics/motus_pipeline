@@ -3,7 +3,7 @@
 */
 process QC_STATS {
 
-    publishDir "results/qc", mode: 'copy'
+    publishDir "${params.outdir}/qc", mode: 'copy'
     container 'quay.io/biocontainers/biopython:1.75'
 
     cpus 1

@@ -4,7 +4,7 @@
 process DECONTAMINATION {
 
     container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
-    publishDir "results/qc/decontamination", mode: 'copy'
+    publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
 
     cpus 2
     memory '10 GB'
