@@ -7,7 +7,7 @@ process DECONTAMINATION {
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
 
     cpus 2
-    memory '10 GB'
+    memory '30 GB'
 
     input:
     path reads
