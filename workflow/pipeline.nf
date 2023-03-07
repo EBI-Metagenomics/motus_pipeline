@@ -54,7 +54,7 @@ include { MOTUS } from '../modules/motus'
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-/*
+
 workflow PIPELINE {
 
     QC(
@@ -98,10 +98,11 @@ workflow PIPELINE {
         )
     }
 }
-*/
 
+/*
 workflow PIPELINE {
 
     MOTUS(merged_reads, motus_db)
 
 }
+*/
