@@ -37,6 +37,7 @@ ssu_tax = channel.fromPath(params.ssu_tax, checkIfExists: true)
 ssu_otu = channel.fromPath(params.ssu_otu, checkIfExists: true)
 ssu_label = channel.value(params.ssu_label)
 
+merged_reads = channel.value(params.merged_reads, checkIfExists: true)
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
@@ -53,7 +54,7 @@ include { MOTUS } from '../modules/motus'
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-
+/*
 workflow PIPELINE {
 
     QC(
@@ -96,4 +97,11 @@ workflow PIPELINE {
             ssu_label
         )
     }
+}
+*/
+
+workflow PIPELINE {
+
+    MOTUS(merged_reads, motus_db)
+
 }
