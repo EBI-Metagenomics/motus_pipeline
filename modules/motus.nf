@@ -11,7 +11,7 @@ process MOTUS {
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
     containerOptions '--bind db_mOTU:/db_mOTU'
 
-    memory '1 GB'
+    memory '30 GB'
     cpus 4
 
     input:
@@ -25,6 +25,7 @@ process MOTUS {
     script:
     """
     gunzip $reads
+    echo 'Run mOTUs'
     motus profile -c -q \
           -db /db_mOTU \
           -s ${reads.baseName} \
@@ -32,8 +33,10 @@ process MOTUS {
           -o ${reads.baseName}.motus
     echo 'clean files'
     echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
+    echo 'Generate presence TSV'
     grep -v "0\$" ${reads.baseName}.motus | egrep '^meta_mOTU|^ref_mOTU'  | sort -t\$'\t' -k3,3n >> ${reads.baseName}.tsv
     tail -n1 ${reads.baseName}.motus | sed s'/-1/Unmapped/g' >> ${reads.baseName}.tsv
+    echo 'Check empty file'
     export y=\$(cat ${reads.baseName}.tsv | wc -l)
     echo 'number of lines is' \$y
     if [ \$y -eq 2 ]; then
