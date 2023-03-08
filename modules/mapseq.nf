@@ -3,7 +3,7 @@
 */
 
 process MAPSEQ {
-    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
+    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
 
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
 
@@ -14,6 +14,7 @@ process MAPSEQ {
         path sequence
         path mapseq_db
         path mapseq_taxonomy
+        val otu_label
     output:
         path "${sequence.baseName}_${mapseq_db.baseName}.mseq", emit: mapseq_result
 
