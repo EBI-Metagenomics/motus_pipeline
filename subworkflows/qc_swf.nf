@@ -60,7 +60,7 @@ workflow QC {
 
         FASTP_REPORT(overlapped_report.collect(), mode)
 
-        FASTQ_TO_FASTA(overlapped_reads)
+        FASTQ_TO_FASTA(name, overlapped_reads)
 
         QC_STATS(FASTQ_TO_FASTA.out.sequence)
 

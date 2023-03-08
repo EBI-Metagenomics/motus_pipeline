@@ -10,12 +10,13 @@ process SEQTK {
     cpus 2
 
     input:
+        val name
         path reads
     output:
-        path "*.fasta", emit: sequence
+        path "${name}.fasta", emit: sequence
 
     script:
     """
-    seqtk seq -a ${reads} > ${reads.baseName}.fasta
+    seqtk seq -a ${reads} > ${name}.fasta
     """
 }

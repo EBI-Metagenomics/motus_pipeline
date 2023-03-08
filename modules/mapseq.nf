@@ -13,10 +13,11 @@ process MAPSEQ {
     input:
         path sequence
         path mapseq_db
+        path mapseq_db_cl
         path mapseq_taxonomy
         val otu_label
     output:
-        path "${sequence.baseName}_${mapseq_db.baseName}.mseq", emit: mapseq_result
+        path "${sequence.baseName}.mseq", emit: mapseq_result
 
     script:
     """
@@ -27,6 +28,6 @@ process MAPSEQ {
         -nthreads ${task.cpus} \
         -tophits 80 \
         -topotus 40 \
-        -outfmt 'simple' > ${sequence.baseName}_${mapseq_db.baseName}.mseq
+        -outfmt 'simple' > ${sequence.baseName}.mseq
     """
 }

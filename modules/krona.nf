@@ -3,7 +3,7 @@
 */
 
 process KRONA {
-    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "*krona.html"
+    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "*krona.html"
 
     container 'quay.io/microbiome-informatics/krona:2.7.1'
 
@@ -11,6 +11,7 @@ process KRONA {
     cpus 2
 
     input:
+        val otu_label
         path otu_counts
     output:
         path "*krona.html", emit: krona_html

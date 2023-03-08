@@ -3,7 +3,7 @@
 */
 
 process MAPSEQ2BIOM {
-    publishDir "${params.outdir}/taxonomy-summary/", mode: 'copy', pattern: "$mapseq.baseName.*"
+    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "$mapseq.baseName.*"
 
     container 'perl:5.32-slim'
 

@@ -4,7 +4,7 @@
 
 process EXTRACT_MODELS {
 
-    publishDir '${params.outdir}/cmsearch/', mode:'copy'
+    publishDir "${params.outdir}/cmsearch/", mode:'copy'
     container 'quay.io/biocontainers/biopython:1.75'
 
     memory '300 MB'
@@ -15,7 +15,7 @@ process EXTRACT_MODELS {
         path sequences
 
     output:
-        path "sequence-categorisation/", emit: sequence_categorisation
+        path "sequence-categorisation/"
         path "sequence-categorisation/${name}_SSU.fasta", optional: true, emit: ssu_fasta
         path "sequence-categorisation/${name}_LSU.fasta", optional: true, emit: lsu_fasta
 
