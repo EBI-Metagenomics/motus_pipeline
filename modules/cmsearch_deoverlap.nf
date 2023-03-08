@@ -3,7 +3,7 @@
 */
 
 process CMSEARCH_DEOVERLAP {
-    publishDir "${params.outdir}/cmsearch/", mode: 'copy'
+    publishDir "${params.outdir}/cmsearch/deoverlapped", mode: 'copy'
 
     container 'debian:stable-slim'
 
