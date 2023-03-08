@@ -8,6 +8,8 @@ from Bio import SeqIO
 
 directory = "sequence-categorisation"
 if not os.path.exists(directory): os.makedirs(directory)
+directory_ncRNA = os.path.join("sequence-categorisation", "ncRNA")
+if not os.path.exists(directory_ncRNA): os.makedirs(directory_ncRNA)
 
 SSU = "SSU_rRNA"
 LSU = "LSU_rRNA"
@@ -47,9 +49,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     prefix = args.prefix if args.prefix else ""
-
+    name = args.name if args.name else "accession"
     print('Start fasta mode')
-    pattern_dict = set_model_names(prefix, args.name)
+    pattern_dict = set_model_names(prefix, name)
     open_files = {}
     for record in SeqIO.parse(args.input, "fasta"):
         for pattern in pattern_dict:
@@ -58,5 +60,15 @@ if __name__ == "__main__":
                     file_out = open(pattern_dict[pattern], 'w')
                     open_files[pattern] = file_out
                 SeqIO.write(record, open_files[pattern], "fasta")
+                continue
+        model = record.id.split('/')[0].split('-')[1]
+        if model not in open_files:
+            file_out = open(os.path.join(directory_ncRNA, f'{prefix}{name}_{model}.fasta'), 'w')
+            open_files[model] = file_out
+        SeqIO.write(record, open_files[model], "fasta")
+
     for item in open_files:
         open_files[item].close()
+
+    if len(os.listdir(directory_ncRNA)) == 0:
+        os.rmdir(directory_ncRNA)
