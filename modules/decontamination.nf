@@ -53,14 +53,10 @@ process DECONTAMINATION {
         }
         """
         mkdir output_decontamination
-        echo "build index PE"
-        cp ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} output_decontamination/
-        bwa-mem2 index output_decontamination/${params.decontamination_reference_index}
-
         echo "mapping files to host genome PE"
         bwa-mem2 mem -M \
         -t ${task.cpus} \
-        output_decontamination/${params.decontamination_reference_index} \
+        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"

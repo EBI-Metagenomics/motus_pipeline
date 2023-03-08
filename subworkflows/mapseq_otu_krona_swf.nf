@@ -15,7 +15,7 @@ workflow MAPSEQ_OTU_KRONA {
         otu_label
     main:
 
-        MAPSEQ(sequence, mapseq_db, mapseq_taxonomy)
+        MAPSEQ(sequence, mapseq_db, mapseq_taxonomy, otu_label)
 
         MAPSEQ2BIOM(
             MAPSEQ.out.mapseq_result,

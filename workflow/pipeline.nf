@@ -25,7 +25,6 @@ motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 covariance_model_database_ribo = channel.fromPath(params.covariance_model_database_ribo, checkIfExists: true)
 covariance_model_database_other = channel.fromPath(params.covariance_model_database_other, checkIfExists: true)
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
-sequences = channel.fromPath(params.sequences, checkIfExists: true)
 
 lsu_db = channel.fromPath(params.lsu_db, checkIfExists: true)
 lsu_tax = channel.fromPath(params.lsu_tax, checkIfExists: true)
@@ -37,7 +36,6 @@ ssu_tax = channel.fromPath(params.ssu_tax, checkIfExists: true)
 ssu_otu = channel.fromPath(params.ssu_otu, checkIfExists: true)
 ssu_label = channel.value(params.ssu_label)
 
-merged_reads = channel.fromPath(params.merged_reads, checkIfExists: true)
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
@@ -98,11 +96,3 @@ workflow PIPELINE {
         )
     }
 }
-
-/*
-workflow PIPELINE {
-
-    MOTUS(merged_reads, motus_db)
-
-}
-*/
