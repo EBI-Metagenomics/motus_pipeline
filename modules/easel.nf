@@ -3,12 +3,12 @@
 */
 
 process EASEL_EXTRACT_BY_COORD {
-    publishDir "${params.outdir}/cmsearch/", mode: 'copy'
+    //publishDir "${params.outdir}/cmsearch/", mode: 'copy'
 
     container 'quay.io/biocontainers/easel:0.48--hec16e2b_1'
 
-    //memory '5 GB'
-    //cpus 4
+    memory '5 GB'
+    cpus 1
 
     input:
         path sequences
