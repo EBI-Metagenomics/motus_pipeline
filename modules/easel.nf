@@ -23,7 +23,6 @@ process EASEL_EXTRACT_BY_COORD {
     esl-sfetch --index ${sequences}
 
     esl-sfetch -Cf ${sequences} ${sequences.baseName}.matched_seqs_with_coords > ${sequences.baseName}_${deoverlapped_coords.baseName}.fasta
-
     """
 }
 
