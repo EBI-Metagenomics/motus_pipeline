@@ -27,11 +27,13 @@ covariance_model_database_other = channel.fromPath(params.covariance_model_datab
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
 
 lsu_db = channel.fromPath(params.lsu_db, checkIfExists: true)
+lsu_db_cl = channel.fromPath(params.lsu_db_cluster, checkIfExists: true)
 lsu_tax = channel.fromPath(params.lsu_tax, checkIfExists: true)
 lsu_otu = channel.fromPath(params.lsu_otu, checkIfExists: true)
 lsu_label = channel.value(params.lsu_label)
 
 ssu_db = channel.fromPath(params.ssu_db, checkIfExists: true)
+ssu_db_cl = channel.fromPath(params.ssu_db_cluster, checkIfExists: true)
 ssu_tax = channel.fromPath(params.ssu_tax, checkIfExists: true)
 ssu_otu = channel.fromPath(params.ssu_otu, checkIfExists: true)
 ssu_label = channel.value(params.ssu_label)
@@ -65,7 +67,7 @@ workflow PIPELINE {
         unqualified_percent_limit,
     )
     
-    MOTUS(QC.out.merged_reads, motus_db)
+    MOTUS(name, QC.out.merged_reads, motus_db)
     
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
     
@@ -80,6 +82,7 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_LSU(
             CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
             lsu_db,
+            lsu_db_cl,
             lsu_tax,
             lsu_otu,
             lsu_label
@@ -90,6 +93,7 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_SSU(
             CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
             ssu_db,
+            ssu_db_cl,
             ssu_tax,
             ssu_otu,
             ssu_label

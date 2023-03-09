@@ -15,33 +15,34 @@ process MOTUS {
     cpus 4
 
     input:
+    val name
     path reads
     path motus_db
 
     output:
-    path "${reads.baseName}.motus", emit: motus_result
+    path "${name}.motus", emit: motus_result
     path "*.tsv", emit: motus_result_cleaned
 
     script:
     """
-    gunzip $reads
+    gunzip ${reads}
     echo 'Run mOTUs'
     motus profile -c -q \
           -db /db_mOTU \
           -s ${reads.baseName} \
           -t ${task.cpus} \
-          -o ${reads.baseName}.motus
+          -o ${name}.motus
     echo 'clean files'
-    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
+    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${name}.tsv
     echo 'Generate presence TSV'
-    grep -v "0\$" ${reads.baseName}.motus | egrep '^meta_mOTU|^ref_mOTU'  | sort -t\$'\t' -k3,3n >> ${reads.baseName}.tsv
-    tail -n1 ${reads.baseName}.motus | sed s'/-1/Unmapped/g' >> ${reads.baseName}.tsv
+    grep -v "0\$" ${name}.motus | egrep '^meta_mOTU|^ref_mOTU'  | sort -t\$'\t' -k3,3n >> ${name}.tsv
+    tail -n1 ${name}.motus | sed s'/-1/Unmapped/g' >> ${name}.tsv
     echo 'Check empty file'
-    export y=\$(cat ${reads.baseName}.tsv | wc -l)
+    export y=\$(cat ${name}.tsv | wc -l)
     echo 'number of lines is' \$y
     if [ \$y -eq 2 ]; then
       echo 'rename file to empty'
-      mv ${reads.baseName}.tsv 'empty.motus.tsv'
+      mv ${name}.tsv 'empty.motus.tsv'
     fi
     """
 }

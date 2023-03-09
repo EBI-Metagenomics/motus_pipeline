@@ -13,6 +13,7 @@ process MAPSEQ {
     input:
         path sequence
         path mapseq_db
+        path mapseq_db_cl
         path mapseq_taxonomy
         val otu_label
     output:
