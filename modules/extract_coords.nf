@@ -4,7 +4,7 @@
 
 process EXTRACT_MODELS {
 
-    publishDir '${params.outdir}/cmsearch/', mode:'copy'
+    publishDir "${params.outdir}/cmsearch/", mode:'copy'
     container 'quay.io/biocontainers/biopython:1.75'
 
     memory '300 MB'
