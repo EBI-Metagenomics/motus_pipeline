@@ -7,8 +7,8 @@ process CMSEARCH {
     container 'quay.io/biocontainers/infernal:1.1.4--pl5321hec16e2b_1'
     //publishDir "${params.outdir}/cmsearch", mode: 'copy'
 
-    memory '30 GB'
-    cpus 4
+    memory '20 GB'
+    cpus 2
 
     input:
         path sequences

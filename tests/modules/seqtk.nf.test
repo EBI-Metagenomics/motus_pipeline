@@ -13,7 +13,8 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = channel.fromPath("${params.reads}/${params.name}.fastq.gz", checkIfExists: true)
+                input[0] = channel.value("mgtest_merged")
+                input[1] = channel.fromPath("${params.reads}/${params.name}.fastq.gz", checkIfExists: true)
                 """
             }
         }

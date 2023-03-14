@@ -7,6 +7,16 @@
                 ]
             }
         ],
-        "timestamp": "2023-02-28T17:22:58+0000"
+        "timestamp": "2023-03-14T14:21:14+0000"
+    },
+    "cmsearch-deoverlap": {
+        "content": [
+            {
+                "cmsearch_deoverlap": [
+                    "mgtest_merged.fastq.cmsearch_matches.tbl.deoverlapped:md5,bc0275dfe8459658458b7fe6776fa9ba"
+                ]
+            }
+        ],
+        "timestamp": "2023-03-14T14:21:14+0000"
     }
 }
