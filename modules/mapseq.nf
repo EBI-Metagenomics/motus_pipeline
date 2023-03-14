@@ -7,8 +7,8 @@ process MAPSEQ {
 
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
 
-    memory '25 GB'
-    cpus 8
+    memory '20 GB'
+    cpus 2
 
     input:
         path sequence

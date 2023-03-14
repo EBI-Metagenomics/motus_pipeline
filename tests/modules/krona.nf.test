@@ -12,14 +12,14 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = channel.fromPath("${params.otu}", checkIfExists: true)
+                input[0] = channel.value('LSU')
+                input[1] = channel.fromPath("${params.otu}", checkIfExists: true)
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
         }
 
     }

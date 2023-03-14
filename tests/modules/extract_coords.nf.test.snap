@@ -2,23 +2,14 @@
     "extract models": {
         "content": [
             {
-                "sequence_categorisation": [
-                    [
-                        "SRR5643986_5_8S.fa:md5,6a7f14d22eb085889bd6b59db11c7310",
-                        "SRR5643986_LSU.fasta:md5,fd3b7525d58570e2ca890a8d034295d4",
-                        "SRR5643986_LSU_rRNA_bacteria.RF02541.fa:md5,fd3b7525d58570e2ca890a8d034295d4",
-                        "SRR5643986_SSU.fasta:md5,5057441cf4c912a294f4d1a830f79271",
-                        "SRR5643986_SSU_rRNA_bacteria.RF00177.fa:md5,5057441cf4c912a294f4d1a830f79271"
-                    ]
-                ],
                 "ssu_fasta": [
-                    "SRR5643986_SSU.fasta:md5,5057441cf4c912a294f4d1a830f79271"
+                    "SRR5643986_SSU.fasta:md5,d82551ffe1cbdcf745278eb09199de56"
                 ],
                 "lsu_fasta": [
-                    "SRR5643986_LSU.fasta:md5,fd3b7525d58570e2ca890a8d034295d4"
+                    "SRR5643986_LSU.fasta:md5,a3687de0c0d784f4930bd9c780638bb3"
                 ]
             }
         ],
-        "timestamp": "2023-02-28T22:38:22+0000"
+        "timestamp": "2023-03-14T15:05:15+0000"
     }
 }
