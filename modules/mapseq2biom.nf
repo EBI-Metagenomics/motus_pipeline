@@ -4,11 +4,8 @@
 
 process MAPSEQ2BIOM {
     publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "$mapseq.baseName.*"
-
+    label 'mapseq2biom'
     container 'perl:5.32-slim'
-
-    memory '200 MB'
-    cpus 1
 
     input:
         path mapseq

@@ -3,12 +3,8 @@
 */
 
 process CMSEARCH_DEOVERLAP {
-    //publishDir "${params.outdir}/cmsearch/deoverlapped", mode: 'copy'
-
+    label 'cmsearch-deoverlap'
     container 'debian:stable-slim'
-
-    memory '200 MB'
-    cpus 2
 
     input:
         path clan_information

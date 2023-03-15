@@ -4,10 +4,8 @@
 
 process SEQTK {
     publishDir "${params.outdir}/", mode: 'copy'
-
+    label 'seqtk'
     container 'quay.io/biocontainers/seqtk:1.3--h7132678_4'
-
-    cpus 2
 
     input:
         val name

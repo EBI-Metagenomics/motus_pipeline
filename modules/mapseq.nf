@@ -6,9 +6,7 @@ process MAPSEQ {
     publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
 
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
-
-    memory '20 GB'
-    cpus 2
+    label 'mapseq'
 
     input:
         path sequence

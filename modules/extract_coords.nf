@@ -6,9 +6,7 @@ process EXTRACT_MODELS {
 
     publishDir "${params.outdir}/cmsearch/", mode:'copy'
     container 'quay.io/biocontainers/biopython:1.75'
-
-    memory '300 MB'
-    cpus 1
+    label 'extract_coords'
 
     input:
         val name
