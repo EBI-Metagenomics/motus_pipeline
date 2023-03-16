@@ -6,13 +6,15 @@
 */
 
 process MOTUS {
+    
     publishDir "${params.outdir}/mOTUs/", mode: 'copy'
+    
     label 'motus'
+
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
-    // singularity
-    containerOptions '--bind db_mOTU_v3.0.1:/db_mOTU'
-    // docker mac
-    //containerOptions '-v ${params.motus_db}:/db_mOTU --platform linux/amd64'
+
+    memory '1 GB'
+    cpus 4
 
     input:
     val name
@@ -28,19 +30,19 @@ process MOTUS {
     gunzip ${reads}
     echo 'Run mOTUs'
     motus profile -c -q \
-          -db /db_mOTU \
-          -s ${reads.baseName} \
-          -t ${task.cpus} \
-          -o ${name}.motus
+    -db /db_mOTU \
+    -s ${reads.baseName} \
+    -t ${task.cpus} \
+    -o ${reads.baseName}.motus
+
     echo 'clean files'
-    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${name}.tsv
-    echo 'Generate presence TSV'
-    grep -v "0\$" ${name}.motus | egrep '^meta_mOTU|^ref_mOTU'  | sort -t\$'\t' -k3,3n >> ${name}.tsv
-    tail -n1 ${name}.motus | sed s'/-1/Unmapped/g' >> ${name}.tsv
-    echo 'Check empty file'
-    export y=\$(cat ${name}.tsv | wc -l)
-    echo 'number of lines is' \$y
-    if [ \$y -eq 2 ]; then
+    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
+    grep -v "0\$" ${reads.baseName}.motus | grep -E '^meta_mOTU|^ref_mOTU' | sort -t\$'\t' -k3,3n >> ${reads.baseName}.tsv
+    tail -n1 ${reads.baseName}.motus | sed s'/-1/Unmapped/g' >> ${reads.baseName}.tsv
+
+    LINES=\$(cat ${reads.baseName}.tsv | wc -l)
+    echo 'number of lines is' \$LINES
+    if [ \$LINES -eq 2 ]; then
       echo 'rename file to empty'
       mv ${name}.tsv 'empty.motus.tsv'
     fi
