@@ -4,8 +4,13 @@
 process FASTP_REPORT {
 
     publishDir "${params.outdir}/qc", mode: 'copy'
-    container 'python:3.8'
+
+    container 'python:3.7.9-slim-buster'
+
     label 'fastp_report'
+
+    cpus 1
+    memory '300 MB'
 
     input:
     path fastp_jsons
