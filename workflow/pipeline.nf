@@ -5,6 +5,7 @@
 */
 name = channel.value(params.name)
 reads = channel.fromPath(params.reads)
+mode = channel.value(params.mode)
 
 if ( params.mode == "paired" ) {
     chosen_reads = channel.fromFilePairs("${params.reads}/${params.name}*_{1,2}.fastq*", checkIfExists: true).map { it[1] }
@@ -12,8 +13,7 @@ if ( params.mode == "paired" ) {
     chosen_reads = channel.fromPath("${params.reads}/${params.name}*.fastq*", checkIfExists: true)
 }
 
-mode = channel.value(params.mode)
-
+// fastp filtering
 min_length = channel.value(params.min_length)
 polya_trim = channel.value(params.polya_trim)
 qualified_quality_phred = channel.value(params.qualified_quality_phred)
@@ -25,16 +25,10 @@ covariance_model_database_ribo = channel.fromPath(params.covariance_model_databa
 covariance_model_database_other = channel.fromPath(params.covariance_model_database_other, checkIfExists: true)
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
 
-lsu_db = channel.fromPath(params.lsu_db, checkIfExists: true)
-//lsu_db_cl = channel.fromPath(params.lsu_db_cluster, checkIfExists: true)
-lsu_tax = channel.fromPath(params.lsu_tax, checkIfExists: true)
-lsu_otu = channel.fromPath(params.lsu_otu, checkIfExists: true)
+// mapseq
+lsu_otu = channel.fromPath(params.lsu_db_otu, checkIfExists: true)
 lsu_label = channel.value(params.lsu_label)
-
-ssu_db = channel.fromPath(params.ssu_db, checkIfExists: true)
-ssu_db_cl = channel.fromPath(params.ssu_db_cluster, checkIfExists: true)
-ssu_tax = channel.fromPath(params.ssu_tax, checkIfExists: true)
-ssu_otu = channel.fromPath(params.ssu_otu, checkIfExists: true)
+ssu_otu = channel.fromPath(params.ssu_db_otu, checkIfExists: true)
 ssu_label = channel.value(params.ssu_label)
 
 /*
@@ -47,27 +41,21 @@ include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
 include { MOTUS } from '../modules/motus'
+
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
-include { GET_MAPSEQ_DB } from '../modules/mapseq'
-
-
+include { PREPARE_DBS } from '../subworkflows/prepare_db'
 
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-
 workflow PIPELINE {
-
-    if (params.lsu_db) { lsu_db = file(params.lsu_db) }
-    else { lsu_db = GET_MAPSEQ_DB().out }
-
-    lsu_db_cl = channel.fromPath(${lsu_db}/${params.lsu_db_cluster}, checkIfExists: true)
+    PREPARE_DBS()
 
     QC(
         name,
@@ -93,9 +81,7 @@ workflow PIPELINE {
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         MAPSEQ_OTU_KRONA_LSU(
             CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
-            lsu_db,
-            lsu_db_cl,
-            lsu_tax,
+            PREPARE_DBS.out.mapseq_db_lsu,
             lsu_otu,
             lsu_label
         )
@@ -104,9 +90,7 @@ workflow PIPELINE {
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
         MAPSEQ_OTU_KRONA_SSU(
             CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
-            ssu_db,
-            ssu_db_cl,
-            ssu_tax,
+            PREPARE_DBS.out.mapseq_db_ssu,
             ssu_otu,
             ssu_label
         )
