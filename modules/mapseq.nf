@@ -1,7 +1,6 @@
 /*
  * MAPseq 2.1.1
 */
-
 process MAPSEQ {
     publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
 
@@ -31,18 +30,20 @@ process MAPSEQ {
 /*
  * Download MGnify mapseq DB
 */
-process GET_MAPSEQ_DB_SSU {
+process GET_MAPSEQ_DB {
+    publishDir "${params.databases}/", mode: 'copy', pattern: "${db_name}"
 
-    publishDir "${params.databases}/", mode: 'copy', pattern: "silva_ssu-20200130"
     label 'mapseq_db'
 
+    input:
+        val db_name
     output:
         path "*", emit: db
 
     script:
     """
-    wget ${params.download_ftp_path}/${params.silva_ssu_db_name}
-    tar -xvzf ${params.silva_ssu_db_name}
-    rm ${params.silva_ssu_db_name}
+    wget "${params.download_ftp_path}/${db_name}.tar.gz"
+    tar -xvzf "${db_name}.tar.gz"
+    rm "${db_name}.tar.gz"
     """
 }
