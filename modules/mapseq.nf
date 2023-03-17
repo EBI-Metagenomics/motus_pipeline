@@ -11,8 +11,6 @@ process MAPSEQ {
     input:
         path sequence
         path mapseq_db
-        path mapseq_db_cl
-        path mapseq_taxonomy
         val otu_label
     output:
         path "${sequence.baseName}.mseq", emit: mapseq_result
@@ -20,12 +18,31 @@ process MAPSEQ {
     script:
     """
     mapseq \
-        $sequence \
-        ${mapseq_db} \
-        $mapseq_taxonomy \
+        ${sequence} \
+        ${mapseq_db}/${params.ssu_db_fasta} \
+        ${mapseq_db}/${params.ssu_db_tax} \
         -nthreads ${task.cpus} \
         -tophits 80 \
         -topotus 40 \
         -outfmt 'simple' > ${sequence.baseName}.mseq
+    """
+}
+
+/*
+ * Download MGnify mapseq DB
+*/
+process GET_MAPSEQ_DB_SSU {
+
+    publishDir "${params.databases}/", mode: 'copy', pattern: "silva_ssu-20200130"
+    label 'mapseq_db'
+
+    output:
+        path "*", emit: db
+
+    script:
+    """
+    wget ${params.download_ftp_path}/${params.silva_ssu_db_name}
+    tar -xvzf ${params.silva_ssu_db_name}
+    rm ${params.silva_ssu_db_name}
     """
 }

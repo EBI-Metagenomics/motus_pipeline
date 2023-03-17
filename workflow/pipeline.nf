@@ -4,7 +4,6 @@
     ~~~~~~~~~~~~~~~~~~
 */
 name = channel.value(params.name)
-
 reads = channel.fromPath(params.reads)
 
 if ( params.mode == "paired" ) {
@@ -27,7 +26,7 @@ covariance_model_database_other = channel.fromPath(params.covariance_model_datab
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
 
 lsu_db = channel.fromPath(params.lsu_db, checkIfExists: true)
-lsu_db_cl = channel.fromPath(params.lsu_db_cluster, checkIfExists: true)
+//lsu_db_cl = channel.fromPath(params.lsu_db_cluster, checkIfExists: true)
 lsu_tax = channel.fromPath(params.lsu_tax, checkIfExists: true)
 lsu_otu = channel.fromPath(params.lsu_otu, checkIfExists: true)
 lsu_label = channel.value(params.lsu_label)
@@ -48,6 +47,14 @@ include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
 include { MOTUS } from '../modules/motus'
+/*
+    ~~~~~~~~~~~~~~~~~~
+     DBs
+    ~~~~~~~~~~~~~~~~~~
+*/
+include { GET_MAPSEQ_DB } from '../modules/mapseq'
+
+
 
 /*
     ~~~~~~~~~~~~~~~~~~
@@ -56,6 +63,11 @@ include { MOTUS } from '../modules/motus'
 */
 
 workflow PIPELINE {
+
+    if (params.lsu_db) { lsu_db = file(params.lsu_db) }
+    else { lsu_db = GET_MAPSEQ_DB().out }
+
+    lsu_db_cl = channel.fromPath(${lsu_db}/${params.lsu_db_cluster}, checkIfExists: true)
 
     QC(
         name,
