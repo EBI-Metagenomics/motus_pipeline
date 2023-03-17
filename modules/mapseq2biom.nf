@@ -9,7 +9,8 @@ process MAPSEQ2BIOM {
 
     input:
         path mapseq
-        path otu_ref
+        path mapseq_db
+        val otu_ref
         val otu_label
     output:
         path "${mapseq.baseName}.tsv", emit: mapseq2biom_tsv
@@ -25,6 +26,6 @@ process MAPSEQ2BIOM {
           --taxid \
           --label $otu_label \
           --query $mapseq \
-          --otuTable $otu_ref
+          --otuTable "${mapseq_db}/${otu_ref}"
     """
 }

@@ -9,6 +9,8 @@ process DECONTAMINATION {
 
     input:
     path reads
+    path ref_genome
+    val ref_genome_name
     val mode
     val name
 
@@ -24,7 +26,7 @@ process DECONTAMINATION {
 
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
-        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
@@ -54,7 +56,7 @@ process DECONTAMINATION {
         echo "mapping files to host genome PE"
         bwa-mem2 mem -M \
         -t ${task.cpus} \
-        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
@@ -75,4 +77,25 @@ process DECONTAMINATION {
         gzip -c output_decontamination/${name}_clean_2.fastq > ${name}_clean_2.fastq.gz
         """
     }
+}
+
+/*
+ * Download reference genome HG38
+*/
+process GET_REF_GENOME {
+    publishDir "${params.databases}/", mode: 'copy'
+
+    label 'decontamination_genome'
+
+    input:
+        val db_name
+    output:
+        path "${db_name}", emit: hg38
+
+    script:
+    """
+    wget "${params.download_ftp_path}/${db_name}.tar.gz"
+    tar -xvzf "${db_name}.tar.gz"
+    rm "${db_name}.tar.gz"
+    """
 }

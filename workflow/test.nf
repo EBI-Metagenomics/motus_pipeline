@@ -115,7 +115,7 @@ workflow PIPELINE {
             channel.value(params.lsu_label)
         )
     }
-    
+
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
         if (params.ssu_db) {
             mapseq_ssu = channel.fromPath("${params.ssu_db}")

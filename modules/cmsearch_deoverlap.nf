@@ -3,7 +3,7 @@
 */
 
 process CMSEARCH_DEOVERLAP {
-    label 'cmsearch-deoverlap'
+    label 'cmsearch_deoverlap'
     container 'debian:stable-slim'
 
     input:

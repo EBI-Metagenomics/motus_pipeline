@@ -46,3 +46,22 @@ process MOTUS {
     fi
     """
 }
+
+/*
+ * Download MGnify Rfam DB
+*/
+process GET_MOTUS_DB {
+    publishDir "${params.databases}/", mode: 'copy'
+    container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
+    label 'motus_db'
+
+    input:
+        val db_name
+    output:
+        path "*", emit: motus_db
+
+    script:
+    """
+    motus downloadDB
+    """
+}
