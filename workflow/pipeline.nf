@@ -26,9 +26,9 @@ covariance_model_database_other = channel.fromPath(params.covariance_model_datab
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
 
 // mapseq
-lsu_otu = channel.fromPath(params.lsu_db_otu, checkIfExists: true)
+lsu_otu = channel.value(params.lsu_db_otu)
 lsu_label = channel.value(params.lsu_label)
-ssu_otu = channel.fromPath(params.ssu_db_otu, checkIfExists: true)
+ssu_otu = channel.value(params.ssu_db_otu)
 ssu_label = channel.value(params.ssu_label)
 
 /*

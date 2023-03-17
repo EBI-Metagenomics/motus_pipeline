@@ -26,6 +26,6 @@ process MAPSEQ2BIOM {
           --taxid \
           --label $otu_label \
           --query $mapseq \
-          --otuTable ${mapseq_db}/${otu_ref}
+          --otuTable "${mapseq_db}/${otu_ref}"
     """
 }
