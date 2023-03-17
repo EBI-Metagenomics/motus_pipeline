@@ -9,14 +9,16 @@ nextflow_process {
         when {
             params {
                 mapseq = "${baseDir}/tests/modules/fixtures/mapseq2biom/test-mapseq"
-                otu_ref = "${baseDir}/tests/modules/fixtures/mapseq2biom/test-otu"
+                mapseq_db = "${baseDir}/tests/modules/fixtures/mapseq2biom"
+                otu_ref = "test-otu"
                 otu_label = "test"
             }
             process {
                 """
                 input[0] = channel.fromPath("${params.mapseq}", checkIfExists: true)
-                input[1] = channel.fromPath("${params.otu_ref}", checkIfExists: true)
-                input[2] = channel.value("${params.otu_label}")
+                input[1] = channel.fromPath("${params.mapseq_db}", checkIfExists: true)
+                input[2] = channel.value("${params.otu_ref}")
+                input[3] = channel.value("${params.otu_label}")
                 """
             }
         }
