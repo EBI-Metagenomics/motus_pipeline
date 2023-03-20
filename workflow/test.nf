@@ -3,26 +3,21 @@
      Input validation
     ~~~~~~~~~~~~~~~~~~
 */
-lsu_otu = channel.value(params.lsu_db_otu)
-lsu_label = channel.value(params.lsu_label)
-ssu_otu = channel.value(params.ssu_db_otu)
-ssu_label = channel.value(params.ssu_label)
+name = channel.value("test")
+sequence = channel.fromPath('tests/modules/fixtures/mapseq/test.SSU.fasta')
 
-sequence = channel.fromPath('tests/modules/fixtures/test.SSU.fasta')
-mapseq_table = channel.fromPath('tests/modules/fixtures/mapseq/output/test.SSU_silva-SSU.mseq')
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
     ~~~~~~~~~~~~~~~~~~
 */
-
+include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
 include { PREPARE_DBS } from '../subworkflows/prepare_db'
-include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 
 /*
     ~~~~~~~~~~~~~~~~~~
@@ -32,10 +27,19 @@ include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq
 
 workflow PIPELINE {
     PREPARE_DBS()
-    MAPSEQ_OTU_KRONA_SSU(
-            mapseq_table,
-            PREPARE_DBS.out.mapseq_db_ssu,
-            ssu_otu,
-            ssu_label
-        )
+    covariance_model_database_ribo = PREPARE_DBS.out.cmsearch_ribo_db
+    covariance_model_database_other = PREPARE_DBS.out.cmsearch_other_db
+    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+
+    covariance_clan_ribo = PREPARE_DBS.out.cmsearch_ribo_clan
+    covariance_clan_other = PREPARE_DBS.out.cmsearch_other_clan
+    clan = covariance_clan_ribo.concat(covariance_clan_other)
+    clan_information = clan.collectFile(name: "clan.info")
+
+    CMSEARCH_SUBWF(
+        name,
+        sequence,
+        covariance_model_database,
+        clan_information
+    )
 }

@@ -21,10 +21,6 @@ unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 
 motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 
-covariance_model_database_ribo = channel.fromPath(params.covariance_model_database_ribo, checkIfExists: true)
-covariance_model_database_other = channel.fromPath(params.covariance_model_database_other, checkIfExists: true)
-clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
-
 // mapseq
 lsu_otu = channel.value(params.lsu_db_otu)
 lsu_label = channel.value(params.lsu_label)
@@ -56,6 +52,14 @@ include { PREPARE_DBS } from '../subworkflows/prepare_db'
 */
 workflow PIPELINE {
     PREPARE_DBS()
+    covariance_model_database_ribo = PREPARE_DBS.out.cmsearch_ribo_db
+    covariance_model_database_other = PREPARE_DBS.out.cmsearch_other_db
+    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+
+    covariance_clan_ribo = PREPARE_DBS.out.cmsearch_ribo_clan
+    covariance_clan_other = PREPARE_DBS.out.cmsearch_other_clan
+    clan = covariance_clan_ribo.concat(covariance_clan_other)
+    clan_information = clan.collectFile(name: "clan.info")
 
     QC(
         name,
@@ -68,9 +72,7 @@ workflow PIPELINE {
     )
     
     MOTUS(name, QC.out.merged_reads, motus_db)
-    
-    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    
+
     CMSEARCH_SUBWF(
         name,
         QC.out.sequence,
