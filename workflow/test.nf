@@ -5,19 +5,27 @@
 */
 name = channel.value("test")
 sequence = channel.fromPath('tests/modules/fixtures/mapseq/test.SSU.fasta')
+mode = channel.value("paired")
+chosen_reads = channel.fromPath("tests/modules/fixtures/fastp/paired_end/example*.fastq*", checkIfExists: true)
+
+min_length = channel.value(params.min_length)
+polya_trim = channel.value(params.polya_trim)
+qualified_quality_phred = channel.value(params.qualified_quality_phred)
+unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
     ~~~~~~~~~~~~~~~~~~
 */
-include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
+include { QC } from '../subworkflows/qc_swf'
+include { DECONTAMINATION } from '../modules/decontamination'
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
-include { PREPARE_DBS } from '../subworkflows/prepare_db'
+include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 
 /*
     ~~~~~~~~~~~~~~~~~~
@@ -26,20 +34,18 @@ include { PREPARE_DBS } from '../subworkflows/prepare_db'
 */
 
 workflow PIPELINE {
-    PREPARE_DBS()
-    covariance_model_database_ribo = PREPARE_DBS.out.cmsearch_ribo_db
-    covariance_model_database_other = PREPARE_DBS.out.cmsearch_other_db
-    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+    if (params.reference_genome) {
+        ref_genome = channel.fromPath("${params.reference_genome}")
+    }
+    else {
+        DOWNLOAD_REFERENCE_GENOME()
+        ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
+    }
 
-    covariance_clan_ribo = PREPARE_DBS.out.cmsearch_ribo_clan
-    covariance_clan_other = PREPARE_DBS.out.cmsearch_other_clan
-    clan = covariance_clan_ribo.concat(covariance_clan_other)
-    clan_information = clan.collectFile(name: "clan.info")
-
-    CMSEARCH_SUBWF(
-        name,
-        sequence,
-        covariance_model_database,
-        clan_information
+    DECONTAMINATION(
+        chosen_reads,
+        ref_genome,
+        mode,
+        name
     )
 }

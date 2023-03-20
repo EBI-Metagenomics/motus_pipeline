@@ -44,6 +44,7 @@ include { MOTUS } from '../modules/motus'
     ~~~~~~~~~~~~~~~~~~
 */
 include { PREPARE_DBS } from '../subworkflows/prepare_db'
+include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 
 /*
     ~~~~~~~~~~~~~~~~~~
@@ -61,10 +62,18 @@ workflow PIPELINE {
     clan = covariance_clan_ribo.concat(covariance_clan_other)
     clan_information = clan.collectFile(name: "clan.info")
 
+    if (params.reference_genome) {
+        ref_genome = channel.fromPath("${params.reference_genome}")
+    }
+    else {
+        DOWNLOAD_REFERENCE_GENOME()
+        ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
+    }
     QC(
         name,
         chosen_reads,
         mode,
+        ref_genome,
         min_length,
         polya_trim,
         qualified_quality_phred,
