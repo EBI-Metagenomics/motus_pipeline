@@ -43,45 +43,59 @@ include { MOTUS } from '../modules/motus'
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
-include { PREPARE_DBS } from '../subworkflows/prepare_db'
 include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
-
+include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
 workflow PIPELINE {
-    PREPARE_DBS()
-    covariance_model_database_ribo = PREPARE_DBS.out.cmsearch_ribo_db
-    covariance_model_database_other = PREPARE_DBS.out.cmsearch_other_db
-    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-
-    covariance_clan_ribo = PREPARE_DBS.out.cmsearch_ribo_clan
-    covariance_clan_other = PREPARE_DBS.out.cmsearch_other_clan
-    clan = covariance_clan_ribo.concat(covariance_clan_other)
-    clan_information = clan.collectFile(name: "clan.info")
-
-    if (params.reference_genome) {
+    // Quality control
+    if (params.reference_genome && params.reference_genome_name) {
         ref_genome = channel.fromPath("${params.reference_genome}")
+        ref_genome_name = channel.value("${params.reference_genome_name}")
     }
     else {
         DOWNLOAD_REFERENCE_GENOME()
         ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
+        ref_genome_name = channel.value("${params.decontamination_reference_index}")
     }
     QC(
         name,
         chosen_reads,
         mode,
         ref_genome,
+        ref_genome_name,
         min_length,
         polya_trim,
         qualified_quality_phred,
         unqualified_percent_limit,
     )
-    
+
+    // mOTUs
     MOTUS(name, QC.out.merged_reads, motus_db)
 
+    // RNA prediction
+    if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan)
+    {
+        covariance_model_database_ribo = channel.fromPath("${params.rfam_ribo_models}")
+        covariance_model_database_other = channel.fromPath("${params.rfam_other_models}")
+        covariance_clan_ribo = channel.fromPath("${params.rfam_ribo_clan}")
+        covariance_clan_other = channel.fromPath("${params.rfam_other_clan}")
+    }
+    else {
+        DOWNLOAD_RFAM()
+        covariance_model_database_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_db
+        covariance_model_database_other = DOWNLOAD_RFAM.out.cmsearch_other_db
+        covariance_clan_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_clan
+        covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
+    }
+    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+    clan_cat = covariance_clan_ribo.concat(covariance_clan_other)
+    clan_information = clan_cat.collectFile(name: "clan.info")
     CMSEARCH_SUBWF(
         name,
         QC.out.sequence,
@@ -90,18 +104,32 @@ workflow PIPELINE {
     )
     
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
+        if (params.lsu_db) {
+            mapseq_lsu = channel.fromPath("${params.lsu_db}")
+        }
+        else {
+            DOWNLOAD_MAPSEQ_LSU()
+            mapseq_lsu = DOWNLOAD_MAPSEQ_LSU.out.mapseq_db_lsu
+        }
         MAPSEQ_OTU_KRONA_LSU(
             CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
-            PREPARE_DBS.out.mapseq_db_lsu,
+            mapseq_lsu,
             lsu_otu,
             lsu_label
         )
     }
     
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
+        if (params.ssu_db) {
+            mapseq_ssu = channel.fromPath("${params.ssu_db}")
+        }
+        else {
+            DOWNLOAD_MAPSEQ_LSU()
+            mapseq_ssu = DOWNLOAD_MAPSEQ_SSU.out.mapseq_db_ssu
+        }
         MAPSEQ_OTU_KRONA_SSU(
             CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
-            PREPARE_DBS.out.mapseq_db_ssu,
+            mapseq_ssu,
             ssu_otu,
             ssu_label
         )

@@ -10,6 +10,7 @@ process DECONTAMINATION {
     input:
     path reads
     path ref_genome
+    val ref_genome_name
     val mode
     val name
 
@@ -25,7 +26,7 @@ process DECONTAMINATION {
 
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
-        ${ref_genome}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
@@ -55,7 +56,7 @@ process DECONTAMINATION {
         echo "mapping files to host genome PE"
         bwa-mem2 mem -M \
         -t ${task.cpus} \
-        ${ref_genome}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
