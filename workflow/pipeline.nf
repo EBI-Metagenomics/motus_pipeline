@@ -25,6 +25,7 @@ motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
 covariance_model_database_ribo = channel.fromPath(params.covariance_model_database_ribo, checkIfExists: true)
 covariance_model_database_other = channel.fromPath(params.covariance_model_database_other, checkIfExists: true)
 clan_information = channel.fromPath(params.clan_information, checkIfExists: true)
+clan_information_other = channel.fromPath(params.clan_information_other, checkIfExists: true)
 
 lsu_db = channel.fromPath(params.lsu_db, checkIfExists: true)
 lsu_db_cl = channel.fromPath(params.lsu_db_cluster, checkIfExists: true)
@@ -70,12 +71,14 @@ workflow PIPELINE {
     MOTUS(name, QC.out.merged_reads, motus_db)
     
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    
+    clan_info_channel = clan_information.concat(clan_information_other)
+    clan_info = clan_info_channel.collectFile(name: "clan.info")
+
     CMSEARCH_SUBWF(
         name,
         QC.out.sequence,
         covariance_model_database,
-        clan_information
+        clan_info
     )
     
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
