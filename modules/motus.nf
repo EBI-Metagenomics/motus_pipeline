@@ -10,7 +10,7 @@ process MOTUS {
     label 'motus'
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
     // singularity
-    containerOptions '--bind db_mOTU:/db_mOTU'
+    containerOptions '--bind db_mOTU_v3.0.1:/db_mOTU'
     // docker mac
     //containerOptions '-v ${params.motus_db}:/db_mOTU --platform linux/amd64'
 
