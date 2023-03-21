@@ -7,6 +7,21 @@ include { GET_MAPSEQ_DB as GET_MAPSEQ_DB_SSU } from '../modules/mapseq'
 include { GET_MAPSEQ_DB as GET_MAPSEQ_DB_LSU } from '../modules/mapseq'
 include { GET_CMSEARCH_DB } from '../modules/cmsearch'
 include { GET_REF_GENOME } from '../modules/decontamination'
+include { MOTUS_DOWNLOAD_DB } from '../modules/motus'
+
+
+workflow DOWNLOAD_MOTUS_DB {
+    main:
+        // mOTUs
+        if (!(file("${params.databases}/${params.motus_db_name}").exists())) {
+            MOTUS_DOWNLOAD_DB()
+            motus_db = MOTUS_DOWNLOAD_DB.out }
+        else {
+            motus_db = channel.fromPath("${params.databases}/${params.motus_db_name}")
+        }
+    emit:
+        motus_db
+}
 
 workflow DOWNLOAD_REFERENCE_GENOME {
     main:

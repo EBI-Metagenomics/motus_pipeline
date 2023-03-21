@@ -13,8 +13,6 @@ if ( params.mode == "paired" ) {
     chosen_reads = channel.fromPath("${params.reads}/${params.name}*.fastq*", checkIfExists: true)
 }
 
-motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
-
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
@@ -35,6 +33,7 @@ include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_db'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
@@ -70,6 +69,13 @@ workflow PIPELINE {
     )
 
     // mOTUs
+    if (params.motus_db){
+        motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
+    }
+    else {
+        DOWNLOAD_MOTUS_DB()
+        motus_db = DOWNLOAD_MOTUS_DB.out.motus_db
+    }
     MOTUS(name, QC.out.merged_reads, motus_db)
 
     // RNA prediction
