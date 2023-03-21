@@ -6,13 +6,13 @@
                     "test-mapseq.txt:md5,fec26a63bbdeaea136fd751640cc305f"
                 ],
                 "mapseq2biom_tsv": [
-                    "test-mapseq.tsv:md5,41c4f5b5857339f066cd790dacbe4377"
+                    "test-mapseq.tsv:md5,340e600927c749d2cc5dabcf3090b0d4"
                 ],
                 "mapseq2biom_notaxid": [
-                    "test-mapseq.notaxid.tsv:md5,79924bc9316de373b87f073a8fdb291d"
+                    "test-mapseq.notaxid.tsv:md5,d9b9e1015a759ed205b4c03b58abd432"
                 ]
             }
         ],
-        "timestamp": "2023-02-28T17:20:32+0000"
+        "timestamp": "2023-03-21T15:01:32+0000"
     }
 }

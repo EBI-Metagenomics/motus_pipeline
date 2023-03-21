@@ -6,43 +6,44 @@
 */
 
 process MOTUS {
+
     publishDir "${params.outdir}/mOTUs/", mode: 'copy'
+
     label 'motus'
+
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
-    // singularity
-    containerOptions '--bind db_mOTU:/db_mOTU'
-    // docker mac
-    //containerOptions '-v ${params.motus_db}:/db_mOTU --platform linux/amd64'
+
+    memory '10 GB'
+    cpus 4
 
     input:
-    val name
     path reads
     path motus_db
 
     output:
-    path "${name}.motus", emit: motus_result
+    path "*.motus", emit: motus_result
     path "*.tsv", emit: motus_result_cleaned
 
     script:
     """
     gunzip ${reads}
     echo 'Run mOTUs'
-    motus profile -c -q \
-          -db /db_mOTU \
-          -s ${reads.baseName} \
-          -t ${task.cpus} \
-          -o ${name}.motus
+    motus profile -c -q -v 9 \
+    -db ${motus_db} \
+    -s ${reads.baseName} \
+    -t ${task.cpus} \
+    -o ${reads.baseName}.motus
+
     echo 'clean files'
-    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${name}.tsv
-    echo 'Generate presence TSV'
-    grep -v "0\$" ${name}.motus | egrep '^meta_mOTU|^ref_mOTU'  | sort -t\$'\t' -k3,3n >> ${name}.tsv
-    tail -n1 ${name}.motus | sed s'/-1/Unmapped/g' >> ${name}.tsv
-    echo 'Check empty file'
-    export y=\$(cat ${name}.tsv | wc -l)
-    echo 'number of lines is' \$y
-    if [ \$y -eq 2 ]; then
+    echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
+    grep -v "0\$" ${reads.baseName}.motus | grep -E '^meta_mOTU|^ref_mOTU' | sort -t\$'\t' -k3,3n >> ${reads.baseName}.tsv
+    tail -n1 ${reads.baseName}.motus | sed s'/-1/Unmapped/g' >> ${reads.baseName}.tsv
+
+    LINES=\$(cat ${reads.baseName}.tsv | wc -l)
+    echo 'number of lines is' \$LINES
+    if [ \$LINES -eq 2 ]; then
       echo 'rename file to empty'
-      mv ${name}.tsv 'empty.motus.tsv'
+      mv ${reads.baseName}.tsv 'empty.motus.tsv'
     fi
     """
 }
@@ -50,18 +51,25 @@ process MOTUS {
 /*
  * Download MGnify Rfam DB
 */
-process GET_MOTUS_DB {
-    publishDir "${params.databases}/", mode: 'copy'
-    container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
-    label 'motus_db'
+process MOTUS_DOWNLOAD_DB {
+
+    container "quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0"
+
+    label 'motus_download'
 
     input:
-        val db_name
+
     output:
-        path "*", emit: motus_db
+    path "db_mOTU/", emit: db
 
     script:
     """
-    motus downloadDB
+    ## must copy script file to working directory,
+    ## otherwise the reference_db will be download to bin folder
+    ## other than current directory
+    ## NOTE: container required
+    cp /usr/local/lib/python3.9/site-packages/motus/downloadDB.py downloadDB.py
+    python downloadDB.py -t $task.cpus
     """
 }
+

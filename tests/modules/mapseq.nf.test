@@ -26,6 +26,7 @@ nextflow_process {
             assert process.success
             // can not ise snapshot as mapseq annotates one sequence in different way?
             assert path(process.out.mapseq_result.get(0)).size() == 11163
+            assert path(process.out.mapseq_result.get(0)).readLines().size() == 30
         }
     }
 }

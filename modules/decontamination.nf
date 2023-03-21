@@ -3,9 +3,14 @@
 */
 process DECONTAMINATION {
 
-    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
+
     label 'decontamination'
+
+    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
+
+    cpus 4
+    memory '2 GB'
 
     input:
     path reads
@@ -78,6 +83,7 @@ process DECONTAMINATION {
         """
     }
 }
+
 
 /*
  * Download reference genome HG38
