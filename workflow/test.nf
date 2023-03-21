@@ -87,4 +87,51 @@ workflow PIPELINE {
         covariance_clan_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_clan
         covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
     }
+    covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
+    clan_cat = covariance_clan_ribo.concat(covariance_clan_other)
+    clan_information = clan_cat.collectFile(name: "clan.info")
+    CMSEARCH_SUBWF(
+        name,
+        QC.out.sequence,
+        covariance_model_database,
+        clan_information
+    )
+
+    // mapseq
+    lsu_otu = channel.value(params.lsu_db_otu)
+    lsu_label = channel.value(params.lsu_label)
+    ssu_otu = channel.value(params.ssu_db_otu)
+    ssu_label = channel.value(params.ssu_label)
+
+    if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
+        if (params.lsu_db) {
+            mapseq_lsu = channel.fromPath("${params.lsu_db}")
+        }
+        else {
+            DOWNLOAD_MAPSEQ_LSU()
+            mapseq_lsu = DOWNLOAD_MAPSEQ_LSU.out.mapseq_db_lsu
+        }
+        MAPSEQ_OTU_KRONA_LSU(
+            CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
+            mapseq_lsu,
+            lsu_otu,
+            lsu_label
+        )
+    }
+
+    if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
+        if (params.ssu_db) {
+            mapseq_ssu = channel.fromPath("${params.ssu_db}")
+        }
+        else {
+            DOWNLOAD_MAPSEQ_LSU()
+            mapseq_ssu = DOWNLOAD_MAPSEQ_SSU.out.mapseq_db_ssu
+        }
+        MAPSEQ_OTU_KRONA_SSU(
+            CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
+            mapseq_ssu,
+            ssu_otu,
+            ssu_label
+        )
+    }
 }
