@@ -70,7 +70,7 @@ workflow PIPELINE {
     )
 
     // mOTUs
-    //MOTUS(name, QC.out.merged_reads, motus_db)
+    MOTUS(name, QC.out.merged_reads, motus_db)
 
     // RNA prediction
     if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan)
@@ -98,11 +98,6 @@ workflow PIPELINE {
     )
 
     // mapseq
-    lsu_otu = channel.value(params.lsu_db_otu)
-    lsu_label = channel.value(params.lsu_label)
-    ssu_otu = channel.value(params.ssu_db_otu)
-    ssu_label = channel.value(params.ssu_label)
-
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         if (params.lsu_db) {
             mapseq_lsu = channel.fromPath("${params.lsu_db}")
@@ -114,8 +109,10 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_LSU(
             CMSEARCH_SUBWF.out.cmsearch_lsu_fasta,
             mapseq_lsu,
-            lsu_otu,
-            lsu_label
+            channel.value(params.lsu_db_otu),
+            channel.value(params.lsu_db_fasta),
+            channel.value(params.lsu_db_tax),
+            channel.value(params.lsu_label)
         )
     }
 
@@ -130,8 +127,10 @@ workflow PIPELINE {
         MAPSEQ_OTU_KRONA_SSU(
             CMSEARCH_SUBWF.out.cmsearch_ssu_fasta,
             mapseq_ssu,
-            ssu_otu,
-            ssu_label
+            channel.value(params.ssu_db_otu),
+            channel.value(params.ssu_db_fasta),
+            channel.value(params.ssu_db_tax),
+            channel.value(params.ssu_label)
         )
     }
 }

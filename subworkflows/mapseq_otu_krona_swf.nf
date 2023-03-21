@@ -11,6 +11,8 @@ workflow MAPSEQ_OTU_KRONA {
         sequence
         mapseq_db
         otu_ref
+        db_fasta
+        db_tax
         otu_label
     main:
 
@@ -20,6 +22,8 @@ workflow MAPSEQ_OTU_KRONA {
             MAPSEQ.out.mapseq_result,
             mapseq_db,
             otu_ref,
+            db_fasta,
+            db_tax,
             otu_label
         )
 

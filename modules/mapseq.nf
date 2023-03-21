@@ -10,6 +10,8 @@ process MAPSEQ {
     input:
         path sequence
         path mapseq_db
+        val db_fasta
+        val db_tax
         val otu_label
     output:
         path "${sequence.baseName}.mseq", emit: mapseq_result
@@ -18,8 +20,8 @@ process MAPSEQ {
     """
     mapseq \
         ${sequence} \
-        ${mapseq_db}/${params.ssu_db_fasta} \
-        ${mapseq_db}/${params.ssu_db_tax} \
+        ${mapseq_db}/${db_fasta} \
+        ${mapseq_db}/${db_tax} \
         -nthreads ${task.cpus} \
         -tophits 80 \
         -topotus 40 \
