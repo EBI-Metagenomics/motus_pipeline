@@ -13,19 +13,7 @@ if ( params.mode == "paired" ) {
     chosen_reads = channel.fromPath("${params.reads}/${params.name}*.fastq*", checkIfExists: true)
 }
 
-// fastp filtering
-min_length = channel.value(params.min_length)
-polya_trim = channel.value(params.polya_trim)
-qualified_quality_phred = channel.value(params.qualified_quality_phred)
-unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
-
 motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
-
-// mapseq
-lsu_otu = channel.value(params.lsu_db_otu)
-lsu_label = channel.value(params.lsu_label)
-ssu_otu = channel.value(params.ssu_db_otu)
-ssu_label = channel.value(params.ssu_label)
 
 /*
     ~~~~~~~~~~~~~~~~~~
@@ -54,6 +42,12 @@ include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
 */
 workflow PIPELINE {
     // Quality control
+    // fastp filtering
+    min_length = channel.value(params.min_length)
+    polya_trim = channel.value(params.polya_trim)
+    qualified_quality_phred = channel.value(params.qualified_quality_phred)
+    unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
+
     if (params.reference_genome && params.reference_genome_name) {
         ref_genome = channel.fromPath("${params.reference_genome}")
         ref_genome_name = channel.value("${params.reference_genome_name}")
@@ -102,7 +96,13 @@ workflow PIPELINE {
         covariance_model_database,
         clan_information
     )
-    
+
+    // mapseq
+    lsu_otu = channel.value(params.lsu_db_otu)
+    lsu_label = channel.value(params.lsu_label)
+    ssu_otu = channel.value(params.ssu_db_otu)
+    ssu_label = channel.value(params.ssu_label)
+
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         if (params.lsu_db) {
             mapseq_lsu = channel.fromPath("${params.lsu_db}")

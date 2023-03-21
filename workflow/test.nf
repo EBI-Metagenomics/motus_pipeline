@@ -20,6 +20,7 @@ unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 */
 include { QC } from '../subworkflows/qc_swf'
 include { DECONTAMINATION } from '../modules/decontamination'
+include { GET_MOTUS_DB } from '../modules/motus'
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
@@ -34,18 +35,5 @@ include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 */
 
 workflow PIPELINE {
-    if (params.reference_genome) {
-        ref_genome = channel.fromPath("${params.reference_genome}")
-    }
-    else {
-        DOWNLOAD_REFERENCE_GENOME()
-        ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
-    }
-
-    DECONTAMINATION(
-        chosen_reads,
-        ref_genome,
-        mode,
-        name
-    )
+    GET_MOTUS_DB("${params.motus_db_name}")
 }
