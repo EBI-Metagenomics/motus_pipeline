@@ -1,0 +1,38 @@
+{
+    "Fastp Overlap on PE": {
+        "content": [
+            [
+                "example_paired_fastp.overlap.json:md5,33c1dac764b830967e2216c41f642b3e"
+            ],
+            [
+                "example_paired_merged.fastq.gz:md5,d823093323b70c108b16d15ba488dafd"
+            ]
+        ],
+        "timestamp": "2023-03-21T15:05:43+0000"
+    },
+    "Fastp QC on SE": {
+        "content": [
+            [
+                "single_fastp.qc.json:md5,d68c9f67c9e45b6a642ff897911b7cb8"
+            ],
+            [
+                "single_fastp.fastq.gz:md5,e97dc837b73424fe9df68a0141058172"
+            ]
+        ],
+        "timestamp": "2023-03-21T15:05:43+0000"
+    },
+    "Fastp QC on PE": {
+        "content": [
+            [
+                "example_paired_fastp.qc.json:md5,469b45fcd4d2f34b0dcfe8818612485d"
+            ],
+            [
+                [
+                    "example_paired_fastp_1.fastq.gz:md5,27375cf65e00163a1c021ec67321be12",
+                    "example_paired_fastp_2.fastq.gz:md5,87ec1c8c9542166afaa3e54da50060d8"
+                ]
+            ]
+        ],
+        "timestamp": "2023-03-21T15:05:43+0000"
+    }
+}
