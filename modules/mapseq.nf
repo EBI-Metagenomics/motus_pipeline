@@ -9,20 +9,21 @@ process MAPSEQ {
     label 'mapseq'
 
     input:
-        path sequence
-        path mapseq_db
-        path mapseq_db_cl
-        path mapseq_taxonomy
-        val otu_label
+    path sequence
+    path mapseq_db
+    path mapseq_db_cl
+    path mapseq_taxonomy
+    val otu_label
+
     output:
-        path "${sequence.baseName}.mseq", emit: mapseq_result
+    path "${sequence.baseName}.mseq", emit: mapseq_result
 
     script:
     """
     mapseq \
-        $sequence \
+        ${sequence} \
         ${mapseq_db} \
-        $mapseq_taxonomy \
+        ${mapseq_taxonomy} \
         -nthreads ${task.cpus} \
         -tophits 80 \
         -topotus 40 \
