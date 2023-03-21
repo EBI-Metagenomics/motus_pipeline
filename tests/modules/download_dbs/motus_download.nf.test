@@ -1,8 +1,8 @@
 nextflow_workflow {
 
-    name "Test Workflow MOTUS_DB_DOWNLOAD_TEST"
-    script "subworkflows/motus_download.nf"
-    workflow "MOTUS_DB_DOWNLOAD_TEST"
+    name "Test Workflow MOTUS_DOWNLOAD_DB_TEST"
+    script "modules/motus.nf"
+    workflow "MOTUS_DOWNLOAD_DB"
 
     test("Should run without failures") {
 
@@ -15,7 +15,7 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out.motus_db).match()
+            assert snapshot(workflow.out).match()
         }
     }
 }

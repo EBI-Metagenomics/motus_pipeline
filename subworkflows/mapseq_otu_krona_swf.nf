@@ -35,5 +35,8 @@ workflow MAPSEQ_OTU_KRONA {
             otu_label,
             MAPSEQ2BIOM.out.mapseq2biom_txt
         )
+    emit:
+        mapseq = MAPSEQ.out.mapseq_result
+        biom = MAPSEQ2BIOM.out.mapseq2biom_txt
 }
 

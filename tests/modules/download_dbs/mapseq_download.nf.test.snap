@@ -1,0 +1,15 @@
+{
+    "download mapseq LSU db": {
+        "content": [
+            [
+                [
+                    "LSU.fasta:md5,96dc05a4ab2933ec6f443a1a0ce0d225",
+                    "LSU.fasta.mscluster:md5,19f454e601925abbde17302ddc20c165",
+                    "lsu2.otu:md5,515df01f33ed8d5741fbe0e55e4780b9",
+                    "slv_lsu_filtered2.txt:md5,d521ce911cb9b94f4d304286ed9f8c3e"
+                ]
+            ]
+        ],
+        "timestamp": "2023-03-21T16:21:15+0000"
+    }
+}

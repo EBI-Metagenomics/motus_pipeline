@@ -1,0 +1,22 @@
+{
+    "cmsearch-deoverlap-extract": {
+        "content": [
+            {
+                "cmsearch_lsu_fasta": [
+                    
+                ],
+                "cmsearch_ssu_fasta": [
+                    
+                ],
+                "seq_cat": [
+                  [
+                      [
+                          "mgtest_RNaseP_bact_b.fasta:md5,7eefda3f2ae374918ddeb201933bca66"
+                      ]
+                  ]
+                ]
+            }
+        ],
+        "timestamp": "2023-03-23T09:56:38+0000"
+    }
+}

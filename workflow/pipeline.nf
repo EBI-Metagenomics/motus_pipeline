@@ -28,10 +28,11 @@ include { MOTUS_SUBWF } from '../subworkflows/motus_swf'
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
-include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_dbs'
-include { DOWNLOAD_RFAM } from '../subworkflows/prepare_dbs'
-include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_dbs'
-include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
+include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
+include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_db'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow

@@ -31,8 +31,8 @@ process MAPSEQ2BIOM {
         --krona ${mapseq.baseName}.txt \
         --no-tax-id-file ${mapseq.baseName}.notaxid.tsv \
         --taxid \
-        --label $otu_label \
-        --query $mapseq \
-        --otu-table $otu_ref
+        --label ${otu_label} \
+        --query ${mapseq} \
+        --otu-table ${mapseq_db}/${otu_ref}
     """
 }

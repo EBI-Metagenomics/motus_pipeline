@@ -1,0 +1,15 @@
+{
+    "mapseq-otu-krona": {
+        "content": [
+            {
+                "mapseq": [
+                    "test.mseq:md5,10f996abe54bd0d5b5429223c9320c47"
+                ],
+                "biom": [
+                    "test.txt:md5,cb95d683b6a7c64da1ef16d1a194c83a"
+                ]
+            }
+        ],
+        "timestamp": "2023-03-22T16:33:05+0000"
+    }
+}

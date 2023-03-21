@@ -1,0 +1,38 @@
+nextflow_process {
+    
+    name "Test module download mapseq db"
+    script "modules/mapseq.nf"
+    process "GET_MAPSEQ_DB"
+
+    test("download mapseq LSU db") {
+
+        when {
+            process {
+                """
+                input[0] = channel.value(params.silva_lsu_db_name)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.db).match()
+        }
+    }
+    
+    
+    test("download mapseq SSU db") {
+        when {
+            process {
+                """
+                input[0] = channel.value(params.silva_ssu_db_name)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.db).match()
+        }
+    }
+}

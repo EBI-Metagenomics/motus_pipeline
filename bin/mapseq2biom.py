@@ -69,7 +69,7 @@ def main():
             # Simple two column table, OTU code and taxonomy string.
             otu = row[0]
             tax = row[1]
-            tax_id = row[3] if len(row) >= 3 else None
+            tax_id = row[2] if len(row) >= 3 else None
             # Have we seen this tax string? Store the OTU
             if tax in tax_counter:
                 tax_counter[tax]["otu"] = otu

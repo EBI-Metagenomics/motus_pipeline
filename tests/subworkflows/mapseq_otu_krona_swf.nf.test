@@ -9,17 +9,19 @@ nextflow_process {
         when {
             params {
                 seq = "${baseDir}/tests/subworkflows/fixtures/mapseq/test.fasta"
-                db = "${baseDir}/tests/modules/fixtures/mapseq/silva-SSU/silva-SSU.fasta"
-                tax = "${baseDir}/tests/modules/fixtures/mapseq/silva-filt.txt"
-                otu = "${baseDir}/tests/subworkflows/fixtures/mapseq/otu"
+                db = "${baseDir}/tests/modules/fixtures/mapseq/silva-SSU"
+                fasta = "SSU.fasta"
+                tax = "slv_ssu_filtered2.txt"
+                otu = "test-otu"
             }
             process {
                 """
                 input[0] = channel.fromPath("${params.seq}", checkIfExists: true)
                 input[1] = channel.fromPath("${params.db}", checkIfExists: true)
-                input[2] = channel.fromPath("${params.tax}", checkIfExists: true)
-                input[3] = channel.fromPath("${params.otu}", checkIfExists: true)
-                input[4] = channel.value("test")
+                input[2] = channel.value(params.otu)
+                input[3] = channel.value(params.fasta)
+                input[4] = channel.value(params.tax)
+                input[5] = channel.value("test")
                 """
             }
         }
