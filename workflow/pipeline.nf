@@ -76,7 +76,7 @@ workflow PIPELINE {
         DOWNLOAD_MOTUS_DB()
         motus_db = DOWNLOAD_MOTUS_DB.out.motus_db
     }
-    MOTUS(name, QC.out.merged_reads, motus_db)
+    MOTUS(QC.out.merged_reads, motus_db)
 
     // RNA prediction
     if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan)
