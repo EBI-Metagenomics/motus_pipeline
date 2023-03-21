@@ -124,7 +124,7 @@ workflow PIPELINE {
             mapseq_ssu = channel.fromPath("${params.ssu_db}")
         }
         else {
-            DOWNLOAD_MAPSEQ_LSU()
+            DOWNLOAD_MAPSEQ_SSU()
             mapseq_ssu = DOWNLOAD_MAPSEQ_SSU.out.mapseq_db_ssu
         }
         MAPSEQ_OTU_KRONA_SSU(
