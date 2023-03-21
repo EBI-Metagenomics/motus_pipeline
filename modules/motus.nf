@@ -13,9 +13,6 @@ process MOTUS {
 
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
 
-    memory '10 GB'
-    cpus 4
-
     input:
     path reads
     path motus_db

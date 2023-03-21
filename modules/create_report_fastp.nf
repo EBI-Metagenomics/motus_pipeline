@@ -9,8 +9,6 @@ process FASTP_REPORT {
 
     label 'fastp_report'
 
-    cpus 1
-    memory '300 MB'
 
     input:
     path fastp_jsons
