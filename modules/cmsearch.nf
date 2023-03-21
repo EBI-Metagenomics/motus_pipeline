@@ -10,9 +10,6 @@ process CMSEARCH {
     
     container 'quay.io/biocontainers/infernal:1.1.4--pl5321hec16e2b_1'
 
-    memory '24 GB'
-    cpus 4
-
     input:
     path sequences
     file covariance_model_database

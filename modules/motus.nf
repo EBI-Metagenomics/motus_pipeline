@@ -6,31 +6,27 @@
 */
 
 process MOTUS {
-    
+
     publishDir "${params.outdir}/mOTUs/", mode: 'copy'
-    
+
     label 'motus'
 
     container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
 
-    memory '1 GB'
-    cpus 4
-
     input:
-    val name
     path reads
     path motus_db
 
     output:
-    path "${name}.motus", emit: motus_result
+    path "*.motus", emit: motus_result
     path "*.tsv", emit: motus_result_cleaned
 
     script:
     """
     gunzip ${reads}
     echo 'Run mOTUs'
-    motus profile -c -q \
-    -db /db_mOTU \
+    motus profile -c -q -v 9 \
+    -db ${motus_db} \
     -s ${reads.baseName} \
     -t ${task.cpus} \
     -o ${reads.baseName}.motus
@@ -44,7 +40,7 @@ process MOTUS {
     echo 'number of lines is' \$LINES
     if [ \$LINES -eq 2 ]; then
       echo 'rename file to empty'
-      mv ${name}.tsv 'empty.motus.tsv'
+      mv ${reads.baseName}.tsv 'empty.motus.tsv'
     fi
     """
 }
@@ -52,18 +48,24 @@ process MOTUS {
 /*
  * Download MGnify Rfam DB
 */
-process GET_MOTUS_DB {
-    publishDir "${params.databases}/", mode: 'copy'
-    container 'quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0'
-    label 'motus_db'
+process MOTUS_DOWNLOAD_DB {
+
+    container "quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0"
+
+    label 'motus_download'
 
     input:
-        val db_name
+
     output:
-        path "*", emit: motus_db
+    path "db_mOTU/", emit: db
 
     script:
     """
-    motus downloadDB
+    ## must copy script file to working directory,
+    ## otherwise the reference_db will be download to bin folder
+    ## other than current directory
+    ## NOTE: container required
+    cp /usr/local/lib/python3.9/site-packages/motus/downloadDB.py downloadDB.py
+    python downloadDB.py -t $task.cpus
     """
 }

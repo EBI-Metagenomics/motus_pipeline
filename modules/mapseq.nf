@@ -14,7 +14,7 @@ process MAPSEQ {
         val db_tax
         val otu_label
     output:
-        path "${sequence.baseName}.mseq", emit: mapseq_result
+    path "${sequence.baseName}.mseq", emit: mapseq_result
 
     script:
     """
@@ -28,6 +28,7 @@ process MAPSEQ {
         -outfmt 'simple' > ${sequence.baseName}.mseq
     """
 }
+<<<<<<< HEAD
 
 /*
  * Download MGnify mapseq DB

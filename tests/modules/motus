@@ -7,21 +7,22 @@ nextflow_process {
     test("motus") {
 
         when {
+            // The DB needs to be downloaded
             params {
-                reads = "${baseDir}/tests/modules/fixtures/motus/db_mOTU/db_mOTU_test/test1_single.fastq.gz"
+                reads = "${baseDir}/tests/modules/fixtures/motus/test_single.fastq.gz"
                 db = "${baseDir}/tests/modules/fixtures/motus/db_mOTU/"
             }
             process {
                 """
-                input[0] = channel.value('test')
-                input[1] = channel.fromPath("${params.reads}", checkIfExists: true)
-                input[2] = channel.fromPath("${params.db}")
+                input[0] = channel.fromPath("${params.reads}", checkIfExists: true)
+                input[1] = channel.fromPath("${params.db}")
                 """
             }
         }
 
         then {
             assert process.success
+            assert path(process.out.motus_result.get(0)).md5 == "a97d4056934b1a36e71cae27a420efa9"
         }
     }
 }
