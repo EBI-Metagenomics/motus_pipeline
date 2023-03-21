@@ -15,7 +15,9 @@ nextflow_process {
                 """
                 input[0] = channel.fromPath("${params.seq}", checkIfExists: true)
                 input[1] = channel.fromPath("${params.db}", checkIfExists: true)
-                input[2] = channel.value("LSU")
+                input[2] = channel.value("SSU.fasta")
+                input[3] = channel.value("slv_ssu_filtered2.txt")
+                input[4] = channel.value("LSU")
                 """
             }
         }

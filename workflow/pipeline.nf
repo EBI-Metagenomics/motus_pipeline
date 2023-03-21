@@ -13,8 +13,6 @@ if ( params.mode == "paired" ) {
     chosen_reads = channel.fromPath("${params.reads}/${params.name}*.fastq*", checkIfExists: true)
 }
 
-motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
-
 /*
     ~~~~~~~~~~~~~~~~~~
      Steps
@@ -24,17 +22,16 @@ include { QC } from '../subworkflows/qc_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
-include { MOTUS } from '../modules/motus'
-
+include { MOTUS_SUBWF } from '../subworkflows/motus_swf'
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
     ~~~~~~~~~~~~~~~~~~
 */
-include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
-include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
-include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
-include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
+include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_dbs'
+include { DOWNLOAD_RFAM } from '../subworkflows/prepare_dbs'
+include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_dbs'
+include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
@@ -70,7 +67,7 @@ workflow PIPELINE {
     )
 
     // mOTUs
-    MOTUS(name, QC.out.merged_reads, motus_db)
+    MOTUS_SUBWF(QC.out.merged_reads)
 
     // RNA prediction
     if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan)
@@ -88,13 +85,15 @@ workflow PIPELINE {
         covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
     }
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
-    clan_cat = covariance_clan_ribo.concat(covariance_clan_other)
-    clan_information = clan_cat.collectFile(name: "clan.info")
+    clan_info_channel = covariance_clan_ribo.concat(covariance_clan_other)
+    clan_info = clan_info_channel.collectFile(name: "clan.info")
+    covariance_cat_models = covariance_model_database.collectFile(name: "models.cm", newLine: true)
+
     CMSEARCH_SUBWF(
         name,
         QC.out.sequence,
-        covariance_model_database,
-        clan_information
+        covariance_cat_models,
+        clan_info
     )
 
     // mapseq
@@ -115,7 +114,7 @@ workflow PIPELINE {
             channel.value(params.lsu_label)
         )
     }
-    
+
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
         if (params.ssu_db) {
             mapseq_ssu = channel.fromPath("${params.ssu_db}")
