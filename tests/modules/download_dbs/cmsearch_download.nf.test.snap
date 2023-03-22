@@ -1,0 +1,43 @@
+{
+    "download cmsearch ribo and other dbs": {
+        "content": [
+            {
+                "ribo_clan": [
+                    "ribo.claninfo:md5,ed55b0130da268e5deca604fa34da618"
+                ],
+                "other_db": [
+                    [
+                        "Archaea_SRP.cm:md5,0b85ae3b178150ad302fe295ea5794dc",
+                        "Bacteria_large_SRP.cm:md5,0ce2c0407c18a6a6f67d907718556951",
+                        "Bacteria_small_SRP.cm:md5,aac546e28fe85eb6478dceab842b7ba2",
+                        "Dictyostelium_SRP.cm:md5,57d27c4d9098f3a05447030c28330238",
+                        "Fungi_SRP.cm:md5,b874eb43eca0af9dbdd402ae8cdc7d76",
+                        "Metazoa_SRP.cm:md5,2e0d37364dd446be81710d013d6b8947",
+                        "Plant_SRP.cm:md5,b0d6d8960d012a40f7b2b4c8ed50cb1f",
+                        "Protozoa_SRP.cm:md5,4f7bb93a56ea9e3f4f00df19e2b1efe3",
+                        "RNaseP_arch.cm:md5,80b98e26b20e3dbcf025d5414023d5e1",
+                        "RNaseP_bact_a.cm:md5,4501e8e0357aefbf76849a619a423c94",
+                        "RNaseP_bact_b.cm:md5,3d5c292715b9df28d74ed032fdcb2041",
+                        "RNaseP_nuc.cm:md5,d82176ee498688ffeaba25263956123e",
+                        "RNase_MRP.cm:md5,339d31cf05f52736c8036d8a28824f53",
+                        "RNase_P.cm:md5,387d3694d17a2fd5bb9edebb586105af",
+                        "alpha_tmRNA.cm:md5,bb386488759438f4c3648044a6e7e990",
+                        "beta_tmRNA.cm:md5,af26a7a601e4b0ae4b7edf7c9459b02d",
+                        "cyano_tmRNA.cm:md5,60ba0326655a2b558ec7adad571c7d90",
+                        "mt-tmRNA.cm:md5,77b2478f1f638066d2eed2b18b0c518b",
+                        "tRNA-Sec.cm:md5,73b3442df0671d75ced6a540c4bc4b31",
+                        "tRNA.cm:md5,adf704922a7f539d0a2ea5132e36db42",
+                        "tmRNA.cm:md5,2b6475b810ce90021bb742473bc1f455"
+                    ]
+                ],
+                "ribo_db": [
+                    "ribo.cm:md5,deaa5d3f619e105ea293152549f199c6"
+                ],
+                "other_clan": [
+                    "other.claninfo:md5,ed7dafda95e609164f942a3b2cd403b1"
+                ]
+            }
+        ],
+        "timestamp": "2023-03-22T15:26:19+0000"
+    }
+}

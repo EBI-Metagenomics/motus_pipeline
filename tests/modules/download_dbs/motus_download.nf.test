@@ -15,7 +15,7 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out.motus_db).match()
+            assert snapshot(workflow.out).match()
         }
     }
 }
