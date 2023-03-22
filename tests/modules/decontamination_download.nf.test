@@ -1,0 +1,22 @@
+nextflow_process {
+    
+    name "Test module download human fer genome"
+    script "modules/decontamination.nf"
+    process "GET_REF_GENOME"
+
+    test("download hg38") {
+
+        when {
+            process {
+                """
+                input[0] = channel.value(params.decontamination_indexes_folder)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.db).match()
+        }
+    }
+}
