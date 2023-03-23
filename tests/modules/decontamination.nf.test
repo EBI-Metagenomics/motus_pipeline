@@ -81,7 +81,7 @@ nextflow_process {
 
         then {
             assert process.success
-            assert path(process.out.decontaminated_reads.get(0)).linesGzip.size() == 0
+            assert path(process.out.decontaminated_reads.get(0)).linesGzip.size() == 1032
         }
 
     }

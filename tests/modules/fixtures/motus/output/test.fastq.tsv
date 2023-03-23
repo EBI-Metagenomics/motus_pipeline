@@ -1,0 +1,17 @@
+#mOTU   consensus_taxonomy      count
+ref_mOTU_v3_00041       k__Bacteria|p__Proteobacteria|c__Gammaproteobacteria|o__Vibrionales|f__Vibrionaceae|g__Vibrio|s__Vibrio tubiashii       2
+ref_mOTU_v3_05094       k__Bacteria|p__Thermodesulfobacteria|c__Thermodesulfobacteria|o__Thermodesulfobacteriales|f__Thermodesulfobacteriaceae|g__Thermodesulfobacterium|s__Thermodesulfobacterium commune [Thermodesulfobacterium sp. 37_54/Thermodesulfobacterium commune]    3
+ref_mOTU_v3_00316       k__Bacteria|p__Firmicutes|c__Bacilli|o__Lactobacillales|f__Streptococcaceae|g__Streptococcus|s__Streptococcus dysgalactiae      7
+ref_mOTU_v3_00564       k__Bacteria|p__Firmicutes|c__Negativicutes|o__Veillonellales|f__Veillonellaceae|g__Megasphaera|s__Megasphaera sp. [Megasphaera sp. UPII 199-6/Veillonellaceae bacterium DNF00751/Megasphaera genomosp. type_1]  7
+ref_mOTU_v3_02941       k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhizobiales|f__Phyllobacteriaceae|g__Nitratireductor|s__Nitratireductor aquibiodomus [Nitratireductor sp. ES.061/Nitratireductor aquibiodomus]  8
+ref_mOTU_v3_00201       k__Bacteria|p__Proteobacteria|c__Gammaproteobacteria|o__Pseudomonadales|f__Pseudomonadaceae|g__Pseudomonas|s__Pseudomonas aeruginosa    11
+ref_mOTU_v3_01591       k__Bacteria|p__Firmicutes|c__Bacilli|o__Lactobacillales|f__Streptococcaceae|g__Streptococcus|s__Streptococcus sanguinis 12
+ref_mOTU_v3_02803       k__Bacteria|p__Proteobacteria|c__Gammaproteobacteria|o__Thiotrichales|f__Francisellaceae|g__Francisella|s__Francisella philomiragia/noatunensis 16
+ref_mOTU_v3_03430       k__Bacteria|p__Actinobacteria|c__Actinobacteria|o__Corynebacteriales|f__Corynebacteriaceae|g__Corynebacterium|s__Corynebacterium ihumii/afermentans     21
+ref_mOTU_v3_00757       k__Bacteria|p__Chlamydiae|c__Chlamydiia|o__Chlamydiales|f__Chlamydiaceae|g__Chlamydia|s__Chlamydia abortus      28
+ref_mOTU_v3_04327       k__Bacteria|p__Firmicutes|c__Erysipelotrichia|o__Erysipelotrichales|f__Erysipelotrichaceae|g__Kandleria|s__Kandleria vitulina   36
+ref_mOTU_v3_00648       k__Bacteria|p__Actinobacteria|c__Actinobacteria|o__Streptomycetales|f__Streptomycetaceae|g__Streptomyces|s__Streptomyces durhamensis    38
+meta_mOTU_v3_13597      k__Bacteria|p__Firmicutes|c__Firmicutes class incertae sedis|o__Firmicutes order incertae sedis|f__Firmicutes fam. incertae sedis|g__Firmicutes gen. incertae sedis|s__Firmicutes species incertae sedis        54
+ref_mOTU_v3_03277       k__Bacteria|p__Actinobacteria|c__Actinobacteria|o__Actinobacteria order [Corynebacteriales/Streptomycetales]|f__Actinobacteria fam. [Williamsiaceae/Streptomycetaceae]|g__Actinobacteria gen. [Kitasatospora/Williamsia]|s__Actinobacteria sp. [Williamsia sp. D3/Microbispora sp. NRRL B-24597/Kitasatospora arboriphila/Williamsia muralis]   57
+ref_mOTU_v3_00567       k__Bacteria|p__Firmicutes|c__Bacilli|o__Lactobacillales|f__Streptococcaceae|g__Streptococcus|s__Streptococcus anginosus 175
+unassigned      unassigned      5
