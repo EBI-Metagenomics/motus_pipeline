@@ -9,7 +9,7 @@
                     "mgtest_merged.fasta:md5,9fb5bc878aafc110c87bc0a1d1c357aa"
                 ],
                 "merged_reads": [
-                    "mgtest_merged_clean.fastq.gz:md5,eeaa6ea45b7de8048a8ca5dbf5f33db0"
+                    "mgtest_merged_clean.fastq.gz:md5,8a588dd21e02550aaf1fcc6c84ecfb20"
                 ],
                 "qc_stats": [
                     [
@@ -25,7 +25,7 @@
                 ]
             }
         ],
-        "timestamp": "2023-03-23T12:12:54+0000"
+        "timestamp": "2023-03-23T12:28:40+0000"
     },
     "QC PE small example": {
         "content": [
@@ -53,6 +53,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-03-23T12:12:54+0000"
+        "timestamp": "2023-03-23T12:28:40+0000"
     }
 }
