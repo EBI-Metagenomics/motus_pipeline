@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test SubWorkflow motus with db download"
+    script "subworkflows/motus_swf.nf"
+    process "MOTUS_SUBWF"
+
+    test("motus with db download") {
+
+        when {
+            params {
+                reads = "${baseDir}/tests/subworkflows/fixtures/motus/test.fastq.gz"
+                motus_db = false
+            }
+            process {
+                """
+                input[0] = channel.fromPath(params.reads)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
