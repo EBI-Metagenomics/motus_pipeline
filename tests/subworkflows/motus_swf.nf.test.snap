@@ -1,0 +1,12 @@
+{
+    "motus with db download": {
+        "content": [
+            {
+                "motus_tsv": [
+                    "test.fastq.tsv:md5,374013e14d9130e1b6fd919ae6b507e7"
+                ]
+            }
+        ],
+        "timestamp": "2023-03-23T11:08:53+0000"
+    }
+}

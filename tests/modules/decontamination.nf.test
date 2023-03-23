@@ -32,6 +32,7 @@ nextflow_process {
         }
 
     }
+
     test("Decontamination PE reverse input order") {
 
         when {
@@ -60,6 +61,7 @@ nextflow_process {
         }
 
     }
+
     test("Decontamination SE") {
 
         when {
@@ -73,15 +75,15 @@ nextflow_process {
                 input[0] = channel.fromPath("${params.reads}/${params.name}.fastq.gz", checkIfExists: true)
                 input[1] = channel.fromPath(params.reference_genome)
                 input[2] = channel.value(params.reference_genome_name)
-                input[3] = params.mode
-                input[4] = params.name
+                input[3] = channel.value(params.mode)
+                input[4] = channel.value(params.name)
                 """
             }
         }
 
         then {
             assert process.success
-            assert path(process.out.decontaminated_reads.get(0)).linesGzip.size() == 0
+            assert path(process.out.decontaminated_reads.get(0)).linesGzip.size() == 1032
         }
 
     }
