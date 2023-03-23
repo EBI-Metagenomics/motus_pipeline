@@ -16,8 +16,7 @@ modules:
 - extract models [1]
 
 subwfs: 
-- qc PE swapping files in snapshot?
-- qc SE failed with decontamination
+- qc swapping files in snapshot?
 
 DB:
 
