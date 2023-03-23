@@ -32,7 +32,6 @@ include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
-include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_db'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
