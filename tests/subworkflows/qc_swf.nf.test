@@ -10,16 +10,20 @@ nextflow_process {
                 name = "mgtest"
                 reads = "${baseDir}/tests/modules/fixtures/bwa/"
                 mode = "paired"
+                ref_genome = "${baseDir}/tests/modules/fixtures/bwa/ref"
+                ref_genome_name = "GRCh38_chr10.fasta"
             }
             process {
                 """
                 input[0] = params.name
                 input[1] = channel.fromFilePairs("${params.reads}/${params.name}_{1,2}.fastq.gz", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
-                input[3] = channel.value(10)
-                input[4] = channel.value(10)
-                input[5] = channel.value(15)
+                input[3] = channel.fromPath(params.ref_genome)
+                input[4] = channel.value(params.ref_genome_name)
+                input[5] = channel.value(10)
                 input[6] = channel.value(10)
+                input[7] = channel.value(15)
+                input[8] = channel.value(10)
                 """
             }
         }
@@ -36,16 +40,20 @@ nextflow_process {
                 name = "mgtest_merged"
                 reads = "${baseDir}/tests/subworkflows/fixtures/qc"
                 mode = "single"
+                ref_genome = "${baseDir}/tests/modules/fixtures/bwa/ref"
+                ref_genome_name = "GRCh38_chr10.fasta"
             }
             process {
                 """
                 input[0] = params.name
                 input[1] = channel.fromPath("${params.reads}/${params.name}.fastq.gz", checkIfExists: true)
                 input[2] = params.mode
-                input[3] = channel.value(10)
-                input[4] = channel.value(10)
-                input[5] = channel.value(15)
+                input[3] = channel.fromPath(params.ref_genome)
+                input[4] = channel.value(params.ref_genome_name)
+                input[5] = channel.value(10)
                 input[6] = channel.value(10)
+                input[7] = channel.value(15)
+                input[8] = channel.value(10)
                 """
             }
         }
