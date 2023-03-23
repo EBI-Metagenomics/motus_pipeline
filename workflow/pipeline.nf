@@ -22,8 +22,7 @@ include { QC } from '../subworkflows/qc_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
-include { MOTUS } from '../modules/motus'
-
+include { MOTUS_SUBWF } from '../subworkflows/motus_swf'
 /*
     ~~~~~~~~~~~~~~~~~~
      DBs
@@ -33,7 +32,6 @@ include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_db'
 include { DOWNLOAD_RFAM } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_db'
 include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_db'
-include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_db'
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
@@ -69,14 +67,7 @@ workflow PIPELINE {
     )
 
     // mOTUs
-    if (params.motus_db){
-        motus_db = channel.fromPath(params.motus_db, checkIfExists: true)
-    }
-    else {
-        DOWNLOAD_MOTUS_DB()
-        motus_db = DOWNLOAD_MOTUS_DB.out.motus_db
-    }
-    MOTUS(QC.out.merged_reads, motus_db)
+    MOTUS_SUBWF(QC.out.merged_reads)
 
     // RNA prediction
     if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan)
