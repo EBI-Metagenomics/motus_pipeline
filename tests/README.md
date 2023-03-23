@@ -11,13 +11,13 @@ error
 
 CODON: \
 modules:
-- cmsearch [1]
-- decontamination [3]
-- extract models [1]
+- cmsearch [1] incorrect output bytes because of command inside output file
+
+fixed but not beautiful :(
+- extract models [1] incorrect order of output files in snapshot
 
 subwfs: 
-- qc PE swapping files in snapshot?
-- qc SE failed with decontamination
+- qc swapping files in snapshot?
 
 DB:
 

@@ -27,7 +27,7 @@ workflow DOWNLOAD_REFERENCE_GENOME {
     main:
         if (!(file("${params.databases}/${params.decontamination_indexes_folder}").exists())) {
             GET_REF_GENOME("${params.decontamination_indexes_folder}")
-            ref_genome = GET_REF_GENOME.out.hg38 }
+            ref_genome = GET_REF_GENOME.out.db }
         else {
             ref_genome = channel.fromPath("${params.databases}/${params.decontamination_indexes_folder}") }
     emit:
@@ -67,7 +67,7 @@ workflow DOWNLOAD_RFAM {
             GET_CMSEARCH_DB("${params.cmsearch_db_name}")
             cmsearch_ribo_db = GET_CMSEARCH_DB.out.ribo_db
             cmsearch_ribo_clan = GET_CMSEARCH_DB.out.ribo_clan
-            cmsearch_other_db = GET_CMSEARCH_DB.out.other_db
+            cmsearch_other_db = GET_CMSEARCH_DB.out.other_db.filter(~/.*.cm/)
             cmsearch_other_clan = GET_CMSEARCH_DB.out.other_clan
             }
         else {
