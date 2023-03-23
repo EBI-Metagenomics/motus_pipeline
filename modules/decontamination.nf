@@ -25,7 +25,7 @@ process DECONTAMINATION {
         input_reads = "${reads}";
         println(input_reads);
         """
-        mkdir output_decontamination
+        mkdir -p output_decontamination
 
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
@@ -41,17 +41,17 @@ process DECONTAMINATION {
 
         echo "samtools"
         samtools fastq output_decontamination/${name}_unmapped_sorted.bam > output_decontamination/${name}_clean.fastq
-        
+
         echo "compressing output file"
-        
         gzip -c output_decontamination/${name}_clean.fastq > ${name}_clean.fastq.gz
         """
-    } else if (mode == "paired") {
+    } else if ( mode == "paired" ) {
         if (reads[0].name.contains("_1")) {
             input_reads = "${reads[0]} ${reads[1]}"
         } else {
             input_reads = "${reads[1]} ${reads[0]}"
         }
+        println(input_reads);
         """
         mkdir output_decontamination
         echo "mapping files to host genome PE"
@@ -62,10 +62,10 @@ process DECONTAMINATION {
 
         echo "convert sam to bam"
         samtools view -@ ${task.cpus} -f 12 -F 256 -uS -o output_decontamination/${name}_both_unmapped.bam out.sam
-        
+
         echo "samtools sort"
         samtools sort -@ ${task.cpus} -n output_decontamination/${name}_both_unmapped.bam -o output_decontamination/${name}_both_unmapped_sorted.bam
-        
+
         echo "samtools fastq"
         samtools fastq -1 output_decontamination/${name}_clean_1.fastq \
         -2 output_decontamination/${name}_clean_2.fastq \
@@ -77,11 +77,8 @@ process DECONTAMINATION {
         gzip -c output_decontamination/${name}_clean_1.fastq > ${name}_clean_1.fastq.gz
         gzip -c output_decontamination/${name}_clean_2.fastq > ${name}_clean_2.fastq.gz
         """
-    }
-    else {
-    """
-    echo "incorrect mode"
-    """
+    } else {
+        error "Invalid mode: ${mode}"
     }
 }
 
