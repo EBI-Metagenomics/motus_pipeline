@@ -87,11 +87,12 @@ workflow PIPELINE {
     covariance_model_database = covariance_model_database_ribo.concat(covariance_model_database_other)
     clan_info_channel = covariance_clan_ribo.concat(covariance_clan_other)
     clan_info = clan_info_channel.collectFile(name: "clan.info")
+    covariance_cat_models = covariance_model_database.collectFile(name: "models.cm", newLine: true)
 
     CMSEARCH_SUBWF(
         name,
         QC.out.sequence,
-        covariance_model_database,
+        covariance_cat_models,
         clan_info
     )
 
