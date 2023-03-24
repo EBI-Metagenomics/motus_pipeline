@@ -94,7 +94,7 @@ process GET_REF_GENOME {
     input:
         val db_name
     output:
-        path "${db_name}", emit: hg38
+        path "${db_name}", emit: db
 
     script:
     """

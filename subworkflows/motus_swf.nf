@@ -2,7 +2,7 @@
  * mOTUs with pre-download DB
  */
 
-include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_db'
+include { DOWNLOAD_MOTUS_DB } from '../subworkflows/prepare_dbs'
 include { MOTUS } from '../modules/motus'
 
 workflow MOTUS_SUBWF {

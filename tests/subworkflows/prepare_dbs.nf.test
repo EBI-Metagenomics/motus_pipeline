@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test SubWorkflow for download DBs"
-    script "subworkflows/prepare_db.nf"
+    script "subworkflows/prepare_dbs.nf"
     
     process "DOWNLOAD_MAPSEQ_LSU"
     test("find existing mapseq silva fake DB") {

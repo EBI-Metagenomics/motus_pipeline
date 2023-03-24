@@ -27,7 +27,7 @@ workflow DOWNLOAD_REFERENCE_GENOME {
     main:
         if (!(file("${params.databases}/${params.decontamination_indexes_folder}").exists())) {
             GET_REF_GENOME("${params.decontamination_indexes_folder}")
-            ref_genome = GET_REF_GENOME.out.hg38 }
+            ref_genome = GET_REF_GENOME.out.db }
         else {
             ref_genome = channel.fromPath("${params.databases}/${params.decontamination_indexes_folder}") }
     emit:
