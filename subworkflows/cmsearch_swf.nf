@@ -48,9 +48,8 @@ workflow CMSEARCH_SUBWF {
             file: true
         )
         // cat models
-        covariance_cat_models = covariance_model_database.collectFile(name: "models.cm", newLine: true)
-
-        CMSEARCH(sequence_chunks_ch, covariance_cat_models.first())
+       
+        CMSEARCH(sequence_chunks_ch, covariance_model_database.first())
 
         CMSEARCH_DEOVERLAP(clan_information.first(), CMSEARCH.out.cmsearch)
 
