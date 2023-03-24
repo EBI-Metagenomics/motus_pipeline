@@ -12,6 +12,8 @@ error
 CODON: \
 modules:
 - cmsearch [1] incorrect output bytes because of command inside output file
+
+fixed but not beautiful :(
 - extract models [1] incorrect order of output files in snapshot
 
 subwfs: 
