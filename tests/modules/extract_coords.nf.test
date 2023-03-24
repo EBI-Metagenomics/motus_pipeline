@@ -31,7 +31,7 @@ nextflow_process {
                 assert get(0) ==~ ".*/test_result_LSU.fasta"
             }
             with(process.out.seq_cat_folder) {
-                assert get(0).size() == 160
+                assert get(0) ==~ ".*/sequence-categorisation"
             }
         }
 

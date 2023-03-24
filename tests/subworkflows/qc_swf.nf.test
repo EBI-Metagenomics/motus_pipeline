@@ -43,7 +43,7 @@ nextflow_process {
                 assert get(0) ==~ ".*/mgtest_merged.fastq.gz"
             }
             with(process.out.qc_stats) {
-                assert get(0).size() == 150
+                assert path(get(0)).size() == 320
             }
         }
     }
@@ -88,7 +88,7 @@ nextflow_process {
                 assert get(0) ==~ ".*/mgtest_merged_clean.fastq.gz"
             }
             with(process.out.qc_stats) {
-                assert get(0).size() == 150
+                assert path(get(0)).size() == 320
             }
         }
     }
