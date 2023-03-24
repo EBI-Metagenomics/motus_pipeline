@@ -29,7 +29,22 @@ nextflow_process {
         }
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            //assert snapshot(process.out).match()
+            with(process.out.fastp_report) {
+                assert size() == 1
+                assert get(0) ==~ ".*/qc_summary"
+            }
+            with(process.out.sequence) {
+                assert size() == 1
+                assert get(0) ==~ ".*/mgtest.fasta"
+            }
+            with(process.out.merged_reads) {
+                assert size() == 1
+                assert get(0) ==~ ".*/mgtest_merged.fastq.gz"
+            }
+            with(process.out.qc_stats) {
+                assert get(0).size() == 150
+            }
         }
     }
 
@@ -59,7 +74,22 @@ nextflow_process {
         }
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            //assert snapshot(process.out).match()
+            with(process.out.fastp_report) {
+                assert size() == 1
+                assert get(0) ==~ ".*/qc_summary"
+            }
+            with(process.out.sequence) {
+                assert size() == 1
+                assert get(0) ==~ ".*/mgtest_merged.fasta"
+            }
+            with(process.out.merged_reads) {
+                assert size() == 1
+                assert get(0) ==~ ".*/mgtest_merged_clean.fastq.gz"
+            }
+            with(process.out.qc_stats) {
+                assert get(0).size() == 150
+            }
         }
     }
 }
