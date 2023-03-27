@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-import sys
 import os
-import gzip
 from Bio import SeqIO
 
-directory = "sequence-categorisation"
-if not os.path.exists(directory): os.makedirs(directory)
-directory_ncRNA = os.path.join("sequence-categorisation", "ncRNA")
-if not os.path.exists(directory_ncRNA): os.makedirs(directory_ncRNA)
 
 SSU = "SSU_rRNA"
 LSU = "LSU_rRNA"
@@ -44,14 +38,28 @@ def set_model_names(prefix, name):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Extract lsu, ssu and 5s and other models")
-    parser.add_argument("-i", "--input", dest="input", help="Input fasta file", required=True)
-    parser.add_argument("-p", "--prefix", dest="prefix", help="prefix for models", required=False)
+    parser = argparse.ArgumentParser(
+        description="Extract lsu, ssu and 5s and other models"
+    )
+    parser.add_argument(
+        "-i", "--input", dest="input", help="Input fasta file", required=True
+    )
+    parser.add_argument(
+        "-p", "--prefix", dest="prefix", help="prefix for models", required=False
+    )
     parser.add_argument("-n", "--name", dest="name", help="Accession", required=True)
 
     args = parser.parse_args()
     prefix = args.prefix if args.prefix else ""
     name = args.name if args.name else "accession"
+
+    directory = "sequence-categorisation"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    directory_ncRNA = os.path.join("sequence-categorisation", "ncRNA")
+    if not os.path.exists(directory_ncRNA):
+        os.makedirs(directory_ncRNA)
+
     print('Start fasta mode')
     pattern_dict = set_model_names(prefix, name)
     coding_rna = [SSU_rRNA_archaea, SSU_rRNA_bacteria, SSU_rRNA_eukarya, SSU_rRNA_microsporidia,

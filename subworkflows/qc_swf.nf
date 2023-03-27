@@ -15,6 +15,8 @@ workflow QC {
         name
         reads
         mode
+        ref_genome
+        ref_genome_name
         length_filter
         polya_trim_param
         qualified_quality_phred
@@ -37,6 +39,8 @@ workflow QC {
 
         DECONTAMINATION(
             FASTP_FILTERING.out.output_reads,
+            ref_genome,
+            ref_genome_name,
             mode,
             name
         )

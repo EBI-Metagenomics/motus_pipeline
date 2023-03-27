@@ -3,8 +3,10 @@
 */
 process QC_STATS {
 
-    publishDir "${params.outdir}/qc/", mode: 'copy'
+    publishDir "${params.outdir}/qc", mode: 'copy'
+
     container 'quay.io/biocontainers/biopython:1.75'
+
     label 'qc_summary'
 
     input:

@@ -8,7 +8,7 @@ nextflow_process {
 
         when {
             params {
-                name = "SRR5643986"
+                name = "test_result"
                 seqs = "${baseDir}/tests/modules/fixtures/extract_coords/test.fasta"
             }
             process {
@@ -21,7 +21,18 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            // assert snapshot(process.out).match()
+            with(process.out.ssu_fasta) {
+                assert size() == 1
+                assert get(0) ==~ ".*/test_result_SSU.fasta"
+            }
+            with(process.out.lsu_fasta) {
+                assert size() == 1
+                assert get(0) ==~ ".*/test_result_LSU.fasta"
+            }
+            with(process.out.seq_cat_folder) {
+                assert get(0) ==~ ".*/sequence-categorisation"
+            }
         }
 
     }

@@ -1,0 +1,58 @@
+{
+    "QC SE": {
+        "content": [
+            {
+                "fastp_report": [
+                    "qc_summary:md5,a6b1cbcce12b2a16f5d3229c6ac0337e"
+                ],
+                "sequence": [
+                    "mgtest_merged.fasta:md5,9fb5bc878aafc110c87bc0a1d1c357aa"
+                ],
+                "merged_reads": [
+                    "mgtest_merged_clean.fastq.gz:md5,8a588dd21e02550aaf1fcc6c84ecfb20"
+                ],
+                "qc_stats": [
+                    [
+                        "GC-distribution.out.full:md5,005562768a1776e22d9a6dabb6127713",
+                        "GC-distribution.out.full_bin:md5,05c187e5a6813e57b36b9011bd718246",
+                        "GC-distribution.out.full_pcbin:md5,af08aada18c6e16cbf4cd38d899372bf",
+                        "nucleotide-distribution.out.full:md5,16b2c3b309c7c001e5a5e12c6d826092",
+                        "seq-length.out.full:md5,3eafcd6988ef4991720e28fc86d4052f",
+                        "seq-length.out.full_bin:md5,8aa2c93b9655673316bc32bfcea47b46",
+                        "seq-length.out.full_pcbin:md5,fd4e6c6dc7b16a0e349ed34bbc2aec64",
+                        "summary.out:md5,631d3ad29ed683d95c43c0dff7fb4312"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-03-23T12:28:40+0000"
+    },
+    "QC PE small example": {
+        "content": [
+            {
+                "fastp_report": [
+                    "qc_summary:md5,74cc08bcc04532c5886e85561bbfe7ef"
+                ],
+                "sequence": [
+                    "mgtest.fasta:md5,49ebae12553a383abea4b260f640f1b5"
+                ],
+                "merged_reads": [
+                    "mgtest_merged.fastq.gz:md5,92974d6cf3459214840517ba44a21a9e"
+                ],
+                "qc_stats": [
+                    [
+                        "GC-distribution.out.full:md5,30b9f49a139487bacc709a3eadb51df6",
+                        "GC-distribution.out.full_bin:md5,9343cc6e4dda227762f3f3c036a5569c",
+                        "GC-distribution.out.full_pcbin:md5,db1951d1d6d50afacb561f4465da2c6a",
+                        "nucleotide-distribution.out.full:md5,63d86691ff955f2c35225e257c48cc00",
+                        "seq-length.out.full:md5,c48c7d1fe813eb27ca6e959675cb52a5",
+                        "seq-length.out.full_bin:md5,4229020513a493b0df0926b9edb13ff6",
+                        "seq-length.out.full_pcbin:md5,6887764d76a3776b24f3d086cbcd9069",
+                        "summary.out:md5,5213486965db0d4d1b3ab73f184ef1d7"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-03-23T12:28:40+0000"
+    }
+}

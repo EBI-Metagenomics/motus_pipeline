@@ -3,12 +3,16 @@
 */
 process DECONTAMINATION {
 
-    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
+
     label 'decontamination'
+
+    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
 
     input:
     path reads
+    path ref_genome
+    val ref_genome_name
     val mode
     val name
 
@@ -16,15 +20,16 @@ process DECONTAMINATION {
     path "*_clean*.fastq.gz", emit: decontaminated_reads
 
     script:
-    def input_reads = ""
+    def input_reads = "";
     if (mode == "single") {
-        input_reads = "${reads}"
+        input_reads = "${reads}";
+        println(input_reads);
         """
-        mkdir output_decontamination
+        mkdir -p output_decontamination
 
         echo "mapping files to host genome SE"
         bwa-mem2 mem -M -t ${task.cpus} \
-        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
@@ -35,34 +40,32 @@ process DECONTAMINATION {
         -o output_decontamination/${name}_unmapped_sorted.bam
 
         echo "samtools"
-        samtools output_decontamination/${name}_unmapped_sorted.bam > output_decontamination/${name}_clean.fastq
-        
+        samtools fastq output_decontamination/${name}_unmapped_sorted.bam > output_decontamination/${name}_clean.fastq
+
         echo "compressing output file"
-        
         gzip -c output_decontamination/${name}_clean.fastq > ${name}_clean.fastq.gz
         """
-    }
-    
-    if (mode == "paired") {
+    } else if ( mode == "paired" ) {
         if (reads[0].name.contains("_1")) {
             input_reads = "${reads[0]} ${reads[1]}"
         } else {
             input_reads = "${reads[1]} ${reads[0]}"
         }
+        println(input_reads);
         """
         mkdir output_decontamination
         echo "mapping files to host genome PE"
         bwa-mem2 mem -M \
         -t ${task.cpus} \
-        ${params.decontamination_indexes_folder}/${params.decontamination_reference_index} \
+        ${ref_genome}/${ref_genome_name} \
         ${input_reads} > out.sam
 
         echo "convert sam to bam"
         samtools view -@ ${task.cpus} -f 12 -F 256 -uS -o output_decontamination/${name}_both_unmapped.bam out.sam
-        
+
         echo "samtools sort"
         samtools sort -@ ${task.cpus} -n output_decontamination/${name}_both_unmapped.bam -o output_decontamination/${name}_both_unmapped_sorted.bam
-        
+
         echo "samtools fastq"
         samtools fastq -1 output_decontamination/${name}_clean_1.fastq \
         -2 output_decontamination/${name}_clean_2.fastq \
@@ -74,5 +77,29 @@ process DECONTAMINATION {
         gzip -c output_decontamination/${name}_clean_1.fastq > ${name}_clean_1.fastq.gz
         gzip -c output_decontamination/${name}_clean_2.fastq > ${name}_clean_2.fastq.gz
         """
+    } else {
+        error "Invalid mode: ${mode}"
     }
+}
+
+
+/*
+ * Download reference genome HG38
+*/
+process GET_REF_GENOME {
+    publishDir "${params.databases}/", mode: 'copy'
+
+    label 'decontamination_genome'
+
+    input:
+        val db_name
+    output:
+        path "${db_name}", emit: db
+
+    script:
+    """
+    wget "${params.download_ftp_path}/${db_name}.tar.gz"
+    tar -xvzf "${db_name}.tar.gz"
+    rm "${db_name}.tar.gz"
+    """
 }

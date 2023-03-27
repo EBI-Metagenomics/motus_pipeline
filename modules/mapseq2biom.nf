@@ -1,15 +1,23 @@
 /*
- * mapseq2biom perl script converter v1.0.0
+ * mapseq2biom python script converter v1.0.0
 */
 
 process MAPSEQ2BIOM {
-    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "$mapseq.baseName.*"
+
+    publishDir(
+        path: "${params.outdir}/taxonomy-summary/${otu_label}",
+        pattern: "$mapseq.baseName.*",
+        mode: 'copy'
+    )
+
+    container 'quay.io/biocontainers/python:3.9--1'
+
     label 'mapseq2biom'
-    container 'perl:5.32-slim'
 
     input:
         path mapseq
-        path otu_ref
+        path mapseq_db
+        val otu_ref
         val otu_label
     output:
         path "${mapseq.baseName}.tsv", emit: mapseq2biom_tsv
@@ -18,13 +26,13 @@ process MAPSEQ2BIOM {
 
     script:
     """
-        mapseq2biom.pl \
-          --outfile ${mapseq.baseName}.tsv \
-          --krona ${mapseq.baseName}.txt \
-          --notaxidfile ${mapseq.baseName}.notaxid.tsv \
-          --taxid \
-          --label $otu_label \
-          --query $mapseq \
-          --otuTable $otu_ref
+    mapseq2biom.py \
+        --out-file ${mapseq.baseName}.tsv \
+        --krona ${mapseq.baseName}.txt \
+        --no-tax-id-file ${mapseq.baseName}.notaxid.tsv \
+        --taxid \
+        --label ${otu_label} \
+        --query ${mapseq} \
+        --otu-table ${mapseq_db}/${otu_ref}
     """
 }

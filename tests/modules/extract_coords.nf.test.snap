@@ -3,13 +3,24 @@
         "content": [
             {
                 "ssu_fasta": [
-                    "SRR5643986_SSU.fasta:md5,d82551ffe1cbdcf745278eb09199de56"
+                    "test_result_SSU.fasta:md5,d82551ffe1cbdcf745278eb09199de56"
                 ],
                 "lsu_fasta": [
-                    "SRR5643986_LSU.fasta:md5,a3687de0c0d784f4930bd9c780638bb3"
+                    "test_result_LSU.fasta:md5,a3687de0c0d784f4930bd9c780638bb3"
+                ],
+                "seq_cat_folder": [
+                    [
+                        [
+                            "test_result_5_8S_rRNA_bacteria.fasta:md5,7dfc2985d28cca6db4c0ee2a26a92175"
+                        ],
+                        "test_result_LSU.fasta:md5,a3687de0c0d784f4930bd9c780638bb3",
+                        "test_result_LSU_rRNA_bacteria.RF02541.fa:md5,a3687de0c0d784f4930bd9c780638bb3",
+                        "test_result_SSU.fasta:md5,d82551ffe1cbdcf745278eb09199de56",
+                        "test_result_SSU_rRNA_bacteria.RF00177.fa:md5,d82551ffe1cbdcf745278eb09199de56"
+                    ]
                 ]
             }
         ],
-        "timestamp": "2023-03-14T15:05:15+0000"
+        "timestamp": "2023-03-24T13:22:00+0000"
     }
 }
