@@ -2,7 +2,7 @@
 
 Raw reads mOTUs and taxonomic classification pipeline
 
-![plot](schema.png)
+![plot](AssemblyPipelineFlow.png)
 
 ## What do I need?
 
