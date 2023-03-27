@@ -1,43 +1,94 @@
-# mOTUs pipeline
+# Taxonomic profiling pipeline
 
-Raw reads mOTUs and taxonomic classification pipeline
+Raw reads mOTUs and taxonomic classification pipeline.
 
-![plot](AssemblyPipelineFlow.png)
+<p align="center">
+    <img src="docs/images/pipeline_schema.png" alt="Taxonomic profiling pipeline overview" width="90%">
+</p>
 
-## What do I need?
+The pipeline is implemented in [Nextflow](https://www.nextflow.io/) and needs as second dependency either [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce) or [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
+All databases are automatically downloaded by Nextflow.
 
-This implementation of the pipeline runs with the workflow manager [Nextflow](https://www.nextflow.io/) and needs as second dependency either [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce) or [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html). 
-All databases are automatically downloaded by Nextflow. 
+## Pipeline summary
 
-## How to run?
+WIP - brief description of the pipeline.
 
-Add your own profile to nextflow.config file including all inputs 
+## Quick Start
 
-**basic run**
-```commandline
-nextflow run main.nf \
+1. Install [Nextflow](https://www.nextflow.io/)
+
+2. Install any of [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce)or  [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
+
+3. Download the pipeline and test it on a minimal dataset with a single command:
+
+    ```bash
+    nextflow run EBI-Metagenomics/motus_pipeline \
+    -profile <choose profile> \
+    --mode <single/paired> \
+    --reads <path to folder with fastq files> \
+    --name <fastq filename>
+    ```
+
+### Run examples
+
+Add your own profile to nextflow.config file including all inputs
+
+#### Basic run
+
+```bash
+nextflow run EBI-Metagenomics/motus_pipeline \
 -profile <choose profile> \
 --mode <single/paired> \
 --reads <path to folder with fastq files> \
 --name <fastq filename>
 ```
 
-**example: local SE run** \
-assume reads location: my_reads/raw/test.fastq.gz
-```commandline
-nextflow run main.nf \
+#### Local Single End run
+
+The reads location: my_reads/raw/test.fastq.gz
+
+```bash
+nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode single \
 --reads my_reads/raw \
 --name test
 ```
+#### Local Paired Ends run
 
-**example: local PE run** \
-assume reads location: my_reads/raw/test_1.fastq.gz, my_reads/raw/test_2.fastq.gz
-```commandline
-nextflow run main.nf \
+The reads location:
+- my_reads/raw/test_1.fastq.gz
+- my_reads/raw/test_2.fastq.gz
+
+```bash
+nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode paired \
 --reads my_reads/raw \
 --name test
+```
+
+## Development
+
+Install development tools (including pre-commit hooks to run Black code formatting).
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit install
+```
+
+### Code style
+
+Use Black, this tool is configured if you install the pre-commit tools as above.
+
+To manually run them: black .
+
+## Testing
+
+The pipeline unit test are executed using [nf-test](https://github.com/askimed/nf-test).
+
+To run the nextflow unit tests the databases have to downloaded manually, we are working to improve this.
+
+```bash
+nf-test test tests/*
 ```
