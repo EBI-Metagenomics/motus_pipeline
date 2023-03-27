@@ -5,7 +5,8 @@
 process KRONA {
     publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "*krona.html"
 
-    container 'quay.io/microbiome-informatics/krona:2.7.1'
+    container 'quay.io/biocontainers/krona:2.7.1--pl5321hdfd78af_7'
+
     label 'krona'
 
     input:
@@ -19,4 +20,3 @@ process KRONA {
     ktImportText -o krona.html $otu_counts
     """
 }
-
