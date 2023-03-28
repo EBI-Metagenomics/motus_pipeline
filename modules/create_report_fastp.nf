@@ -5,7 +5,7 @@ process FASTP_REPORT {
 
     publishDir "${params.outdir}/qc", mode: 'copy'
 
-    container 'python:3.7.9-slim-buster'
+    container 'quay.io/biocontainers/python:3.9--1'
 
     label 'fastp_report'
 
