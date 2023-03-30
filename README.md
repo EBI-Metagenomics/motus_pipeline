@@ -2,6 +2,17 @@
 
 Raw reads mOTUs and taxonomic classification pipeline.
 
+## Pipeline summary
+
+The containerised pipeline for profiling shotgun metagenomic data is derived from the [MGnify](https://www.ebi.ac.uk/metagenomics/) pipeline raw-reads analyses, a well-established resource used for analyzing microbiome data.
+
+Key components:
+- Quality control and decontamination
+- rRNA and ncRNA detection using [Rfam database](https://rfam.org/)
+- Taxonomic classification of SSU and LSU regions based on [SILVA database](https://www.arb-silva.de/projects/ssu-ref-nr/)
+- Abundance analysis of [mOTUs](https://github.com/motu-tool/mOTUs) (Metagenomic Operational Taxonomic Units)
+
+
 <p align="center">
     <img src="docs/images/pipeline_schema.png" alt="Taxonomic profiling pipeline overview" width="90%">
 </p>
@@ -9,15 +20,11 @@ Raw reads mOTUs and taxonomic classification pipeline.
 The pipeline is implemented in [Nextflow](https://www.nextflow.io/) and needs as second dependency either [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce) or [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
 All databases are automatically downloaded by Nextflow.
 
-## Pipeline summary
-
-WIP - brief description of the pipeline.
-
 ## Quick Start
 
 1. Install [Nextflow](https://www.nextflow.io/)
 
-2. Install any of [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce)or  [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
+2. Install any of [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce) or  [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
