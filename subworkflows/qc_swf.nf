@@ -3,8 +3,9 @@
  */
 
 include { FASTP as FASTP_FILTERING } from '../modules/fastp'
-include { FASTP as FASTP_OVERLAP } from '../modules/fastp'
-include { FASTP_REPORT } from '../modules/create_report_fastp'
+include { SEQPREP } from '../modules/seqprep'
+include { SEQPREP_REPORT } from '../modules/seqprep'
+include { QC_REPORT } from '../modules/create_qc_report'
 include { DECONTAMINATION } from '../modules/decontamination'
 include { SEQTK as FASTQ_TO_FASTA} from '../modules/seqtk'
 include { QC_STATS } from '../modules/qc_summary'
@@ -33,9 +34,7 @@ workflow QC {
             polya_trim_param,
             qualified_quality_phred,
             unqualified_percent_limit
-        )
-        
-        overlapped_report = FASTP_FILTERING.out.json
+        ) 
 
         DECONTAMINATION(
             FASTP_FILTERING.out.output_reads,
@@ -44,25 +43,29 @@ workflow QC {
             mode,
             name
         )
-
+        
         if ( params.mode == "paired" ) {
-            FASTP_OVERLAP(
+            SEQPREP(
                 name,
-                DECONTAMINATION.out.decontaminated_reads,
-                mode,
-                channel.value("merged.fastq.gz"),
-                channel.value(""),
-                channel.value(""),
-                channel.value(""),
-                channel.value("")
+                DECONTAMINATION.out.decontaminated_reads
             )
-            overlapped_reads = FASTP_OVERLAP.out.overlapped_reads
-            overlapped_report = overlapped_report.concat(FASTP_OVERLAP.out.json)
+            SEQPREP_REPORT(
+                SEQPREP.out.forward_unmapped_reads,
+                SEQPREP.out.reverse_unmerged_reads,
+                SEQPREP.out.overlapped_reads
+            )
+            overlapped_reads = SEQPREP.out.overlapped_reads
+            overlapped_counts = SEQPREP_REPORT.out.overlapped_report
         } else {
             overlapped_reads = DECONTAMINATION.out.decontaminated_reads
+            overlapped_counts = channel.fromPath("NO_FILE")
         }
 
-        FASTP_REPORT(overlapped_report.collect(), mode)
+        QC_REPORT(
+            mode,
+            FASTP_FILTERING.out.json,
+            overlapped_counts,
+        )
 
         FASTQ_TO_FASTA(name, overlapped_reads)
 
@@ -71,7 +74,7 @@ workflow QC {
     emit:
         merged_reads = overlapped_reads
         sequence = FASTQ_TO_FASTA.out.sequence
-        fastp_report = FASTP_REPORT.out.qc_report
+        qc_report = QC_REPORT.out.qc_report
         qc_stats = QC_STATS.out.qc_statistics
 }
 

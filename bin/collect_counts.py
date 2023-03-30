@@ -10,8 +10,20 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--overlap-json",
-        dest="input_overlap",
+        dest="fastp_overlap",
         help="Json from fastp overlap reads",
+        required=False,
+    )
+    parser.add_argument(
+        "--decontamination-counts",
+        dest="decontamination_overlap",
+        help="Counts from decontamination output files",
+        required=False,
+    )
+    parser.add_argument(
+        "--overlap-counts",
+        dest="seqprep_overlap",
+        help="Counts from SeqPrep output files",
         required=False,
     )
     parser.add_argument(
@@ -52,9 +64,30 @@ if __name__ == "__main__":
                     count -= input['filtering_result']['too_many_N_reads']
                 f_out.write(f"Qualified reads filter: {count}\n")
                 """
-        if args.input_overlap:
-            with open(args.input_overlap, "r") as f_in:
+        if args.decontamination_overlap:
+            counts = []
+            with open(args.decontamination_overlap, "r") as f_in:
+                for line in f_in:
+                    counts.append(line.strip())
+                if len(counts) == 1:
+                    f_out.write(f"Cleaned reads: {counts[0]}\n")
+                elif len(counts) == 2:
+                    f_out.write(f"Cleaned forward reads: {counts[0]}\n")
+                    f_out.write(f"Cleaned reverse reads: {counts[1]}\n")
+                
+        if args.fastp_overlap:
+            with open(args.fastp_overlap, "r") as f_in:
                 input = json.load(f_in)
                 # corrected reads?
                 merged_reads = input["merged_and_filtered"]["total_reads"]
                 f_out.write(f"Merged reads: {merged_reads}\n")
+                
+        if args.seqprep_overlap:
+            counts = []
+            with open(args.seqprep_overlap, "r") as f_in:
+                for line in f_in:
+                    counts.append(line.strip())
+                f_out.write(f"Unmapped_forward: {counts[0]}\n")
+                f_out.write(f"Unmapped_reverse: {counts[1]}\n")
+                f_out.write(f"Overlapped: {counts[2]}\n")
+                

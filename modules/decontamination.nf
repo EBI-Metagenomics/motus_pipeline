@@ -82,6 +82,47 @@ process DECONTAMINATION {
     }
 }
 
+/*
+ * Decontamination counts
+*/
+process DECONTAMINATION_REPORT {
+    publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
+    label 'decontamination_report'
+    // TODO change container
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
+
+    input:
+        val mode
+        path cleaned_reads
+    output:
+        path "output_report.txt", emit: decontamination_report
+
+    script:
+
+    if (mode == "paired") {
+        def input_f_reads = ""
+        def input_r_reads = ""
+        println('paired')
+        if (cleaned_reads[0].name.contains('_1'))  {
+            input_f_reads = cleaned_reads[0]
+            input_r_reads = cleaned_reads[1]
+        }
+        else if (cleaned_reads[1].name.contains('_1'))  {
+            input_f_reads = cleaned_reads[1]
+            input_r_reads = cleaned_reads[0]
+        }
+        """
+        grep '@' ${input_f_reads} | wc -l > output_report.txt
+        """
+    }
+
+    if (mode == "single") {
+        println('single')
+        """
+        zgrep '@' ${cleaned_reads} | wc -l > output_report.txt
+        """
+    }
+}
 
 /*
  * Download reference genome HG38

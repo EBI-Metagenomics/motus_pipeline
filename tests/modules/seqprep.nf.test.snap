@@ -1,0 +1,18 @@
+{
+    "Overlap on PE": {
+        "content": [
+            {
+                "overlapped_reads": [
+                    "example_paired_merged.fastq.gz:md5,57dff46d32b9a1f391dda1af7274fd3c"
+                ],
+                "forward_unmapped_reads": [
+                    "example_paired_forward_unmerged.fastq.gz:md5,a8150869f2b9ee3f6ab78956363240ef"
+                ],
+                "reverse_unmerged_reads": [
+                    "example_paired_reverse_unmerged.fastq.gz:md5,3f8f7b018e2154fb3a75c17cb817d9de"
+                ]
+            }
+        ],
+        "timestamp": "2023-03-30T09:12:48+0000"
+    }
+}
