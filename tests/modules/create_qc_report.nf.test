@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test module Fastp report"
-    script "modules/create_report_fastp.nf"
-    process "FASTP_REPORT"
+    name "Test module QC report"
+    script "modules/create_qc_report.nf"
+    process "QC_REPORT"
 
     test("Report QC (SE)") {
 
@@ -13,8 +13,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = channel.fromFilePairs("${params.jsons}/mgtest_fastp.qc.json", checkIfExists: true).map { it[1] }
-                input[1] = params.mode
+                input[0] = params.mode
+                input[1] = channel.fromFilePairs("${params.jsons}/mgtest_fastp.qc.json", checkIfExists: true).map { it[1] }
+                input[2] = channel.fromPath("${params.jsons}/dec_report.txt", checkIfExists: true)
+                input[3] = channel.fromPath("NO_FILE")
                 """
             }
         }
@@ -34,8 +36,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = channel.fromPath("${params.jsons}/*.json").collect()
-                input[1] = params.mode
+                input[0] = params.mode
+                input[1] = channel.fromPath("${params.jsons}/mgtest_fastp.qc.json", checkIfExists: true)
+                input[2] = channel.fromPath("${params.jsons}/dec_report.txt", checkIfExists: true)
+                input[3] = channel.fromPath("${params.jsons}/seqprep_output.txt", checkIfExists: true)
                 """
             }
         }

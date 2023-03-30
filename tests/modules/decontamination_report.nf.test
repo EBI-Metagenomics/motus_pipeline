@@ -1,0 +1,48 @@
+nextflow_process {
+
+    name "Test Process DECONTAMINATION_REPORT"
+    script "modules/decontamination.nf"
+    process "DECONTAMINATION_REPORT"
+
+    test("Decontamination PE reads count") {
+
+        when {
+            params {
+                reads = "${baseDir}/tests/modules/fixtures/bwa/mgtest_{1,2}.fastq.gz"
+                mode = "paired"
+            }
+            process {
+                """
+                input[0] = params.mode
+                input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+    
+    test("Decontamination SE reads count") {
+
+        when {
+            params {
+                reads = "${baseDir}/tests/modules/fixtures/bwa/mgtest_merged.fastq.gz"
+                mode = "single"
+            }
+            process {
+                """
+                input[0] = params.mode
+                input[1] = channel.fromPath("${params.reads}", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

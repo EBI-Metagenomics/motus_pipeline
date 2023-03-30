@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process SEQPREP"
+    script "modules/seqprep.nf"
+    process "SEQPREP"
+
+    test("Overlap on PE") {
+
+        when {
+            params {
+                name = "example_paired"
+                reads = "${baseDir}/tests/modules/fixtures/fastp/paired_end/example_paired_{1,2}.fastq.gz"
+            }
+            process {
+                """
+                input[0] = params.name
+                input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

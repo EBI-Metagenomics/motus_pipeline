@@ -82,6 +82,49 @@ process DECONTAMINATION {
 }
 
 /*
+ * Decontamination counts
+*/
+process DECONTAMINATION_REPORT {
+    publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
+    label 'decontamination_report'
+    // TODO change container
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
+
+    input:
+        val mode
+        path cleaned_reads
+    output:
+        path "decontamination_output_report.txt", emit: decontamination_report
+
+    script:
+    def input_f_reads = "";
+    def input_r_reads = "";
+    if (mode == "paired") {
+        println('paired');
+        if (cleaned_reads[0].name.contains('_1'))  {
+            input_f_reads = cleaned_reads[0]
+            input_r_reads = cleaned_reads[1]
+        }
+        else if (cleaned_reads[1].name.contains('_1'))  {
+            input_f_reads = cleaned_reads[1]
+            input_r_reads = cleaned_reads[0]
+        }
+        """
+        zcat ${input_f_reads} | grep '@' | wc -l > decontamination_output_report.txt
+        zcat ${input_r_reads} | grep '@' | wc -l >> decontamination_output_report.txt
+        """
+    } else if (mode == "single") {
+        println('single');
+        """
+        zcat ${cleaned_reads} | grep '@' | wc -l > decontamination_output_report.txt
+        """
+    } else {
+        error "Invalid mode: ${mode}"
+    }
+}
+
+
+/*
  * Download reference genome HG38
 */
 process GET_REF_GENOME {
