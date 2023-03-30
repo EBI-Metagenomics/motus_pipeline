@@ -3,20 +3,20 @@
         "content": [
             {
                 "decontamination_report": [
-                    "output_report.txt:md5,14864edb3380cc19ac1b2f3abbe13c46"
+                    "decontamination_output_report.txt:md5,14864edb3380cc19ac1b2f3abbe13c46"
                 ]
             }
         ],
-        "timestamp": "2023-03-30T12:57:29+0000"
+        "timestamp": "2023-03-30T13:22:36+0000"
     },
     "Decontamination SE reads count": {
         "content": [
             {
                 "decontamination_report": [
-                    "output_report.txt:md5,cdd52d64d4c86b2807dfd31c5ee0554a"
+                    "decontamination_output_report.txt:md5,cdd52d64d4c86b2807dfd31c5ee0554a"
                 ]
             }
         ],
-        "timestamp": "2023-03-30T12:57:29+0000"
+        "timestamp": "2023-03-30T13:22:36+0000"
     }
 }

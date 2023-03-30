@@ -43,12 +43,12 @@ process SEQPREP_REPORT {
         path reverse_unmerged_reads
         path merged_reads
     output:
-        path "output_report.txt", emit: overlapped_report
+        path "seqprep_output_report.txt", emit: overlapped_report
 
     script:
     """
-    zcat ${forward_unmapped_reads} | grep '@' | wc -l > output_report.txt
-    zcat ${reverse_unmerged_reads} | grep '@' | wc -l >> output_report.txt
-    zcat ${merged_reads} | grep '@' | wc -l >> output_report.txt
+    zcat ${forward_unmapped_reads} | grep '@' | wc -l > seqprep_output_report.txt
+    zcat ${reverse_unmerged_reads} | grep '@' | wc -l >> seqprep_output_report.txt
+    zcat ${merged_reads} | grep '@' | wc -l >> seqprep_output_report.txt
     """
 }

@@ -95,7 +95,7 @@ process DECONTAMINATION_REPORT {
         val mode
         path cleaned_reads
     output:
-        path "output_report.txt", emit: decontamination_report
+        path "decontamination_output_report.txt", emit: decontamination_report
 
     script:
     def input_f_reads = "";
@@ -111,13 +111,13 @@ process DECONTAMINATION_REPORT {
             input_r_reads = cleaned_reads[0]
         }
         """
-        zcat ${input_f_reads} | grep '@' | wc -l > output_report.txt
-        zcat ${input_r_reads} | grep '@' | wc -l >> output_report.txt
+        zcat ${input_f_reads} | grep '@' | wc -l > decontamination_output_report.txt
+        zcat ${input_r_reads} | grep '@' | wc -l >> decontamination_output_report.txt
         """
     } else if (mode == "single") {
         println('single');
         """
-        zcat ${cleaned_reads} | grep '@' | wc -l > output_report.txt
+        zcat ${cleaned_reads} | grep '@' | wc -l > decontamination_output_report.txt
         """
     } else {
         error "Invalid mode: ${mode}"
