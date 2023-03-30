@@ -15,7 +15,8 @@ nextflow_process {
                 """
                 input[0] = params.mode
                 input[1] = channel.fromFilePairs("${params.jsons}/mgtest_fastp.qc.json", checkIfExists: true).map { it[1] }
-                input[2] = channel.fromPath("NO_FILE")
+                input[2] = channel.fromPath("${params.jsons}/dec_report.txt", checkIfExists: true)
+                input[3] = channel.fromPath("NO_FILE")
                 """
             }
         }
@@ -37,7 +38,8 @@ nextflow_process {
                 """
                 input[0] = params.mode
                 input[1] = channel.fromPath("${params.jsons}/mgtest_fastp.qc.json", checkIfExists: true)
-                input[2] = channel.fromPath("${params.jsons}/seqprep_output.txt", checkIfExists: true)
+                input[2] = channel.fromPath("${params.jsons}/dec_report.txt", checkIfExists: true)
+                input[3] = channel.fromPath("${params.jsons}/seqprep_output.txt", checkIfExists: true)
                 """
             }
         }

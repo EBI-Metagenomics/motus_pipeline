@@ -7,6 +7,7 @@ include { SEQPREP } from '../modules/seqprep'
 include { SEQPREP_REPORT } from '../modules/seqprep'
 include { QC_REPORT } from '../modules/create_qc_report'
 include { DECONTAMINATION } from '../modules/decontamination'
+include { DECONTAMINATION_REPORT } from '../modules/decontamination'
 include { SEQTK as FASTQ_TO_FASTA} from '../modules/seqtk'
 include { QC_STATS } from '../modules/qc_summary'
 
@@ -43,6 +44,10 @@ workflow QC {
             mode,
             name
         )
+        DECONTAMINATION_REPORT(
+            mode,
+            DECONTAMINATION.out.decontaminated_reads
+        )
         
         if ( params.mode == "paired" ) {
             SEQPREP(
@@ -64,6 +69,7 @@ workflow QC {
         QC_REPORT(
             mode,
             FASTP_FILTERING.out.json,
+            DECONTAMINATION_REPORT.out.decontamination_report,
             overlapped_counts,
         )
 

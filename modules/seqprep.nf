@@ -47,8 +47,8 @@ process SEQPREP_REPORT {
 
     script:
     """
-    zgrep '@' ${forward_unmapped_reads} | wc -l > output_report.txt
-    zgrep '@' ${reverse_unmerged_reads} | wc -l >> output_report.txt
-    zgrep '@' ${merged_reads} | wc -l >> output_report.txt
+    zcat ${forward_unmapped_reads} | grep '@' | wc -l > output_report.txt
+    zcat ${reverse_unmerged_reads} | grep '@' | wc -l >> output_report.txt
+    zcat ${merged_reads} | grep '@' | wc -l >> output_report.txt
     """
 }

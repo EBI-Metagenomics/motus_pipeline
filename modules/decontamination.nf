@@ -98,11 +98,10 @@ process DECONTAMINATION_REPORT {
         path "output_report.txt", emit: decontamination_report
 
     script:
-
+    def input_f_reads = "";
+    def input_r_reads = "";
     if (mode == "paired") {
-        def input_f_reads = ""
-        def input_r_reads = ""
-        println('paired')
+        println('paired');
         if (cleaned_reads[0].name.contains('_1'))  {
             input_f_reads = cleaned_reads[0]
             input_r_reads = cleaned_reads[1]
@@ -112,15 +111,16 @@ process DECONTAMINATION_REPORT {
             input_r_reads = cleaned_reads[0]
         }
         """
-        grep '@' ${input_f_reads} | wc -l > output_report.txt
+        zcat ${input_f_reads} | grep '@' | wc -l > output_report.txt
+        zcat ${input_r_reads} | grep '@' | wc -l >> output_report.txt
         """
-    }
-
-    if (mode == "single") {
-        println('single')
+    } else if (mode == "single") {
+        println('single');
         """
-        zgrep '@' ${cleaned_reads} | wc -l > output_report.txt
+        zcat ${cleaned_reads} | grep '@' | wc -l > output_report.txt
         """
+    } else {
+        error "Invalid mode: ${mode}"
     }
 }
 

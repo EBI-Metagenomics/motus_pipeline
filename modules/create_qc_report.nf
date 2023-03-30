@@ -12,6 +12,7 @@ process QC_REPORT {
     input:
     val mode
     path filtering_fastp_json
+    path decontamination_counts
     path seqprep_counts
 
     output:
@@ -20,13 +21,16 @@ process QC_REPORT {
     script:
     def inputs = ""
     if (mode == "paired") {
-        inputs = "--qc-json ${filtering_fastp_json} --overlap-counts ${seqprep_counts}"
+        inputs = " --overlap-counts ${seqprep_counts}" 
     }
     else {
-        inputs = "--qc-json ${filtering_fastp_json} "
+        inputs = ""
     }
 
     """
-    collect_counts.py ${inputs} -o "qc_summary"
+    collect_counts.py \
+    --qc-json ${filtering_fastp_json} \
+    --decontamination-counts ${decontamination_counts} \
+    ${inputs} -o "qc_summary"
     """
 }

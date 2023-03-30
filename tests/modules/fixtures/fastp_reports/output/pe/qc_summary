@@ -1,6 +1,8 @@
 Initial reads: 1200
 Reads passed filters: 746
 Low quality reads: 454
+Cleaned forward reads: 125
+Cleaned reverse reads: 126
 Unmapped_forward: 1
 Unmapped_reverse: 2
 Overlapped: 3
