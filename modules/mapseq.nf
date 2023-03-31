@@ -28,7 +28,6 @@ process MAPSEQ {
         -outfmt 'simple' > ${sequence.baseName}.mseq
     """
 }
-<<<<<<< HEAD
 
 /*
  * Download MGnify mapseq DB
