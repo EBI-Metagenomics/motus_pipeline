@@ -35,7 +35,6 @@ process CMSEARCH {
 */
 process GET_CMSEARCH_DB {
     publishDir "${params.databases}/", mode: 'copy'
-
     label 'cmsearch_db'
 
     input:

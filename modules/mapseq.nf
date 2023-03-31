@@ -3,7 +3,6 @@
 */
 process MAPSEQ {
     publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
-
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
     label 'mapseq'
 
@@ -28,14 +27,13 @@ process MAPSEQ {
         -outfmt 'simple' > ${sequence.baseName}.mseq
     """
 }
-<<<<<<< HEAD
 
 /*
  * Download MGnify mapseq DB
 */
 process GET_MAPSEQ_DB {
     publishDir "${params.databases}/", mode: 'copy', pattern: "${db_name}"
-
+   
     label 'mapseq_db'
 
     input:
