@@ -88,7 +88,7 @@ process DECONTAMINATION_REPORT {
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
     label 'decontamination_report'
     // TODO change container
-    container 'quay.io/openshifttest/base-alpine:1.2.0'
+    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
 
     input:
         val mode
@@ -129,7 +129,7 @@ process DECONTAMINATION_REPORT {
 */
 process GET_REF_GENOME {
     publishDir "${params.databases}/", mode: 'copy'
-
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
     label 'decontamination_genome'
 
     input:

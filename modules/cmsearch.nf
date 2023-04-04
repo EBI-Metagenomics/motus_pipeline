@@ -35,7 +35,7 @@ process CMSEARCH {
 */
 process GET_CMSEARCH_DB {
     publishDir "${params.databases}/", mode: 'copy'
-
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
     label 'cmsearch_db'
 
     input:

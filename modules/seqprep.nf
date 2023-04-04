@@ -36,7 +36,7 @@ process SEQPREP_REPORT {
     publishDir "${params.outdir}/qc/seqprep", mode: 'copy'
     label 'seqprep_report'
     // TODO change container
-    container 'quay.io/openshifttest/base-alpine:1.2.0'
+    container 'quay.io/biocontainers/seqprep:1.3.2--hed695b0_4'
 
     input:
         path forward_unmapped_reads
