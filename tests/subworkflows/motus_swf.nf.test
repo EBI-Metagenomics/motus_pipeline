@@ -9,7 +9,6 @@ nextflow_process {
         when {
             params {
                 reads = "${baseDir}/tests/subworkflows/fixtures/motus/test.fastq.gz"
-                motus_db = false
             }
             process {
                 """

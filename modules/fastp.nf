@@ -23,8 +23,8 @@ process FASTP {
 
     output:
     path "${name}_fastp*.fastq.gz", optional: true, emit: output_reads
-    path "*_fastp.*.json", emit: json
-    path "*_fastp.*.html", emit: html
+    path "*_fastp.json", emit: json
+    path "*_fastp.html", emit: html
     path "*_merged*", optional: true, emit: overlapped_reads
 
     script:
@@ -60,8 +60,8 @@ process FASTP {
     fastp -w ${task.cpus} \
     ${input_reads} \
     ${output_reads} \
-    --json ${name}_fastp.${report_name}.json \
-    --html ${name}_fastp.${report_name}.html \
+    --json ${name}_${report_name}_fastp.json \
+    --html ${name}_${report_name}_fastp.html \
     ${args}
     """
 }

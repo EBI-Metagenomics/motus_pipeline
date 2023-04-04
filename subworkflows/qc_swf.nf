@@ -2,7 +2,7 @@
  * Quality control, host-decontamination and overlap reads
  */
 
-include { FASTP as FASTP_FILTERING } from '../modules/fastp'
+include { FASTP } from '../modules/fastp'
 include { SEQPREP } from '../modules/seqprep'
 include { SEQPREP_REPORT } from '../modules/seqprep'
 include { QC_REPORT } from '../modules/create_qc_report'
@@ -26,7 +26,7 @@ workflow QC {
     main:
         reads_list = reads.collect()
 
-        FASTP_FILTERING(
+        FASTP(
             name,
             reads_list,
             mode,
@@ -35,10 +35,10 @@ workflow QC {
             polya_trim_param,
             qualified_quality_phred,
             unqualified_percent_limit
-        ) 
+        )
 
         DECONTAMINATION(
-            FASTP_FILTERING.out.output_reads,
+            FASTP.out.output_reads,
             ref_genome,
             ref_genome_name,
             mode,
@@ -48,7 +48,7 @@ workflow QC {
             mode,
             DECONTAMINATION.out.decontaminated_reads
         )
-        
+
         if ( params.mode == "paired" ) {
             SEQPREP(
                 name,
@@ -68,7 +68,7 @@ workflow QC {
 
         QC_REPORT(
             mode,
-            FASTP_FILTERING.out.json,
+            FASTP.out.json,
             DECONTAMINATION_REPORT.out.decontamination_report,
             overlapped_counts,
         )
@@ -82,5 +82,5 @@ workflow QC {
         sequence = FASTQ_TO_FASTA.out.sequence
         qc_report = QC_REPORT.out.qc_report
         qc_stats = QC_STATS.out.qc_statistics
+        fastp_json = FASTP.out.json
 }
-
