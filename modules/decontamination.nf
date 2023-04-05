@@ -23,7 +23,6 @@ process DECONTAMINATION {
     def input_reads = "";
     if (mode == "single") {
         input_reads = "${reads}";
-        println(input_reads);
         """
         mkdir -p output_decontamination
 
@@ -41,7 +40,7 @@ process DECONTAMINATION {
 
         echo "samtools"
         samtools fastq output_decontamination/${name}_unmapped_sorted.bam > output_decontamination/${name}_clean.fastq
-        
+
         echo "compressing output file"
         gzip -c output_decontamination/${name}_clean.fastq > ${name}_clean.fastq.gz
         """
@@ -85,25 +84,26 @@ process DECONTAMINATION {
  * Decontamination counts
 */
 process DECONTAMINATION_REPORT {
+
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
+
     label 'decontamination_report'
 
     input:
-        val mode
-        path cleaned_reads
+    val mode
+    path cleaned_reads
+
     output:
-        path "decontamination_output_report.txt", emit: decontamination_report
+    path "decontamination_output_report.txt", emit: decontamination_report
 
     script:
     def input_f_reads = "";
     def input_r_reads = "";
-    if (mode == "paired") {
-        println('paired');
-        if (cleaned_reads[0].name.contains('_1'))  {
+    if ( mode == "paired" ) {
+        if (cleaned_reads[0].name.contains('_1')) {
             input_f_reads = cleaned_reads[0]
             input_r_reads = cleaned_reads[1]
-        }
-        else if (cleaned_reads[1].name.contains('_1'))  {
+        } else if (cleaned_reads[1].name.contains('_1')) {
             input_f_reads = cleaned_reads[1]
             input_r_reads = cleaned_reads[0]
         }
@@ -111,8 +111,7 @@ process DECONTAMINATION_REPORT {
         zcat ${input_f_reads} | grep '@' | wc -l > decontamination_output_report.txt
         zcat ${input_r_reads} | grep '@' | wc -l >> decontamination_output_report.txt
         """
-    } else if (mode == "single") {
-        println('single');
+    } else if ( mode == "single" ) {
         """
         zcat ${cleaned_reads} | grep '@' | wc -l > decontamination_output_report.txt
         """
@@ -126,13 +125,20 @@ process DECONTAMINATION_REPORT {
  * Download reference genome HG38
 */
 process GET_REF_GENOME {
+
     publishDir "${params.databases}/", mode: 'copy'
+
     label 'decontamination_genome'
+    
+    publishDir "${params.databases}/${params.decontamination_indexes_folder}", mode: 'copy'
+
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
 
     input:
-        val db_name
+    val db_name
+
     output:
-        path "${db_name}", emit: db
+    path "${db_name}", emit: db
 
     script:
     """

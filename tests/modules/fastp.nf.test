@@ -8,13 +8,13 @@ nextflow_process {
 
         when {
             params {
-                name = "example_paired"
+                sample_name = "example_paired"
                 reads = "${baseDir}/tests/modules/fixtures/fastp/paired_end/example_paired_{1,2}.fastq.gz"
                 mode = "paired"
             }
             process {
                 """
-                input[0] = params.name
+                input[0] = params.sample_name
                 input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
                 input[3] = channel.value("")
@@ -40,14 +40,14 @@ nextflow_process {
 
         when {
             params {
-                name = "single"
+                sample_name = "single"
                 reads = "${baseDir}/tests/modules/fixtures/fastp/single_end/single.fastq.gz"
                 mode = "single"
             }
             process {
                 """
-                input[0] = params.name
-                input[1] = channel.fromPath("${params.reads}", checkIfExists: true)
+                input[0] = params.sample_name
+                input[1] = channel.fromPath("${params.readsdir}", checkIfExists: true)
                 input[2] = params.mode
                 input[3] = channel.value("")
                 input[4] = channel.value(10)
@@ -72,13 +72,13 @@ nextflow_process {
 
         when {
             params {
-                name = "example_paired"
+                sample_name = "example_paired"
                 reads = "${baseDir}/tests/modules/fixtures/fastp/paired_end/example_paired_{1,2}.fastq.gz"
                 mode = "paired"
             }
             process {
                 """
-                input[0] = params.name
+                input[0] = params.sample_name
                 input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
                 input[3] = channel.value("merged.fastq.gz")

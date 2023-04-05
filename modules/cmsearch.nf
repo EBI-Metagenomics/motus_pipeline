@@ -5,7 +5,7 @@
 process CMSEARCH {
 
     label 'cmsearch'
-    
+
     container 'quay.io/biocontainers/infernal:1.1.4--pl5321hec16e2b_1'
 
     input:
@@ -34,16 +34,21 @@ process CMSEARCH {
  * Download MGnify Rfam DB
 */
 process GET_CMSEARCH_DB {
+
     publishDir "${params.databases}/", mode: 'copy'
+
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
+
     label 'cmsearch_db'
 
     input:
-        val db_name
+    val db_name
+
     output:
-        path "${db_name}/${params.ribosomal_model_path}", emit: ribo_db
-        path "${db_name}/${params.other_model_path}", emit: other_db
-        path "${db_name}/${params.ribosomal_claninfo_path}", emit: ribo_clan
-        path "${db_name}/${params.other_claninfo_path}", emit: other_clan
+    path "${db_name}/${params.ribosomal_model_path}", emit: ribo_db
+    path "${db_name}/${params.other_model_path}", emit: other_db
+    path "${db_name}/${params.ribosomal_claninfo_path}", emit: ribo_clan
+    path "${db_name}/${params.other_claninfo_path}", emit: other_clan
 
     script:
     """

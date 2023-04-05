@@ -5,8 +5,8 @@
 process MAPSEQ2BIOM {
 
     publishDir(
-        path: "${params.outdir}/taxonomy-summary/${otu_label}",
-        pattern: "$mapseq.baseName.*",
+        path: "${params.outdir}/taxonomy/${otu_label}",
+        pattern: "${mapseq.baseName}.*",
         mode: 'copy'
     )
 

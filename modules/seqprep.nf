@@ -3,8 +3,11 @@
 */
 
 process SEQPREP {
+
     publishDir "${params.outdir}/qc/seqprep", mode: 'copy'
+    
     label 'seqprep'
+    
     container 'quay.io/biocontainers/seqprep:1.3.2--hed695b0_4'
 
     input:
@@ -33,7 +36,9 @@ process SEQPREP {
 }
 
 process SEQPREP_REPORT {
+    
     publishDir "${params.outdir}/qc/seqprep", mode: 'copy'
+    
     label 'seqprep_report'
 
     input:

@@ -2,16 +2,24 @@
  * MAPseq 2.1.1
 */
 process MAPSEQ {
-    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
+
+    publishDir(
+        "${params.outdir}/taxonomy/${otu_label}",
+        mode: 'copy',
+        pattern: "${sequence.baseName}_${mapseq_db.baseName}.mseq*"
+    )
+
     container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
+
     label 'mapseq'
 
     input:
-        path sequence
-        path mapseq_db
-        val db_fasta
-        val db_tax
-        val otu_label
+    path sequence
+    path mapseq_db
+    val db_fasta
+    val db_tax
+    val otu_label
+
     output:
     path "${sequence.baseName}.mseq", emit: mapseq_result
 
@@ -32,14 +40,20 @@ process MAPSEQ {
  * Download MGnify mapseq DB
 */
 process GET_MAPSEQ_DB {
+
     publishDir "${params.databases}/", mode: 'copy', pattern: "${db_name}"
-   
+
     label 'mapseq_db'
 
+    publishDir "${params.databases}/", mode: 'copy'
+
+    container 'quay.io/openshifttest/base-alpine:1.2.0'
+
     input:
-        val db_name
+    val db_name
+
     output:
-        path "*", emit: db
+    path "*", emit: db
 
     script:
     """

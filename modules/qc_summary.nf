@@ -13,10 +13,10 @@ process QC_STATS {
     path sequence
 
     output:
-    path "qc-statistics", emit: qc_statistics
+    path "statistics", emit: qc_statistics
 
     script:
     """
-    qc_summary.py -i ${sequence} --output-dir "qc-statistics"
+    qc_summary.py -i ${sequence} --output-dir "statistics"
     """
 }

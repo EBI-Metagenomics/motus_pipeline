@@ -32,8 +32,8 @@ All databases are automatically downloaded by Nextflow.
     nextflow run EBI-Metagenomics/motus_pipeline \
     -profile <choose profile> \
     --mode <single/paired> \
-    --reads <path to folder with fastq files> \
-    --name <fastq filename>
+    --readsdir <path to folder with fastq files> \
+    --sample_name <fastq filename>
     ```
 
 ### Run examples
@@ -46,8 +46,8 @@ Add your own profile to nextflow.config file including all inputs
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile <choose profile> \
 --mode <single/paired> \
---reads <path to folder with fastq files> \
---name <fastq filename>
+--readsdir <path to folder with fastq files> \
+--sample_name <fastq filename>
 ```
 
 #### Local Single End run
@@ -58,8 +58,8 @@ The reads location: my_reads/raw/test.fastq.gz
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode single \
---reads my_reads/raw \
---name test
+--readsdir my_reads/raw \
+--sample_name test
 ```
 #### Local Paired Ends run
 
@@ -71,8 +71,8 @@ The reads location:
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode paired \
---reads my_reads/raw \
---name test
+--readsdir my_reads/raw \
+--sample_name test
 ```
 
 ## Development

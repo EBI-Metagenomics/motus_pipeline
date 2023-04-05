@@ -7,3 +7,6 @@ work/
 results/
 
 .nf-test/*
+
+nextflow-autodownload-databases/
+motus_pipeline_results/

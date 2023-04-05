@@ -20,16 +20,17 @@ process MOTUS {
     output:
     path "*.motus", emit: motus_result
     path "*.tsv", emit: motus_result_cleaned
+    path "${reads.simpleName}_motus.log", emit: motus_log
 
     script:
     """
     gunzip ${reads}
     echo 'Run mOTUs'
-    motus profile -c -q -v 9 \
+    motus profile -c -q \
     -db ${motus_db} \
     -s ${reads.baseName} \
     -t ${task.cpus} \
-    -o ${reads.baseName}.motus
+    -o ${reads.baseName}.motus 2> ${reads.simpleName}_motus.log
 
     echo 'clean files'
     echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
@@ -50,6 +51,12 @@ process MOTUS {
 */
 process MOTUS_DOWNLOAD_DB {
 
+    publishDir(
+        "${params.databases}/${params.motus_db_name}",
+
+        mode: 'copy'
+    )
+
     container "quay.io/biocontainers/motus:3.0.3--pyhdfd78af_0"
 
     label 'motus_download'
@@ -57,7 +64,7 @@ process MOTUS_DOWNLOAD_DB {
     input:
 
     output:
-    path "db_mOTU/", emit: db
+    path "*", emit: db
 
     script:
     """
@@ -67,5 +74,7 @@ process MOTUS_DOWNLOAD_DB {
     ## NOTE: container required
     cp /usr/local/lib/python3.9/site-packages/motus/downloadDB.py downloadDB.py
     python downloadDB.py -t $task.cpus
+    mv db_mOTU/* .
+    rm -r db_mOTU/ downloadDB.py
     """
 }

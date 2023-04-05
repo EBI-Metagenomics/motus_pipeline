@@ -3,17 +3,23 @@
 */
 
 process KRONA {
-    publishDir "${params.outdir}/taxonomy-summary/${otu_label}", mode: 'copy', pattern: "*krona.html"
-
-    container 'quay.io/biocontainers/krona:2.7.1--pl5321hdfd78af_7'
 
     label 'krona'
 
+    publishDir(
+        "${params.outdir}/taxonomy/${otu_label}",
+        mode: 'copy',
+        pattern: "*krona.html"
+    )
+
+    container 'quay.io/biocontainers/krona:2.7.1--pl5321hdfd78af_7'
+
     input:
-        val otu_label
-        path otu_counts
+    val otu_label
+    path otu_counts
+
     output:
-        path "*krona.html", emit: krona_html
+    path "*krona.html", emit: krona_html
 
     script:
     """
