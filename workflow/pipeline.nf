@@ -4,14 +4,16 @@
     ~~~~~~~~~~~~~~~~~~
 */
 sample_name = channel.value(params.sample_name)
-readsdir = channel.fromPath(params.readsdir)
+single_end = channel.fromPath(params.single_end)
+paired_end_forward = channel.fromPath(params.paired_end_forward)
+paired_end_reverse = channel.fromPath(params.paired_end_reverse)
 
 mode = channel.value(params.mode)
 
 if ( params.mode == "paired" ) {
-    chosen_reads = channel.fromFilePairs("${params.readsdir}/${params.sample_name}*_{1,2}.fastq*", checkIfExists: true).map { it[1] }
+    chosen_reads = channel.fromFilePairs([paired_end_forward, paired_end_reverse], checkIfExists: true)
 } else if ( params.mode == "single" ) {
-    chosen_reads = channel.fromPath("${params.readsdir}/${params.sample_name}.fastq", checkIfExists: true)
+    chosen_reads = channel.fromPath(single_end, checkIfExists: true)
 }
 
 /*

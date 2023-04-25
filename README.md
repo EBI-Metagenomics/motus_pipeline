@@ -26,15 +26,7 @@ All databases are automatically downloaded by Nextflow.
 
 2. Install any of [Docker](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce) or  [Singularity](https://sylabs.io/guides/3.0/user-guide/quick_start.html).
 
-3. Download the pipeline and test it on a minimal dataset with a single command:
-
-    ```bash
-    nextflow run EBI-Metagenomics/motus_pipeline \
-    -profile <choose profile> \
-    --mode <single/paired> \
-    --readsdir <path to folder with fastq files> \
-    --sample_name <fastq filename>
-    ```
+3. Download the pipeline and test it on a minimal dataset.
 
 ### Run examples
 
@@ -46,32 +38,26 @@ Add your own profile to nextflow.config file including all inputs
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile <choose profile> \
 --mode <single/paired> \
---readsdir <path to folder with fastq files> \
---sample_name <fastq filename>
+--single_end  / --paired_end_forward --paired_end_reverse <path with fastq file/s>\
+--sample_name <accession/name>
 ```
 
 #### Local Single End run
-
-The reads location: my_reads/raw/test.fastq.gz
 
 ```bash
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode single \
---readsdir my_reads/raw \
+--single_end my_reads/raw/test.fastq.gz \
 --sample_name test
 ```
 #### Local Paired Ends run
-
-The reads location:
-- my_reads/raw/test_1.fastq.gz
-- my_reads/raw/test_2.fastq.gz
-
 ```bash
 nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode paired \
---readsdir my_reads/raw \
+--paired_end_forward my_reads/raw/test_1.fastq.gz \
+--paired_end_reverse my_reads/raw/test_2.fastq.gz \
 --sample_name test
 ```
 
