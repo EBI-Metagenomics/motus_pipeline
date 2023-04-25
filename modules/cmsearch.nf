@@ -46,7 +46,7 @@ process GET_CMSEARCH_DB {
 
     output:
     path "${db_name}/${params.ribosomal_model_path}", emit: ribo_db
-    path "${db_name}/${params.other_model_path}", emit: other_db
+    path "${db_name}/${params.other_model_path}/*.cm", emit: other_db
     path "${db_name}/${params.ribosomal_claninfo_path}", emit: ribo_clan
     path "${db_name}/${params.other_claninfo_path}", emit: other_clan
 

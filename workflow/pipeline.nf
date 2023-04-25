@@ -79,7 +79,7 @@ workflow PIPELINE {
 
     DOWNLOAD_RFAM()
     covariance_model_database_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_db
-    covariance_model_database_other = DOWNLOAD_RFAM.out.cmsearch_other_db
+    covariance_model_database_other = DOWNLOAD_RFAM.out.cmsearch_other_db_cat
     covariance_clan_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_clan
     covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
 
