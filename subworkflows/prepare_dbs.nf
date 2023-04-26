@@ -78,12 +78,13 @@ workflow DOWNLOAD_RFAM {
             GET_CMSEARCH_DB("${params.cmsearch_db_name}");
             cmsearch_ribo_db = GET_CMSEARCH_DB.out.ribo_db;
             cmsearch_ribo_clan = GET_CMSEARCH_DB.out.ribo_clan;
-            cmsearch_other_db = GET_CMSEARCH_DB.out.other_db.filter(~/.*.cm/);
+            cmsearch_other_db = GET_CMSEARCH_DB.out.other_db;
             cmsearch_other_clan = GET_CMSEARCH_DB.out.other_clan;
         }
+        cmsearch_other_db_cat = cmsearch_other_db.collectFile(name: "other.cm")
     emit:
         cmsearch_ribo_db
         cmsearch_ribo_clan
-        cmsearch_other_db
+        cmsearch_other_db_cat
         cmsearch_other_clan
 }
