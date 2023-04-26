@@ -4,16 +4,13 @@
     ~~~~~~~~~~~~~~~~~~
 */
 sample_name = channel.value(params.sample_name)
-single_end = channel.fromPath(params.single_end)
-paired_end_forward = channel.fromPath(params.paired_end_forward)
-paired_end_reverse = channel.fromPath(params.paired_end_reverse)
-
 mode = channel.value(params.mode)
 
 if ( params.mode == "paired" ) {
-    chosen_reads = channel.fromFilePairs([paired_end_forward, paired_end_reverse], checkIfExists: true)
-} else if ( params.mode == "single" ) {
-    chosen_reads = channel.fromPath(single_end, checkIfExists: true)
+    chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
+} 
+else if ( params.mode == "single" ) {
+    chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
 }
 
 /*
@@ -73,30 +70,45 @@ workflow PIPELINE {
     )
 
     // mOTUs
-    DOWNLOAD_MOTUS_DB()
+    if (params.motus_db) {
+        motus_db = channel.fromPath("${params.motus_db}")
+    }
+    else {
+        DOWNLOAD_MOTUS_DB()
+        motus_db = DOWNLOAD_MOTUS_DB.out.motus_db
+    }
 
-    MOTUS(QC.out.merged_reads, DOWNLOAD_MOTUS_DB.out.motus_db)
+    MOTUS(QC.out.merged_reads, motus_db)
 
-    DOWNLOAD_RFAM()
-    covariance_model_database_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_db
-    covariance_model_database_other = DOWNLOAD_RFAM.out.cmsearch_other_db_cat
-    covariance_clan_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_clan
-    covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
-
+    // CMSEARCH prepare DBs
+    if (params.rfam_ribo_models && params.rfam_other_models && params.rfam_ribo_clan && params.rfam_other_clan) {
+        covariance_model_database_ribo = channel.fromPath("${params.rfam_ribo_models}")
+        covariance_model_database_other = channel.fromPath("${params.rfam_other_models}")
+        covariance_clan_ribo = channel.fromPath("${params.rfam_ribo_clan}")
+        covariance_clan_other = channel.fromPath("${params.rfam_other_clan}")
+    }
+    else {
+        DOWNLOAD_RFAM()
+        covariance_model_database_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_db
+        covariance_model_database_other = DOWNLOAD_RFAM.out.cmsearch_other_db_cat
+        covariance_clan_ribo = DOWNLOAD_RFAM.out.cmsearch_ribo_clan
+        covariance_clan_other = DOWNLOAD_RFAM.out.cmsearch_other_clan
+    }
     covariance_cat_models = covariance_model_database_ribo.concat(covariance_model_database_other) \
         .collectFile(name: "models.cm", newLine: true)
 
     clan_info = covariance_clan_ribo.concat(covariance_clan_other) \
         .collectFile(name: "clan.info")
 
+    // CMSEARCH
     CMSEARCH_SUBWF(
         sample_name,
         QC.out.sequence,
         covariance_cat_models,
         clan_info
     )
-
-    // mapseq
+ 
+    // MAPSEQ LSU
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         if (params.lsu_db) {
             mapseq_lsu = channel.fromPath("${params.lsu_db}")
@@ -114,7 +126,7 @@ workflow PIPELINE {
             channel.value(params.lsu_label)
         )
     }
-
+    // MAPSEQ SSU
     if (CMSEARCH_SUBWF.out.cmsearch_ssu_fasta) {
         if (params.ssu_db) {
             mapseq_ssu = channel.fromPath("${params.ssu_db}")
