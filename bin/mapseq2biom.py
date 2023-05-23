@@ -47,15 +47,18 @@ def main():
             # Pull out the fields that we need
             line = line.strip()
             fields = line.split("\t")
-
-            if not fields[13]:
+            
+            if len(fields) < 14:
                 tax = "Unclassified"
             else:
-                tax = fields[13]
-                while tax.endswith("__"):
-                    fds = tax.split(";")
-                    fds = fds[:-1]
-                    tax = ";".join(fds)
+                if not fields[13]:
+                    tax = "Unclassified"
+                else:
+                    tax = fields[13]
+                    while tax.endswith("__"):
+                        fds = tax.split(";")
+                        fds = fds[:-1]
+                        tax = ";".join(fds)
 
             if tax in tax_counter:
                 tax_counter[tax]["count"] += 1
