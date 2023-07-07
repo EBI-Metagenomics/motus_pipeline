@@ -26,11 +26,12 @@ process MOTUS {
     """
     gunzip ${reads}
     echo 'Run mOTUs'
+
     motus profile -c -q \
     -db ${motus_db} \
     -s ${reads.baseName} \
     -t ${task.cpus} \
-    -o ${reads.baseName}.motus 2> ${reads.simpleName}_motus.log
+    -o ${reads.baseName}.motus 2>&1 | tee ${reads.simpleName}_motus.log
 
     echo 'clean files'
     echo -e '#mOTU\tconsensus_taxonomy\tcount' > ${reads.baseName}.tsv
