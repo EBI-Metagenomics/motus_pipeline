@@ -6,11 +6,15 @@
 sample_name = channel.value(params.sample_name)
 mode = channel.value(params.mode)
 
-if ( params.mode == "paired" ) {
-    chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
-} 
-else if ( params.mode == "single" ) {
-    chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
+if (params.reads_accession) {
+    chosen_reads = channel.empty()
+} else {
+    if ( params.mode == "paired" ) {
+        chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
+    }
+    else if ( params.mode == "single" ) {
+        chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
+    }
 }
 
 /*
@@ -22,6 +26,7 @@ include { QC } from '../subworkflows/qc_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
+include { FETCHTOOL } from '../modules/fetchtool'
 include { MOTUS } from '../modules/motus'
 include { MULTIQC } from '../modules/multiqc'
 
@@ -41,6 +46,11 @@ include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
     ~~~~~~~~~~~~~~~~~~
 */
 workflow PIPELINE {
+
+    if (params.reads_accession) {
+        chosen_reads = FETCHTOOL(params.reads_accession).out.reads
+    }
+
     // Quality control
     // fastp filtering
     min_length = channel.value(params.min_length)
@@ -107,7 +117,7 @@ workflow PIPELINE {
         covariance_cat_models,
         clan_info
     )
- 
+
     // MAPSEQ LSU
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         if (params.lsu_db) {

@@ -3,42 +3,23 @@
         "content": [
             {
                 "reads": [
-                    [
-                        "SRR2187576",
-                        "SRR2187576.fastq.gz:md5,421386641e05978ba61550b851855743"
-                    ]
+                    "SRR2187576.fastq.gz:md5,421386641e05978ba61550b851855743"
                 ]
             }
         ],
-        "timestamp": "2023-07-18T22:33:12+0000"
+        "timestamp": "2023-07-18T22:54:31+0000"
     },
     "Should download paired end reads": {
         "content": [
             {
                 "reads": [
                     [
-                        "ERR4387386",
-                        [
-                            "ERR4387386_1.fastq.gz:md5,eb626d41e20ec61318d4541dbe84fdbe",
-                            "ERR4387386_2.fastq.gz:md5,8cd92f17190c2c60b2651536f7eb11c6"
-                        ]
+                        "ERR4387386_1.fastq.gz:md5,eb626d41e20ec61318d4541dbe84fdbe",
+                        "ERR4387386_2.fastq.gz:md5,8cd92f17190c2c60b2651536f7eb11c6"
                     ]
                 ]
             }
         ],
-        "timestamp": "2023-07-18T22:33:12+0000"
-    },
-    "Should run without failures": {
-        "content": [
-            {
-                "reads": [
-                    [
-                        "SRR2187576",
-                        "SRR2187576.fastq.gz:md5,421386641e05978ba61550b851855743"
-                    ]
-                ]
-            }
-        ],
-        "timestamp": "2023-07-18T22:33:12+0000"
+        "timestamp": "2023-07-18T22:54:31+0000"
     }
 }

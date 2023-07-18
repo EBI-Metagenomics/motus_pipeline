@@ -8,7 +8,7 @@ process FETCHTOOL {
     val password
 
     output:
-    tuple val(reads_accession_number), path("download_folder/*/raw/${reads_accession_number}*.fastq.gz"), emit: reads
+    path("download_folder/*/raw/${reads_accession_number}*.fastq.gz"), emit: reads
 
     script:
     """
