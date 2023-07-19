@@ -19,22 +19,20 @@ workflow QC {
         mode
         ref_genome
         ref_genome_name
-        length_filter
-        polya_trim_param
-        qualified_quality_phred
-        unqualified_percent_limit
     main:
-        reads_list = reads.collect()
+        // We sort the reads by name.. to ensure
+        // pair end reads land in the correct position
+        // _1 -> forward first
+        // _2 -> reverse second
+        reads_list = reads.collect(sort: {
+            it.name
+        })
 
         FASTP(
             name,
             reads_list,
             mode,
-            channel.value(""),
-            length_filter,
-            polya_trim_param,
-            qualified_quality_phred,
-            unqualified_percent_limit
+            channel.value("")
         )
 
         DECONTAMINATION(

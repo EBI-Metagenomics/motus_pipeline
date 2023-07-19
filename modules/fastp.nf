@@ -1,6 +1,3 @@
-/*
- * fastp
-*/
 
 process FASTP {
 
@@ -13,13 +10,9 @@ process FASTP {
 
     input:
     val name
-    file(reads)
+    file reads
     val mode
     val merged_reads
-    val length_filter
-    val polya_trim_param
-    val qualified_quality_phred
-    val unqualified_percent_limit
 
     output:
     path "${name}_fastp*.fastq.gz", optional: true, emit: output_reads
@@ -51,10 +44,10 @@ process FASTP {
         " --unpaired2 ${name}.unpaired_2.fastq.gz"
         report_name = "overlap"
     }
-    args += length_filter ? " -l ${length_filter}" : "";
-    args += polya_trim_param ? " -x ${polya_trim_param}" : "";
-    args += qualified_quality_phred ? " -q ${qualified_quality_phred}" : "";
-    args += unqualified_percent_limit ? " -u ${unqualified_percent_limit}" : "";
+    args += params.length_filter ? " -l ${params.length_filter}" : "";
+    args += params.polya_trim ? " -x ${params.polya_trim}" : "";
+    args += params.qualified_quality_phred ? " -q ${params.qualified_quality_phred}" : "";
+    args += params.unqualified_percent_limit ? " -u ${params.unqualified_percent_limit}" : "";
 
     """
     fastp -w ${task.cpus} \

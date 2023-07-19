@@ -15,8 +15,6 @@ nextflow_process {
                 """
                 // define inputs of the process here. Example:
                 input[0] = "SRR2187576"
-                input[1] = ""
-                input[2] = ""
                 """
             }
         }
@@ -40,8 +38,6 @@ nextflow_process {
                 """
                 // define inputs of the process here. Example:
                 input[0] = "ERR4387386"
-                input[1] = ""
-                input[2] = ""
                 """
             }
         }

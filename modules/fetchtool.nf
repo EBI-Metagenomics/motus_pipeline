@@ -3,12 +3,10 @@ process FETCHTOOL {
     container 'hariszaf/fetch-tool:latest'
 
     input:
-    val reads_accession_number
-    val username
-    val password
+    val reads_accession
 
     output:
-    path("download_folder/*/raw/${reads_accession_number}*.fastq.gz"), emit: reads
+    path("download_folder/*/raw/${reads_accession}*.fastq.gz"), emit: reads
 
     script:
     """
@@ -22,7 +20,6 @@ process FETCHTOOL {
     "aspera_cert": "/app/fetch_tool/aspera-cli/cli/etc/asperaweb_id_dsa.openssh"
     }' >> \$CONF_FILE
 
-    fetch-read-tool -d download_folder/ -ru $reads_accession_number -c \$CONF_FILE -v
+    fetch-read-tool -d download_folder/ -ru $reads_accession -c \$CONF_FILE -v
     """
-
 }
