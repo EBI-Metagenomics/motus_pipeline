@@ -13,16 +13,13 @@ nextflow_process {
                 reads_r = "${baseDir}/tests/modules/fixtures/fastp/paired_end/example_paired_2.fastq.gz"
                 mode = "paired"
             }
+
             process {
                 """
                 input[0] = params.sample_name
                 input[1] = channel.fromFilePairs(["${params.reads_f}", "${params.reads_r}"], checkIfExists: true)
                 input[2] = params.mode
                 input[3] = channel.value("")
-                input[4] = channel.value(10)
-                input[5] = channel.value(10)
-                input[6] = channel.value(15)
-                input[7] = channel.value(10)
                 """
             }
         }
@@ -51,10 +48,6 @@ nextflow_process {
                 input[1] = channel.fromPath("${params.readsdir}", checkIfExists: true)
                 input[2] = params.mode
                 input[3] = channel.value("")
-                input[4] = channel.value(10)
-                input[5] = channel.value(10)
-                input[6] = channel.value(15)
-                input[7] = channel.value(10)
                 """
             }
         }
@@ -83,10 +76,6 @@ nextflow_process {
                 input[1] = channel.fromFilePairs("${params.reads}", checkIfExists: true).map { it[1] }
                 input[2] = params.mode
                 input[3] = channel.value("merged.fastq.gz")
-                input[4] = channel.value(10)
-                input[5] = channel.value(10)
-                input[6] = channel.value(15)
-                input[7] = channel.value(10)
                 """
             }
         }

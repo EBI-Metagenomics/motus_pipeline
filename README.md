@@ -42,6 +42,16 @@ nextflow run EBI-Metagenomics/motus_pipeline \
 --sample_name <accession/name>
 ```
 
+#### Using the fetch tool to download the reads
+
+```bash
+nextflow run EBI-Metagenomics/motus_pipeline \
+-profile local \
+--mode single \
+--sample_name test
+--runs_accession ERR4387386
+```
+
 #### Local Single End run
 
 ```bash
@@ -51,6 +61,7 @@ nextflow run EBI-Metagenomics/motus_pipeline \
 --single_end my_reads/raw/test.fastq.gz \
 --sample_name test
 ```
+
 #### Local Paired Ends run
 ```bash
 nextflow run EBI-Metagenomics/motus_pipeline \
