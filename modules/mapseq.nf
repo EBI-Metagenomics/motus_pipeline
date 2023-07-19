@@ -47,7 +47,7 @@ process GET_MAPSEQ_DB {
 
     publishDir "${params.databases}/", mode: 'copy'
 
-    container 'quay.io/openshifttest/base-alpine:1.2.0'
+    container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
 
     input:
     val db_name

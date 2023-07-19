@@ -82,12 +82,15 @@ process DECONTAMINATION {
 
 /*
  * Decontamination counts
+ * # TODO: assess Qualimap to see tha bwa mapping results
 */
 process DECONTAMINATION_REPORT {
 
     publishDir "${params.outdir}/qc/decontamination", mode: 'copy'
 
     label 'decontamination_report'
+
+    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
 
     input:
     val mode
@@ -129,10 +132,10 @@ process GET_REF_GENOME {
     publishDir "${params.databases}/", mode: 'copy'
 
     label 'decontamination_genome'
-    
+
     publishDir "${params.databases}/${params.decontamination_indexes_folder}", mode: 'copy'
 
-    container 'quay.io/openshifttest/base-alpine:1.2.0'
+    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
 
     input:
     val db_name

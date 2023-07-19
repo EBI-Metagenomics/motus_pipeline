@@ -6,11 +6,20 @@
 sample_name = channel.value(params.sample_name)
 mode = channel.value(params.mode)
 
-if ( params.mode == "paired" ) {
-    chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
-} 
-else if ( params.mode == "single" ) {
-    chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
+if ( params.reads_accession ) {
+    // The "mode" is also required but not needed to pull the reads //
+    chosen_reads = channel.empty()
+} else {
+    if ( params.mode == "paired" ) {
+        chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
+    }
+    else if ( params.mode == "single" ) {
+        chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
+    }
+}
+
+if ( params.reads_accession && (params.paired_end_forward || params.paired_end_reverse || params.single_end) ) {
+    exit 1, "If --reads_accession is provided, paired_end_forward, paired_end_reverse and single_end are invalid."
 }
 
 /*
@@ -22,6 +31,7 @@ include { QC } from '../subworkflows/qc_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU} from '../subworkflows/mapseq_otu_krona_swf'
 include { CMSEARCH_SUBWF } from '../subworkflows/cmsearch_swf'
+include { FETCHTOOL } from '../modules/fetchtool'
 include { MOTUS } from '../modules/motus'
 include { MULTIQC } from '../modules/multiqc'
 
@@ -41,14 +51,15 @@ include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
     ~~~~~~~~~~~~~~~~~~
 */
 workflow PIPELINE {
-    // Quality control
-    // fastp filtering
-    min_length = channel.value(params.min_length)
-    polya_trim = channel.value(params.polya_trim)
-    qualified_quality_phred = channel.value(params.qualified_quality_phred)
-    unqualified_percent_limit = channel.value(params.unqualified_percent_limit)
 
-    if (params.reference_genome && params.reference_genome_name) {
+    if ( params.reads_accession ) {
+        // Sorting this is required to guarantee the order for
+        // pair end reads
+        FETCHTOOL(params.reads_accession)
+        chosen_reads = FETCHTOOL.out.reads
+    }
+
+    if ( params.reference_genome && params.reference_genome_name ) {
         ref_genome = channel.fromPath("${params.reference_genome}")
         ref_genome_name = channel.value("${params.reference_genome_name}")
     } else {
@@ -62,11 +73,7 @@ workflow PIPELINE {
         chosen_reads,
         mode,
         ref_genome,
-        ref_genome_name,
-        min_length,
-        polya_trim,
-        qualified_quality_phred,
-        unqualified_percent_limit,
+        ref_genome_name
     )
 
     // mOTUs
@@ -107,7 +114,7 @@ workflow PIPELINE {
         covariance_cat_models,
         clan_info
     )
- 
+
     // MAPSEQ LSU
     if (CMSEARCH_SUBWF.out.cmsearch_lsu_fasta) {
         if (params.lsu_db) {

@@ -5,9 +5,9 @@
 process SEQPREP {
 
     publishDir "${params.outdir}/qc/seqprep", mode: 'copy'
-    
+
     label 'seqprep'
-    
+
     container 'quay.io/biocontainers/seqprep:1.3.2--hed695b0_4'
 
     input:
@@ -31,20 +31,23 @@ process SEQPREP {
     -1 ${name}_forward_unmerged.fastq.gz \
     -2 ${name}_reverse_unmerged.fastq.gz \
     -s ${name}_merged.fastq.gz
-    
+
     """
 }
 
 process SEQPREP_REPORT {
-    
+
     publishDir "${params.outdir}/qc/seqprep", mode: 'copy'
-    
+
+    container 'quay.io/biocontainers/seqprep:1.3.2--hed695b0_4'
+
     label 'seqprep_report'
 
     input:
         path forward_unmapped_reads
         path reverse_unmerged_reads
         path merged_reads
+
     output:
         path "seqprep_output_report.txt", emit: overlapped_report
 

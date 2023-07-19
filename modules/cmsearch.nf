@@ -37,7 +37,7 @@ process GET_CMSEARCH_DB {
 
     publishDir "${params.databases}/", mode: 'copy'
 
-    container 'quay.io/openshifttest/base-alpine:1.2.0'
+    container 'quay.io/biocontainers/infernal:1.1.4--pl5321hec16e2b_1'
 
     label 'cmsearch_db'
 

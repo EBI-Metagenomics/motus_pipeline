@@ -7,12 +7,15 @@ include { CMSEARCH_DEOVERLAP } from '../modules/cmsearch_deoverlap'
 include { EASEL_EXTRACT_BY_COORD } from '../modules/easel'
 include { EXTRACT_MODELS } from '../modules/extract_coords'
 
+/* FIXME: rename this - the current name doesn't reflect the modue functionatily */
 process RETURN_FILES {
 
     publishDir(
         "${params.outdir}/cmsearch/",
         mode: 'copy'
     )
+
+    container 'quay.io/biocontainers/infernal:1.1.4--pl5321hec16e2b_1'
 
     stageInMode 'copy'
 
@@ -48,7 +51,7 @@ workflow CMSEARCH_SUBWF {
             file: true
         )
         // cat models
-       
+
         CMSEARCH(sequence_chunks_ch, covariance_model_database.first())
 
         CMSEARCH_DEOVERLAP(clan_information.first(), CMSEARCH.out.cmsearch)
@@ -69,4 +72,3 @@ workflow CMSEARCH_SUBWF {
         cmsearch_ssu_fasta = EXTRACT_MODELS.out.ssu_fasta
         seq_cat = EXTRACT_MODELS.out.seq_cat_folder
 }
-
