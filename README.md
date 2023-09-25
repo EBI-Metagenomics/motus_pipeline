@@ -5,7 +5,7 @@ Raw reads mOTUs and taxonomic classification pipeline.
 ## Pipeline summary
 
 The containerised pipeline for profiling shotgun metagenomic data is derived from the [MGnify](https://www.ebi.ac.uk/metagenomics/) pipeline raw-reads analyses, a well-established resource used for analyzing microbiome data.
-Results of chosen studies are available on [FTP](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/motus_pipeline).
+Results of chosen studies are available on [FTP](http://ftp.ebi.ac.uk/pub/databases/metagenomics/motus_pipeline/).
 
 Key components:
 - Quality control and decontamination
