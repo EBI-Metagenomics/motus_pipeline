@@ -49,7 +49,7 @@ nextflow run EBI-Metagenomics/motus_pipeline \
 -profile local \
 --mode single \
 --sample_name test
---runs_accession ERR4387386
+--reads_accession ERR4387386
 ```
 
 #### Local Single End run
