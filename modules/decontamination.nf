@@ -20,6 +20,8 @@ process DECONTAMINATION {
     path "*_clean*.fastq.gz", emit: decontaminated_reads
 
     script:
+    print(ref_genome)
+    print(ref_genome_name)
     def input_reads = "";
     if (mode == "single") {
         input_reads = "${reads}";
