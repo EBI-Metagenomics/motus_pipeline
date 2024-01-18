@@ -67,7 +67,7 @@ workflow PIPELINE {
         ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
         ref_genome_name = channel.value("${params.decontamination_reference_index}")
     }
-    print(ref_genome)
+    ref_genome.view()
     print(params.reference_genome)
     QC(
         sample_name,
