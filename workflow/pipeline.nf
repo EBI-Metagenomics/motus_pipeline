@@ -64,6 +64,7 @@ workflow PIPELINE {
     input_data = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads) 
     
     sample_name = input_data.map{meta, mode, reads -> meta.id}
+    print(sample_name)
     chosen_reads = input_data.map{meta, mode, reads -> reads}.collect()
     print(chosen_reads)
     mode = input_data.map{meta, mode, reads -> mode}
