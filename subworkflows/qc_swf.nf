@@ -15,6 +15,7 @@ workflow QC {
 
     take:
         name
+        mode
         reads
         mode
         ref_genome
@@ -47,7 +48,7 @@ workflow QC {
             DECONTAMINATION.out.decontaminated_reads
         )
 
-        if ( params.mode == "paired" ) {
+        if ( $mode == "paired" ) {
             SEQPREP(
                 name,
                 DECONTAMINATION.out.decontaminated_reads
