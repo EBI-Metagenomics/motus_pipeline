@@ -55,18 +55,16 @@ include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
 workflow PIPELINE {
     groupReads = { meta, fq1, fq2 ->
         if (fq2 == []) {
-            chosen_reads = channel.fromPath(fq1, checkIfExists: true)
-            return tuple(meta, 'single', chosen_reads)
+            return tuple(meta, 'single', [fq1])
         }
         else {
-            chosen_reads = channel.fromFilePairs([fq1, fq2], checkIfExists: true)
-            return tuple(meta, 'paired', chosen_reads)
+            return tuple(meta, 'paired', [fq1, fq2])
         }
     }
     input_data = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads) 
     
     sample_name = input_data.map{meta, mode, reads -> meta.id}
-    chosen_reads = input_data.map{meta, mode, reads -> reads}
+    chosen_reads = input_data.map{meta, mode, reads -> reads}.collect()
     mode = input_data.map{meta, mode, reads -> mode}
 
     if ( params.fetch_data ) {
