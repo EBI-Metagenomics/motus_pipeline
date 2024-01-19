@@ -1,0 +1,198 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/./master/nextflow_schema.json",
+    "title": ". pipeline parameters",
+    "description": "",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": ["outdir"],
+            "properties": {
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "fa_icon": "fas fa-folder-open"
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
+        }
+    ],
+    "properties": {
+        "samplesheet": {
+          "type": "string",
+          "format": "file-path",
+          "exists": true,
+          "mimetype": "text/csv",
+          "pattern": "^\\S+\\.csv$",
+          "schema": "assets/schema_input.json",
+          "description": "Path to comma-separated file containing information about the raw reads with the prefix to be used.",
+          "help_text": "File format should be accession, path_to_read_1, path_to_read_2",
+          "fa_icon": "fas fa-file-csv"
+        },
+        "fetch_data": {
+            "type": "string",
+            "default": "false"
+        },
+        "workdir": {
+            "type": "string",
+            "default": "motus-pipeline_workdir"
+        },
+        "databases": {
+            "type": "string",
+            "default": "false"
+        },
+        "download_ftp_path": {
+            "type": "string",
+            "default": "ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/pipeline-5.0/ref-dbs"
+        },
+        "reference_genome": {
+            "type": "string",
+        },
+        "reference_genome_name": {
+            "type": "string",
+            "default": "hg38.fa"
+        },
+        "length_filter": {
+            "type": "integer",
+            "default": 10
+        },
+        "polya_trim": {
+            "type": "integer",
+            "default": 10
+        },
+        "qualified_quality_phred": {
+            "type": "integer",
+            "default": 15
+        },
+        "unqualified_percent_limit": {
+            "type": "integer",
+            "default": 10
+        },
+        "decontamination_indexes_folder": {
+            "type": "string",
+            "default": "hg38"
+        },
+        "decontamination_reference_index": {
+            "type": "string",
+            "default": "hg38.fa"
+        },
+        "cmsearch_db_name": {
+            "type": "string",
+            "default": "rfam_models"
+        },
+        "ribosomal_model_path": {
+            "type": "string",
+            "default": "ribosomal_models/ribo.cm"
+        },
+        "ribosomal_claninfo_path": {
+            "type": "string",
+            "default": "ribosomal_models/ribo.claninfo"
+        },
+        "other_model_path": {
+            "type": "string",
+            "default": "other_models"
+        },
+        "other_claninfo_path": {
+            "type": "string",
+            "default": "other_models/other.claninfo"
+        },
+        "motus_db_name": {
+            "type": "string",
+            "default": "db_mOTU"
+        },
+        "silva_ssu_db_name": {
+            "type": "string",
+            "default": "silva_ssu-20200130"
+        },
+        "ssu_db_fasta": {
+            "type": "string",
+            "default": "SSU.fasta"
+        },
+        "ssu_db_tax": {
+            "type": "string",
+            "default": "slv_ssu_filtered2.txt"
+        },
+        "ssu_db_otu": {
+            "type": "string",
+            "default": "ssu2.otu"
+        },
+        "ssu_label": {
+            "type": "string",
+            "default": "SSU"
+        },
+        "silva_lsu_db_name": {
+            "type": "string",
+            "default": "silva_lsu-20200130"
+        },
+        "lsu_db_fasta": {
+            "type": "string",
+            "default": "LSU.fasta"
+        },
+        "lsu_db_tax": {
+            "type": "string",
+            "default": "slv_lsu_filtered2.txt"
+        },
+        "lsu_db_otu": {
+            "type": "string",
+            "default": "lsu2.otu"
+        },
+        "lsu_label": {
+            "type": "string",
+            "default": "LSU"
+        },
+        "ssu_db": {
+            "type": "string",
+        },
+        "lsu_db": {
+            "type": "string",
+        },
+        "motus_db": {
+            "type": "string",
+            "default": "db_mOTU"
+        },
+        "rfam_ribo_models": {
+            "type": "string",
+            "default": "ribosomal_models/ribo.cm"
+        },
+        "rfam_other_models": {
+            "type": "string",
+            "default": "other_models/*.cm"
+        },
+        "rfam_ribo_clan": {
+            "type": "string",
+            "default": "ribosomal_models/ribo.claninfo"
+        },
+        "rfam_other_clan": {
+            "type": "string",
+            "default": "other_models/other.claninfo"
+        }
+    }
+}

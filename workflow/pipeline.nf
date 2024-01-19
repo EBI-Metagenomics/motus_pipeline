@@ -3,23 +3,23 @@
      Input validation
     ~~~~~~~~~~~~~~~~~~
 */
-sample_name = channel.value(params.sample_name)
-mode = channel.value(params.mode)
+include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
 
-if ( params.reads_accession ) {
-    // The "mode" is also required but not needed to pull the reads //
-    chosen_reads = channel.empty()
-} else {
-    if ( params.mode == "paired" ) {
-        chosen_reads = channel.fromFilePairs(["${params.paired_end_forward}", "${params.paired_end_reverse}"], checkIfExists: true).map { it[1] }
-    }
-    else if ( params.mode == "single" ) {
-        chosen_reads = channel.fromPath("${params.single_end}", checkIfExists: true)
-    }
+def summary_params = paramsSummaryMap(workflow)
+
+// Print help message, supply typical command line usage for the pipeline
+if (params.help) {
+   log.info paramsHelp("nextflow run my_pipeline --input input_file.csv")
+   exit 0
 }
 
-if ( params.reads_accession && (params.paired_end_forward || params.paired_end_reverse || params.single_end) ) {
-    exit 1, "If --reads_accession is provided, paired_end_forward, paired_end_reverse and single_end are invalid."
+validateParameters()
+
+log.info paramsSummaryLog(workflow)
+
+if (params.help) {
+   log.info paramsHelp("nextflow run ebi-metagenomics/motus-pipeline --help")
+   exit 0
 }
 
 /*
@@ -45,17 +45,32 @@ include { DOWNLOAD_REFERENCE_GENOME } from '../subworkflows/prepare_dbs'
 include { DOWNLOAD_RFAM } from '../subworkflows/prepare_dbs'
 include { DOWNLOAD_MAPSEQ_SSU } from '../subworkflows/prepare_dbs'
 include { DOWNLOAD_MAPSEQ_LSU } from '../subworkflows/prepare_dbs'
+
 /*
     ~~~~~~~~~~~~~~~~~~
      Run workflow
     ~~~~~~~~~~~~~~~~~~
 */
-workflow PIPELINE {
 
-    if ( params.reads_accession ) {
+workflow PIPELINE {
+    groupReads = { meta, fq1, fq2 ->
+        if (fq2 == []) {
+            return tuple(meta, 'single', [fq1])
+        }
+        else {
+            return tuple(meta, 'paired', [fq1, fq2])
+        }
+    }
+    input_data = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads) 
+    
+    sample_name = input_data.map{meta, mode, reads -> meta.id}
+    chosen_reads = input_data.map{meta, mode, reads -> reads}
+    mode = input_data.map{meta, mode, reads -> mode}
+
+    if ( params.fetch_data ) {
         // Sorting this is required to guarantee the order for
         // pair end reads
-        FETCHTOOL(params.reads_accession)
+        FETCHTOOL(sample_name)
         chosen_reads = FETCHTOOL.out.reads
     }
 
