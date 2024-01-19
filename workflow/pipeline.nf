@@ -59,7 +59,7 @@ workflow PIPELINE {
             return tuple(meta, 'single', chosen_reads)
         }
         else {
-            chosen_reads = channel.fromFilePairs([fq1, fq2], checkIfExists: true).map { it[1] }
+            chosen_reads = channel.fromFilePairs([fq1, fq2], checkIfExists: true)
             return tuple(meta, 'paired', chosen_reads)
         }
     }
