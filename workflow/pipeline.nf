@@ -84,7 +84,6 @@ workflow PIPELINE {
     }
     QC(
         sample_name,
-        mode,
         chosen_reads,
         mode,
         ref_genome,

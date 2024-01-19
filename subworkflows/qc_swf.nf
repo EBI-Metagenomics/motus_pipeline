@@ -15,7 +15,6 @@ workflow QC {
 
     take:
         name
-        mode
         reads
         mode
         ref_genome
