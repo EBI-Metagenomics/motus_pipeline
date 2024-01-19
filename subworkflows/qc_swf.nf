@@ -47,7 +47,7 @@ workflow QC {
             DECONTAMINATION.out.decontaminated_reads
         )
 
-        if ( $mode == "paired" ) {
+        if ( mode == "paired" ) {
             SEQPREP(
                 name,
                 DECONTAMINATION.out.decontaminated_reads
