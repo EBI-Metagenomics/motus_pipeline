@@ -25,7 +25,7 @@ process FASTP {
     def input_reads = "";
     def output_reads = "";
     def report_name = "qc";
-    reads.view()
+
     if ( mode == "single" ) {
         input_reads = "--in1 ${reads}";
         output_reads = "--out1 ${name}_fastp.fastq.gz";

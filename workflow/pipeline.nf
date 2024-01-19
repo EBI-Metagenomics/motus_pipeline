@@ -65,6 +65,7 @@ workflow PIPELINE {
     
     sample_name = input_data.map{meta, mode, reads -> meta.id}
     chosen_reads = input_data.map{meta, mode, reads -> reads}.collect()
+    print(chosen_reads)
     mode = input_data.map{meta, mode, reads -> mode}
 
     if ( params.fetch_data ) {
