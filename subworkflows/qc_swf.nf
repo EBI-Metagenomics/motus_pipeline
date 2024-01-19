@@ -24,9 +24,7 @@ workflow QC {
         // pair end reads land in the correct position
         // _1 -> forward first
         // _2 -> reverse second
-        reads_list = reads.collect(sort: {
-            it.name
-        })
+        reads_list = reads.collect()
 
         FASTP(
             name,
