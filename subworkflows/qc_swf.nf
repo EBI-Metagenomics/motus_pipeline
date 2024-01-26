@@ -2,81 +2,60 @@
  * Quality control, host-decontamination and overlap reads
  */
 
-include { FASTP } from '../modules/fastp'
+include { FASTP as FASTP_SINGLE } from '../modules/nf-core/fastp/main'
+include { FASTP as FASTP_PAIRED } from '../modules/nf-core/fastp/main'
 include { SEQPREP } from '../modules/seqprep'
 include { SEQPREP_REPORT } from '../modules/seqprep'
 include { QC_REPORT } from '../modules/create_qc_report'
-include { DECONTAMINATION } from '../modules/decontamination'
-include { DECONTAMINATION_REPORT } from '../modules/decontamination'
+include { DECONTAMINATION } from '../modules/local/decontamination'
+include { DECONTAMINATION_REPORT } from '../modules/loca/decontamination'
+include { SAMTOOLS_BAM2FQ } from '../modules/nf-core/samtools/bam2fq/main'
 include { SEQTK as FASTQ_TO_FASTA} from '../modules/seqtk'
 include { QC_STATS } from '../modules/qc_summary'
 
 workflow QC {
 
     take:
-        name
-        reads
-        mode
+        input
         ref_genome
-        ref_genome_name
+        ref_genome_index
     main:
-        // We sort the reads by name.. to ensure
-        // pair end reads land in the correct position
-        // _1 -> forward first
-        // _2 -> reverse second
-        reads_list = reads.collect()
-
-        FASTP(
-            name,
-            reads_list,
-            mode,
-            channel.value("")
-        )
-
-        DECONTAMINATION(
-            FASTP.out.output_reads,
-            ref_genome,
-            ref_genome_name,
-            mode,
-            name
-        )
-        DECONTAMINATION_REPORT(
-            mode,
-            DECONTAMINATION.out.decontaminated_reads
-        )
-
-        if ( mode == "paired" ) {
-            SEQPREP(
-                name,
-                DECONTAMINATION.out.decontaminated_reads
-            )
-            SEQPREP_REPORT(
-                SEQPREP.out.forward_unmapped_reads,
-                SEQPREP.out.reverse_unmerged_reads,
-                SEQPREP.out.overlapped_reads
-            )
-            overlapped_reads = SEQPREP.out.overlapped_reads
-            overlapped_counts = SEQPREP_REPORT.out.overlapped_report
+        ch_versions           = Channel.empty()
+        
+        input.branch {
+            single: it[1].collect().size() == 1
+            paired: it[1].collect().size() == 2
+            }.set {
+                ch_input_for_fastp
+        }
+    
+        // We don't provide the adapter sequences, which is the second parameter for fastp
+    
+        FASTP_SINGLE ( ch_input_for_fastp.single, [], false, false )
+    
+        // Last parameter here turns on merging of PE data
+        FASTP_PAIRED ( ch_input_for_fastp.paired, [], false, params.merge_pairs )
+    
+        if ( params.merge_pairs ) {
+            ch_fastp_paired = FASTP_PAIRED.out.reads_merged
         } else {
-            overlapped_reads = DECONTAMINATION.out.decontaminated_reads
-            overlapped_counts = channel.fromPath("NO_FILE")
+            ch_fastp_paired = FASTP_PAIRED.out.reads
         }
 
-        QC_REPORT(
-            mode,
-            FASTP.out.json,
-            DECONTAMINATION_REPORT.out.decontamination_report,
-            overlapped_counts,
+        ch_processed_reads = ch_fastp_paired.mix(
+            FASTP_SINGLE.out.reads
         )
+        ch_versions = ch_versions.mix(FASTP_SINGLE.out.versions.first())
+        ch_versions = ch_versions.mix(FASTP_PAIRED.out.versions.first())
 
-        FASTQ_TO_FASTA(name, overlapped_reads)
-
-        QC_STATS(FASTQ_TO_FASTA.out.sequence)
-
-    emit:
-        merged_reads = overlapped_reads
-        sequence = FASTQ_TO_FASTA.out.sequence
-        qc_report = QC_REPORT.out.qc_report
-        qc_stats = QC_STATS.out.qc_statistics
-        fastp_json = FASTP.out.json
+        DECONTAMINATION(ch_processed_reads.map { meta, reads -> 
+                [ meta, reads, ref_genome, ref_genome_index ]
+            }, 
+            false
+        )
+        ch_versions = ch_versions.mix( DECONTAMINATION.out.versions )
+        
+        SAMTOOLS_BAM2FQ( DECONTAMINATION.out.bam.map { meta, ref_fasta, bam, bai -> [ meta, bam ] }, true )
+        ch_versions = ch_versions.mix(SAMTOOLS_BAM2FQ.out.versions.first())
+        
 }

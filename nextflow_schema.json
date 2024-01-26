@@ -76,10 +76,6 @@
         "reference_genome": {
             "type": "string",
         },
-        "reference_genome_name": {
-            "type": "string",
-            "default": "hg38.fa"
-        },
         "length_filter": {
             "type": "integer",
             "default": 10

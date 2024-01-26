@@ -61,11 +61,11 @@ workflow PIPELINE {
             return tuple(meta, 'paired', [fq1, fq2])
         }
     }
-    input_data = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads) 
-    
+    input_data_all = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads)
+    input_data = input_data_all
     sample_name = input_data.map{meta, mode, reads -> meta.id}
     print(sample_name)
-    chosen_reads = input_data.map{meta, mode, reads -> reads}.collect()
+    chosen_reads = input_data.map{meta, mode, reads -> reads}
     print(chosen_reads)
     mode = input_data.map{meta, mode, reads -> mode}
 
@@ -76,20 +76,18 @@ workflow PIPELINE {
         chosen_reads = FETCHTOOL.out.reads
     }
 
-    if ( params.reference_genome && params.reference_genome_name ) {
-        ref_genome = channel.fromPath("${params.reference_genome}")
-        ref_genome_name = channel.value("${params.reference_genome_name}")
+    if ( params.reference_genome ) {
+        ref_genome         = file(params.reference_genome)
+        ref_genome_index   = file("${reference_genome.parent}/*.fa.*")
     } else {
         DOWNLOAD_REFERENCE_GENOME()
         ref_genome = DOWNLOAD_REFERENCE_GENOME.out.ref_genome
-        ref_genome_name = channel.value("${params.decontamination_reference_index}")
+        ref_genome_index = DOWNLOAD_REFERENCE_GENOME.out.ref_genome_index
     }
     QC(
-        sample_name,
         chosen_reads,
-        mode,
         ref_genome,
-        ref_genome_name
+        ref_genome_index
     )
 
     // mOTUs

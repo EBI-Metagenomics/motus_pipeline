@@ -1,0 +1,2 @@
+id,fastq_1,fastq_2
+ERR123456,/Users/kates/Desktop/EBI/MGnify/pipelines/motus_pipeline/tests/modules/fixtures/bwa/mgtest_1.fastq.gz,/Users/kates/Desktop/EBI/MGnify/pipelines/motus_pipeline/tests/modules/fixtures/bwa/mgtest_2.fastq.gz
