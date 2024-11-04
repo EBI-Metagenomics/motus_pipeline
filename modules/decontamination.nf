@@ -124,29 +124,4 @@ process DECONTAMINATION_REPORT {
 }
 
 
-/*
- * Download reference genome HG38
-*/
-process GET_REF_GENOME {
 
-    publishDir "${params.databases}/", mode: 'copy'
-
-    label 'decontamination_genome'
-
-    publishDir "${params.databases}/${params.decontamination_indexes_folder}", mode: 'copy'
-
-    container 'quay.io/microbiome-informatics/bwamem2:2.2.1'
-
-    input:
-    val db_name
-
-    output:
-    path "${db_name}", emit: db
-
-    script:
-    """
-    wget "${params.download_ftp_path}/${db_name}.tar.gz"
-    tar -xvzf "${db_name}.tar.gz"
-    rm "${db_name}.tar.gz"
-    """
-}

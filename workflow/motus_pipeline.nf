@@ -1,0 +1,111 @@
+include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
+
+def summary_params = paramsSummaryMap(workflow)
+
+// Print help message, supply typical command line usage for the pipeline
+if (params.help) {
+   log.info paramsHelp("nextflow run main.nf --samplesheet input.csv")
+   exit 0
+}
+
+validateParameters()
+
+log.info paramsSummaryLog(workflow)
+
+if (params.help) {
+   log.info paramsHelp("nextflow run ebi-metagenomics/genomes-generation --help")
+   exit 0
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CONFIG FILES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo                       = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.fromPath("$projectDir/assets/mgnify_logo.png")
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    MODULES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+include { BWAMEM2DECONTNOBAMS } from '../modules/ebi-metagenomics/bwamem2decontnobams'
+include { MOTUS_PROFILE       } from '../modules/nf-core/motus/profile'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     Subworkflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+include { DOWNLOAD_DBS                                  } from '../subworkflows/local/download_dbs'
+include { READS_QC                                      } from '../subworkflows/ebi-metagenomics/reads_qc'
+include { RRNA_EXTRACTION as RRNA_EXTRACTION            } from '../subworkflows/ebi-metagenomics/rrna_extraction/main'
+include { RRNA_EXTRACTION as OTHER_RNA_EXTRACTION       } from '../subworkflows/ebi-metagenomics/rrna_extraction/main'
+include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_SSU      } from '../subworkflows/ebi-metagenomics/mapseq_otu_krona/main'
+include { MAPSEQ_OTU_KRONA as MAPSEQ_OTU_KRONA_LSU      } from '../subworkflows/ebi-metagenomics/mapseq_otu_krona/main'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     Run workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+workflow MOTUS_PIPELINE {
+    // ---- combine data for reads ---- //
+    groupReads = { meta, fq1, fq2 ->
+        if (fq2 == []) {
+            return tuple(meta + [single_end: true], [fq1])
+        }
+        else {
+            return tuple(meta + [single_end: false], [fq1, fq2])
+        }
+    }
+    input_reads = Channel.fromSamplesheet("samplesheet", header: true, sep: ',').map(groupReads)   // [ meta, [raw_reads] ]
+
+    // Check DBs and download not existing
+    DOWNLOAD_DBS()
+    
+    // Decontaminate reads
+    BWAMEM2DECONTNOBAMS(input_reads, DOWNLOAD_DBS.out.ref_genome)
+    
+    // QC
+    READS_QC(params.filter_amplicon, BWAMEM2DECONTNOBAMS.out.decontaminated_reads, params.save_merged)
+    
+    // mOTU profile 
+    MOTUS_PROFILE(READS_QC.out.reads, DOWNLOAD_DBS.out.motus_db_folder)
+    
+    // Removes reads that passed sanity checks but are empty after QC with fastp //
+    READS_QC.out.reads_fasta.branch{ meta, fasta ->
+                                qc_pass: fasta.countFasta() > 0
+                                qc_empty: fasta.countFasta() == 0
+                            }
+                            .set { extended_fasta_qc }
+    // rRNA
+    RRNA_EXTRACTION(
+        extended_fasta_qc.qc_pass,
+        DOWNLOAD_DBS.out.cmsearch_ribo_db,
+        DOWNLOAD_DBS.out.cmsearch_ribo_clan
+    )
+    // OTHER RNA
+    OTHER_RNA_EXTRACTION(
+        extended_fasta_qc.qc_pass,
+        DOWNLOAD_DBS.out.cmsearch_other_db,
+        DOWNLOAD_DBS.out.cmsearch_other_clan
+    )
+    
+    // MAPseq annotation + Krona generation for SSU+LSU //
+    MAPSEQ_OTU_KRONA_LSU(
+        RRNA_EXTRACTION.out.lsu_fasta,
+        lsu_mapseq_krona_tuple
+    )
+    
+    MAPSEQ_OTU_KRONA_SSU(
+        RRNA_EXTRACTION.out.ssu_fasta,
+        ssu_mapseq_krona_tuple
+    )
+    
+    // Collect stats
+    // MultiQC
+
+}
