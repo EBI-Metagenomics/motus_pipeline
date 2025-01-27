@@ -1,0 +1,2 @@
+id,fastq_1,fastq_2
+ERR123456,tests/sample_reads/ERR123456_1.fastq.gz,tests/sample_reads/ERR123456_2.fastq.gz
