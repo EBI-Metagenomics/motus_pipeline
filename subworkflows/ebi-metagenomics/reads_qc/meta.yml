@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "reads_qc"
+description: |
+  Quality control and merging of fastq-format short-reads using fastp, generating fasta
+keywords:
+  - trimming
+  - quality control
+  - merging
+  - fastq
+  - fasta
+components:
+  - seqfu/check
+  - fastqsuffixheadercheck
+  - assessmcpproportions
+  - fastp
+  - seqtk/seq
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information. Use 'single_end: true' to specify single ended or interleaved FASTQs. Use 'single_end: false' for paired-end reads.
+        e.g. [ id:'test', single_end:false ]
+  - filter_amplicon:
+      type: boolean
+      description: Specify true to check whether the reads are likely to be AMPLICON or not
+  - ch_reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - save_merged:
+      type: boolean
+      description: Specify true to save all merged reads to the a file ending in `*.merged.fastq.gz`
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test' ]`
+  - seqfu_check:
+      type: file
+      description: TSV file containing output from seqfu/check, first column is either OK or ERR depending on if anything is wrong with the file(s)
+      pattern: "*.tsv"
+  - suffix_header_check:
+      type: file
+      description: JSON log file that is empty if no errors were found, or that contains which reads had mismatches if there were errors
+      pattern: "*.json"
+  - amplicon_check:
+      type: env
+      description: Optional env variable containing either "AMPLICON", empty otherwise
+  - reads:
+      type: file
+      description: The trimmed/modified/unmerged fastq reads
+      pattern: "*fastp.fastq.gz"
+  - reads_se_and_merged:
+      type: file
+      description: fastp-cleaned single-end reads and merged paired-end reads
+      pattern: "*.merged.fastq.gz"
+  - fastp_summary_json:
+      type: file
+      description: fastp results in JSON format
+      pattern: "*.json"
+  - reads_fasta:
+      type: file
+      description: FASTA file converted from FASTQ
+      pattern: "*.fasta.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@chrisata"

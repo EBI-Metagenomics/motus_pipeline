@@ -36,29 +36,4 @@ process MAPSEQ {
     """
 }
 
-/*
- * Download MGnify mapseq DB
-*/
-process GET_MAPSEQ_DB {
 
-    publishDir "${params.databases}/", mode: 'copy', pattern: "${db_name}"
-
-    label 'mapseq_db'
-
-    publishDir "${params.databases}/", mode: 'copy'
-
-    container 'quay.io/biocontainers/mapseq:2.1.1--ha34dc8c_0'
-
-    input:
-    val db_name
-
-    output:
-    path "*", emit: db
-
-    script:
-    """
-    wget "${params.download_ftp_path}/${db_name}.tar.gz"
-    tar -xvzf "${db_name}.tar.gz"
-    rm "${db_name}.tar.gz"
-    """
-}

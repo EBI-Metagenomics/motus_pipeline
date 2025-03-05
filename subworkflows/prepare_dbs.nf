@@ -65,26 +65,3 @@ workflow DOWNLOAD_MAPSEQ_LSU {
         mapseq_db_lsu
 }
 
-workflow DOWNLOAD_RFAM {
-    main:
-        // Rfam
-        db_folder = file("${params.databases}/${params.cmsearch_db_name}");
-        if ( db_folder.exists() ) {
-            cmsearch_ribo_db = channel.fromPath("${params.databases}/${params.cmsearch_db_name}/${params.ribosomal_model_path}", checkIfExists: true);
-            cmsearch_ribo_clan = channel.fromPath("${params.databases}/${params.cmsearch_db_name}/${params.ribosomal_claninfo_path}", checkIfExists: true);
-            cmsearch_other_db = channel.fromPath("${params.databases}/${params.cmsearch_db_name}/${params.other_model_path}/*.cm", checkIfExists: true);
-            cmsearch_other_clan = channel.fromPath("${params.databases}/${params.cmsearch_db_name}/${params.other_claninfo_path}", checkIfExists: true);
-        } else {
-            GET_CMSEARCH_DB("${params.cmsearch_db_name}");
-            cmsearch_ribo_db = GET_CMSEARCH_DB.out.ribo_db;
-            cmsearch_ribo_clan = GET_CMSEARCH_DB.out.ribo_clan;
-            cmsearch_other_db = GET_CMSEARCH_DB.out.other_db;
-            cmsearch_other_clan = GET_CMSEARCH_DB.out.other_clan;
-        }
-        cmsearch_other_db_cat = cmsearch_other_db.collectFile(name: "other.cm")
-    emit:
-        cmsearch_ribo_db
-        cmsearch_ribo_clan
-        cmsearch_other_db_cat
-        cmsearch_other_clan
-}
